@@ -20,6 +20,15 @@ It combines accessibility, artificial intelligence, and simplicity to create a s
 
 ---
 
+## Design
+
+You can view the complete LingoSign design and prototype using the links below:
+
+- **Figma Design:** [View on Figma](https://www.figma.com/design/XCzyAHxpRgMXJsIrxQGHSF/Lingo-Sign?node-id=0-1&t=C102KO0fZQoocYli-1)  
+- **App Prototype:** [View Prototype on Google Drive](https://drive.google.com/drive/folders/1fPOHZjBCI_s8kVhQmO0SENRZCRi7w9qY?usp=drive_link)
+
+---
+
 ## Tech Stack
 
 - Framework: Flutter  
