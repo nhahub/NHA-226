@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "671655381307",
+    "project_id": "lingo-sign",
+    "storage_bucket": "lingo-sign.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671655381307:android:105169bc71836464af0f1e",
+        "android_client_info": {
+          "package_name": "com.example.lingo_sign"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC9A3iqBQV9U19r2xqX2h8LAJT14pquYpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
