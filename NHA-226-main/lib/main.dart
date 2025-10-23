@@ -6,7 +6,7 @@ import 'package:lingo_sign/app_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 
-// make _MyAppState public so SettingsScreen can find it
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
@@ -31,10 +31,10 @@ class MyApp extends StatefulWidget {
   });
 
   @override
-  MyAppState createState() => MyAppState(); // now public
+  MyAppState createState() => MyAppState(); 
 }
 
-// ✅ Made this class public (remove the underscore)
+
 class MyAppState extends State<MyApp> {
   late bool _isDarkMode;
 
@@ -44,7 +44,7 @@ class MyAppState extends State<MyApp> {
     _isDarkMode = widget.isDarkMode;
   }
 
-  // renamed _updateTheme → updateTheme and made it public
+  
   void updateTheme(bool isDark) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('darkMode', isDark);
