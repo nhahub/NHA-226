@@ -5,8 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:lingo_sign/search_feature/data_layer/data_source/local_data_source.dart';
-import 'package:lingo_sign/search_feature/data_layer/data_source/remote_data_source.dart';
+
 import 'package:lingo_sign/search_feature/data_layer/repositories/search_repository.dart';
 import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_bloc.dart';
 import 'package:lingo_sign/app_router.dart';
@@ -16,9 +15,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();
-  // final localDataSource = LocalDataSource(prefs);
-  final remoteDataSource = RemoteDataSource(FirebaseFirestore.instance, prefs);
-  final searchRepository = SearchRepository(remoteDataSource);
+  final searchRepository = SearchRepository(FirebaseFirestore.instance, prefs);
 
   runApp(MyApp(searchRepository: searchRepository));
 }
