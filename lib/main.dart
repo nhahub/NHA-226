@@ -16,9 +16,9 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   final prefs = await SharedPreferences.getInstance();
-  final localDataSource = LocalDataSource(prefs);
-  final remoteDataSource = RemoteDataSource(FirebaseFirestore.instance);
-  final searchRepository = SearchRepository(remoteDataSource, localDataSource);
+  // final localDataSource = LocalDataSource(prefs);
+  final remoteDataSource = RemoteDataSource(FirebaseFirestore.instance, prefs);
+  final searchRepository = SearchRepository(remoteDataSource);
 
   runApp(MyApp(searchRepository: searchRepository));
 }
