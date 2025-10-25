@@ -1,13 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
+import 'package:lingo_sign/features/friend_account/freind_account_screen.dart';
+// import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp(appRouter: AppRouter()));
+  runApp(MyApp(appRouter: AppRouter())
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -20,7 +22,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRouter.generateRouter,
-      home: SigninScreen(),
+       home: FreindAccountScreen(userId: '7MNZhIsumBa3IqXPrZXoB6gZB9Y2',),
     );
   }
 }
