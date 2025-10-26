@@ -3,7 +3,6 @@ import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/widget/custom_bottom_navigation_bar.dart';
 import 'package:lingo_sign/features/home/presentation/screen/friends_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/last_call_screen.dart';
-import 'package:lingo_sign/features/profile/presentation/screen/profile_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -16,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screen = [
     FriendsScreen(),
     LastCallScreen(),
-    ProfileScreen(),
+    Scaffold(), // Profile Screen
   ];
   int index = 0;
 
