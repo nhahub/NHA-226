@@ -29,8 +29,6 @@ class AppRouter {
 
       case '/profile':
         return MaterialPageRoute(builder: (_) => const Profile());
-      //   case '/profile/account_info':
-      //     return MaterialPageRoute(builder: (_) => const AccountInfoScreen());
     }
     return null;
   }
