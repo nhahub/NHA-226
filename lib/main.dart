@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
+import 'package:lingo_sign/features/add_friend/add_friend.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
 
@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRouter.generateRouter,
-      home: SigninScreen(),
+      home: AddFriend(),
     );
   }
 }
