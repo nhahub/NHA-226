@@ -44,4 +44,6 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
-/lib/features/auth/
+/lib/features/home/
+/lib/features/profile/
+/lib/main_screen.dart
