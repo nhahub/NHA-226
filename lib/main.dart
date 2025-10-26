@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:lingo_sign/features/Transelation/UI/translation_screen.dart';
 import 'package:lingo_sign/features/friend_account/freind_account_screen.dart';
 // import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
@@ -22,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       onGenerateRoute: appRouter.generateRouter,
-       home: FreindAccountScreen(userId: '7MNZhIsumBa3IqXPrZXoB6gZB9Y2',),
+       home: TranslationScreen()
     );
   }
 }
