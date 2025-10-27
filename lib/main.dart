@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
       designSize: const Size(375, 812),
       builder: (context, _) => MaterialApp(
         debugShowCheckedModeBanner: false,
-        initialRoute: '/search',
+        initialRoute: '/profile/account_info',
         onGenerateRoute: AppRouter().generateRouter,
       ),
     );

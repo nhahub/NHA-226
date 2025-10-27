@@ -1,7 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingo_sign/search_feature/data_layer/repositories/search_repository.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_event.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_state.dart';
+import 'package:lingo_sign/features/search_feature/data_layer/repositories/search_repository.dart';
+import 'package:lingo_sign/features/search_feature/presentation_layer/bloc/search_event.dart';
+import 'package:lingo_sign/features/search_feature/presentation_layer/bloc/search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository repo;

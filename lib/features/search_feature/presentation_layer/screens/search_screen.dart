@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_event.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_state.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/widgets/custom_search_user.dart';
+import 'package:lingo_sign/features/search_feature/presentation_layer/bloc/search_event.dart';
+import 'package:lingo_sign/features/search_feature/presentation_layer/bloc/search_state.dart';
+import 'package:lingo_sign/features/search_feature/presentation_layer/widgets/custom_search_user.dart';
 
 import '../bloc/search_bloc.dart';
 

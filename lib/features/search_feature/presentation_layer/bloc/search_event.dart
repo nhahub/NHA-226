@@ -1,4 +1,4 @@
-import 'package:lingo_sign/search_feature/data_layer/model/user_model.dart';
+import 'package:lingo_sign/features/search_feature/data_layer/model/user_model.dart';
 
 abstract class SearchEvent {}
 
