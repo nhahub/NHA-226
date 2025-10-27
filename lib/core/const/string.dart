@@ -4,3 +4,5 @@ String resetPasswordStringMessage =
     'A link to reset your password has been sent to your email.';
 String verifyAccountStringMessage =
     'A link to verify your account has been sent to your email.';
+String notVerifiedAccountStringMessage =
+    'Account not verified';

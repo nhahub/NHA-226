@@ -148,7 +148,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         if (state is Authenticated) {
                           Navigator.pushNamedAndRemoveUntil(
                             context,
-                            mainScreen,
+                            loginScreen,
                             (_) => false,
                           );
                           if (state.message != null) {

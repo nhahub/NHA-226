@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/auth_button.dart';
+import 'package:lingo_sign/features/auth/presentation/widget/email_verification_dialog.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/message.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/signin_header.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/coustom_text_field.dart';
@@ -126,6 +128,24 @@ class _LogInScreenState extends State<LogInScreen> {
                               color: Colors.green,
                             );
                           }
+                        }
+                        if (state is NotVerifyAccountState) {
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (_) => EmailVerificationDialog(
+                              isLoading: state is AuthLoading ? true : false,
+                              isSent:
+                                  state.message == verifyAccountStringMessage,
+                              onResend: () {
+                                context.read<AuthBloc>().add(
+                                  VerifyAccountEvent(
+                                    emailController.text.trim(),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
                         }
                         if (state is AuthError) {
                           Message(

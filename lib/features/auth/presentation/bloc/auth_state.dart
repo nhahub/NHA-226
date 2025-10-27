@@ -26,9 +26,9 @@ final class ResetPasswordState extends AuthState {
   const ResetPasswordState(this.message);
 }
 
-final class VerifyAccountState extends AuthState {
+final class NotVerifyAccountState extends AuthState {
   final String message;
-  const VerifyAccountState(this.message);
+  const NotVerifyAccountState(this.message);
 }
 
 final class AuthError extends AuthState {

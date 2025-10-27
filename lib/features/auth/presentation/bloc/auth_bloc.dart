@@ -53,7 +53,11 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         emit(Unauthenticated('Wrong email or password'));
       }
     } on Failure catch (failure) {
-      emit(AuthError(failure.message));
+      if (failure.message == notVerifiedAccountStringMessage) {
+        emit(NotVerifyAccountState(failure.message));
+      } else {
+        emit(AuthError(failure.message));
+      }
     } catch (e) {
       emit(AuthError('Something went wrong. Please try again.'));
     }
@@ -71,9 +75,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         event.password,
       );
       if (user != null) {
-        emit(Authenticated('User cearted successfully!'));
+        emit(Authenticated('Account created! Check your email to verify it.'));
       } else {
-        emit(Unauthenticated('Sign up'));
+        emit(Unauthenticated('User not found'));
       }
     } on Failure catch (failure) {
       emit(AuthError(failure.message));
@@ -109,9 +113,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthLoading());
       String text = await authRepository.verifyAccountByEmail(event.email);
       if (text == verifyAccountStringMessage) {
-        emit(VerifyAccountState(verifyAccountStringMessage));
+        emit(NotVerifyAccountState(verifyAccountStringMessage));
       } else {
-        emit(VerifyAccountState('Error occurred try again'));
+        emit(NotVerifyAccountState('Error occurred try again'));
       }
     } on Failure catch (failure) {
       emit(AuthError(failure.message));

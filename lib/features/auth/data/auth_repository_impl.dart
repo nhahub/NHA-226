@@ -21,20 +21,14 @@ class AuthRepositoryImpl extends AuthRepository {
     try {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
-
       if (userCredential.user == null) throw AuthFailure('Login failed');
-
       await createUserinFirestore(userCredential.user!);
-
-      AppUser user = AppUser(uid: userCredential.user!.uid, email: email);
-      return user;
-
-      // if (userCredential.user!.emailVerified) {
-      //   AppUser user = AppUser(uid: userCredential.user!.uid, email: email);
-      //   return user;
-      // } else {
-      //   throw Exception('Please check your email to verify your account');
-      // }
+      if (userCredential.user!.emailVerified) {
+        AppUser user = AppUser(uid: userCredential.user!.uid, email: email);
+        return user;
+      } else {
+        throw AuthFailure(notVerifiedAccountStringMessage);
+      }
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(mapFirebaseAuthError(e));
     }
@@ -53,6 +47,7 @@ class AuthRepositoryImpl extends AuthRepository {
       await userCredential.user?.reload();
       final updatedUser = firebaseAuth.currentUser!;
       await createUserinFirestore(updatedUser);
+      userCredential.user!.sendEmailVerification();
       return AppUser(uid: userCredential.user!.uid, email: email);
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(mapFirebaseAuthError(e));
