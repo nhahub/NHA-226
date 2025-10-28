@@ -87,6 +87,11 @@ class AccountInfoScreen extends StatelessWidget {
 
                     const SizedBox(height: 20),
                     ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                          Color(0xff31326F),
+                        ),
+                      ),
                       onPressed: () {
                         if (formKey.currentState!.validate()) {
                           context.read<EditAccountInfoBloc>().add(
@@ -98,7 +103,12 @@ class AccountInfoScreen extends StatelessWidget {
                           );
                         }
                       },
-                      child: const Text('Save'),
+                      child: const Text(
+                        'Save',
+                        style: TextStyle(
+                          color: Color.fromARGB(255, 255, 255, 255),
+                        ),
+                      ),
                     ),
                   ],
                 ),

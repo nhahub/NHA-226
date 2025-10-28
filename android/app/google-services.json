@@ -12,6 +12,7 @@
           "package_name": "com.example.lingo_sign"
         }
       },
+<<<<<<< HEAD
       "oauth_client": [
         {
           "client_id": "671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com",
@@ -26,6 +27,9 @@
           "client_type": 3
         }
       ],
+=======
+      "oauth_client": [],
+>>>>>>> 7e869d24215b82eb3018de8f63117b98466ece66
       "api_key": [
         {
           "current_key": "AIzaSyC9A3iqBQV9U19r2xqX2h8LAJT14pquYpk"
@@ -33,6 +37,7 @@
       ],
       "services": {
         "appinvite_service": {
+<<<<<<< HEAD
           "other_platform_oauth_client": [
             {
               "client_id": "671655381307-qsg8ogo7hj8u55skj4kg19tm0fshcndm.apps.googleusercontent.com",
@@ -46,6 +51,9 @@
               }
             }
           ]
+=======
+          "other_platform_oauth_client": []
+>>>>>>> 7e869d24215b82eb3018de8f63117b98466ece66
         }
       }
     }

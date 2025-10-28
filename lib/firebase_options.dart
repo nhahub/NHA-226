@@ -64,8 +64,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671655381307',
     projectId: 'lingo-sign',
     storageBucket: 'lingo-sign.firebasestorage.app',
-    androidClientId: '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
-    iosClientId: '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
+    androidClientId:
+        '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
+    iosClientId:
+        '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
     iosBundleId: 'com.example.lingoSign',
   );
 
@@ -75,8 +77,10 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671655381307',
     projectId: 'lingo-sign',
     storageBucket: 'lingo-sign.firebasestorage.app',
-    androidClientId: '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
-    iosClientId: '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
+    androidClientId:
+        '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
+    iosClientId:
+        '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
     iosBundleId: 'com.example.lingoSign',
   );
 
@@ -89,5 +93,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'lingo-sign.firebasestorage.app',
     measurementId: 'G-8MS04LYPDR',
   );
-
 }
