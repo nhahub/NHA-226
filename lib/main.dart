@@ -11,7 +11,8 @@ import 'app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp(appRouter: AppRouter()));
+  runApp(MyApp(appRouter: AppRouter())
+  );
 }
 
 class MyApp extends StatelessWidget {
