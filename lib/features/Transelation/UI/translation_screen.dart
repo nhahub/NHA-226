@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TranslationScreen extends StatelessWidget {
   const TranslationScreen({super.key});
@@ -22,29 +23,15 @@ class TranslationScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      InkWell(
-                        onTap: () {},
-                        child: Image.asset(
-                          'assets/images/Refresh.png',
-                          height: 24,
-                          width: 24,
-                        ),
-                      ),
+                      InkWell(onTap: () {}, child: Icon(Icons.history)),
+
                       const SizedBox(width: 10),
-                      InkWell(
-                        onTap: () {},
-                        child: Icon(
-                          Icons.menu,
-                          size: 28,
-                          color: AppColor.black,
-                        ),
-                      ),
                     ],
                   ),
                   InkWell(
                     onTap: () {},
-                    child: Image.asset(
-                      'assets/images/si_notifications-fill.png',
+                    child: SvgPicture.asset(
+                      'assets/images/si_notifications-fill.svg',
                       height: 24,
                       width: 24,
                     ),
@@ -58,7 +45,10 @@ class TranslationScreen extends StatelessWidget {
             Center(
               child: InkWell(
                 onTap: () {},
-                child: Image.asset('assets/images/person.png', height: 120),
+                child: SvgPicture.asset(
+                  'assets/images/person.svg',
+                  height: 120,
+                ),
               ),
             ),
 
@@ -86,7 +76,7 @@ class TranslationScreen extends StatelessWidget {
                           ),
                           InkWell(
                             onTap: () {},
-                            child: Image.asset('assets/images/Camera.png'),
+                            child: SvgPicture.asset('assets/images/Camera.svg'),
                           ),
                         ],
                       ),
@@ -103,7 +93,7 @@ class TranslationScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(10),
                     child: InkWell(
                       onTap: () {},
-                      child: Image.asset('assets/images/mic.png'),
+                      child: SvgPicture.asset('assets/images/mic.svg'),
                     ),
                   ),
                 ],
