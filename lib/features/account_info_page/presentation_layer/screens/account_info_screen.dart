@@ -42,23 +42,23 @@ class AccountInfoScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       body: BlocConsumer<EditAccountInfoBloc, EditAccountInfoState>(
         listener: (context, state) {
-          if (state is EditProfileError) {
+          if (state is EditAccountError) {
             ScaffoldMessenger.of(
               context,
             ).showSnackBar(SnackBar(content: Text(state.message)));
-          } else if (state is EditProfileSuccess) {
+          } else if (state is AccountInfoUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Profile updated successfully!")),
             );
-          } else if (state is EditAccountLoaded) {
-            nameController.text = state.name;
-            phoneController.text = state.phone;
-            emailController.text = state.email;
           }
         },
         builder: (context, state) {
           if (state is EditAccountLoading) {
             return const Center(child: CircularProgressIndicator());
+          } else if (state is EditAccountLoaded) {
+            nameController.text = state.name;
+            phoneController.text = state.phone;
+            emailController.text = state.email;
           }
           return Column(
             children: [
@@ -69,37 +69,36 @@ class AccountInfoScreen extends StatelessWidget {
                     CustomInfoFeild(
                       description: 'Full Name',
                       controller: nameController,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your name' : null,
                     ),
                     CustomInfoFeild(
                       description: 'Phone Number',
                       controller: phoneController,
+                      validator: (value) =>
+                          !value!.contains('@') ? 'Enter a valid email' : null,
                     ),
                     CustomInfoFeild(
                       description: 'Email',
                       controller: emailController,
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your phone number' : null,
                     ),
-                    SizedBox(height: 24.h),
+
+                    const SizedBox(height: 20),
                     ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: EdgeInsets.symmetric(vertical: 12.h),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12.r),
-                        ),
-                      ),
                       onPressed: () {
-                        context.read<EditAccountInfoBloc>().add(
-                          UpdateUserData(
-                            name: nameController.text.trim(),
-                            phone: phoneController.text.trim(),
-                            email: emailController.text.trim(),
-                          ),
-                        );
+                        if (formKey.currentState!.validate()) {
+                          context.read<EditAccountInfoBloc>().add(
+                            UpdateUserData(
+                              name: nameController.text,
+                              email: emailController.text,
+                              phone: phoneController.text,
+                            ),
+                          );
+                        }
                       },
-                      child: Text(
-                        'Save',
-                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
-                      ),
+                      child: const Text('Save'),
                     ),
                   ],
                 ),

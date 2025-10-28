@@ -1,13 +1,18 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingo_sign/features/account_info_page/data_layer/user_repository.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lingo_sign/features/account_info_page/data_layer/account_repository.dart';
 import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_event.dart';
 import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_state.dart';
 
 class EditAccountInfoBloc
     extends Bloc<EditAccountInfoEvent, EditAccountInfoState> {
-  final UserRepository userRepository;
+  final AccountRepository repository;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  EditAccountInfoBloc(this.userRepository) : super(EditAccountInitial()) {
+  EditAccountInfoBloc(this.repository) : super(EditAccountInitial()) {
     on<LoadUserData>(_onLoadUserData);
     on<UpdateUserData>(_onUpdateUserData);
   }
@@ -18,16 +23,18 @@ class EditAccountInfoBloc
   ) async {
     emit(EditAccountLoading());
     try {
-      final data = await userRepository.getUserData();
+      final userId = _auth.currentUser!.uid;
+      final doc = await _firestore.collection('users').doc(userId).get();
+      final data = doc.data();
       emit(
         EditAccountLoaded(
-          name: data['name'] ?? '',
-          email: data['email'] ?? '',
-          phone: data['phone'] ?? '',
+          name: data?['name'] ?? '',
+          email: data?['email'] ?? '',
+          phone: data?['phone'] ?? '',
         ),
       );
     } catch (e) {
-      emit(EditProfileError(e.toString()));
+      emit(EditAccountError('Failed to load user data: $e'));
     }
   }
 
@@ -35,48 +42,18 @@ class EditAccountInfoBloc
     UpdateUserData event,
     Emitter<EditAccountInfoState> emit,
   ) async {
-    final name = event.name?.trim() ?? '';
-    final email = event.email?.trim() ?? '';
-    final phone = event.phone?.trim() ?? '';
-
-    if (event.name!.isEmpty) {
-      emit(EditProfileError("Name can't be empty"));
-      return;
-    }
-    if (event.name!.length < 3) {
-      emit(EditProfileError("Phone number must be at least 10 digits"));
-      return;
-    }
-    if (event.email!.isEmpty) {
-      emit(EditProfileError("Email can't be empty"));
-      return;
-    }
-    if (!event.email!.contains('@')) {
-      emit(EditProfileError("Invalid email address"));
-      return;
-    }
-
-    if (event.phone!.isEmpty) {
-      emit(EditProfileError("Phone Number can't be empty"));
-      return;
-    }
-    if (event.phone!.length < 10) {
-      emit(EditProfileError("Phone number must be at least 10 digits"));
-      return;
-    }
-
     emit(EditAccountLoading());
     try {
-      await userRepository.updateUserData(
-        name: event.name,
-        email: event.email,
-        phone: event.phone,
-      );
-
-      emit(EditProfileSuccess());
-      add(LoadUserData()); // Reload updated data
+      final userId = _auth.currentUser!.uid;
+      await _firestore.collection('users').doc(userId).update({
+        'name': event.name,
+        'email': event.email,
+        'phone': event.phone,
+      });
+      emit(AccountInfoUpdated());
+      add(LoadUserData()); // reload data
     } catch (e) {
-      emit(EditProfileError(e.toString()));
+      emit(EditAccountError('Failed to update user data: $e'));
     }
   }
 }

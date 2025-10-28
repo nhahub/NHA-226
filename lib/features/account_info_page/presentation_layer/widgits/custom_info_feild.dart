@@ -4,10 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomInfoFeild extends StatelessWidget {
   final String description;
   final TextEditingController controller;
+  final FormFieldValidator validator;
   const CustomInfoFeild({
     super.key,
     required this.description,
     required this.controller,
+    required this.validator,
   });
   @override
   Widget build(BuildContext context) {
