@@ -1,0 +1,21 @@
+Success Messages
+    Signup: Account created successfully. Please check your email to verify your account.
+    Email Verified: Your email has been verified successfully. You can now log in.
+    Login: Logged in successfully. Welcome back!
+    Logout: You have been logged out. See you soon.
+    Password Reset Request: Password reset link has been sent to your email.
+    Password Reset Done: Your password has been reset successfully.
+
+Error / Failure Messages
+    Invalid Credentials: Invalid email or password. Please try again.
+    Unverified Email: Please verify your email before logging in.
+    Account Not Found: No account found with this email.
+    Weak Password: Password is too weak. Please use a stronger one.
+    Email Already in Use: This email is already registered. Try logging in.
+    Network Error: Network issue. Please check your connection and try again.
+    General Error: Something went wrong. Please try again later.
+
+Info / Neutral Messages
+    Session Expired: Your session has expired. Please log in again.
+    Loading: Please wait...
+    Processing: We are processing your request...

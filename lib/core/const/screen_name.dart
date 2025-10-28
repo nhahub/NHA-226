@@ -1,6 +1,6 @@
 const String onboardingScreen = '/onboarding';
-const String homeScreen = '/home';
-const String signinScreen = '/signin';
+const String mainScreen = '/main';
+const String loginScreen = '/login';
 const String signupScreen = '/signup';
 const String verifyAccountScreen = '/verify_account';
 const String forgetPasswordScreen = '/forget_password';

@@ -1,8 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/Transelation/UI/translation_screen.dart';
-import 'package:lingo_sign/features/friend_account/freind_account_screen.dart';
-// import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
+import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
 
@@ -20,10 +22,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: appRouter.generateRouter,
-       home: TranslationScreen()
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) =>
+              AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
+        ),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        onGenerateRoute: appRouter.generateRouter,
+        home: BlocBuilder<AuthBloc, AuthState>(
+          builder: (context, state) {
+            if (state is Authenticated) {
+              return MainScreen();
+            }
+            return LogInScreen();
+          },
+        ),
+      ),
     );
   }
 }
