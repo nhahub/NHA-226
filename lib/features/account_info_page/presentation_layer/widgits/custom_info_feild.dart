@@ -3,9 +3,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomInfoFeild extends StatelessWidget {
   final String description;
-
-  const CustomInfoFeild({super.key, required this.description});
-
+  final TextEditingController controller;
+  const CustomInfoFeild({
+    super.key,
+    required this.description,
+    required this.controller,
+  });
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -14,7 +17,7 @@ class CustomInfoFeild extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(description, style: TextStyle(fontSize: 16.h)),
-          TextField(),
+          TextFormField(),
         ],
       ),
     );

@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_bloc.dart';
+import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_event.dart';
+import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_state.dart';
 
 import 'package:lingo_sign/features/account_info_page/presentation_layer/widgits/custom_info_feild.dart';
 
+// ignore: must_be_immutable
 class AccountInfoScreen extends StatelessWidget {
-  const AccountInfoScreen({super.key});
+  TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
+  AccountInfoScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +40,73 @@ class AccountInfoScreen extends StatelessWidget {
         ],
       ),
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          CustomInfoFeild(description: 'Full Name'),
-          CustomInfoFeild(description: 'Phone Number'),
-          CustomInfoFeild(description: 'Email'),
-        ],
+      body: BlocConsumer<EditAccountInfoBloc, EditAccountInfoState>(
+        listener: (context, state) {
+          if (state is EditProfileError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
+          } else if (state is EditProfileSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Profile updated successfully!")),
+            );
+          } else if (state is EditAccountLoaded) {
+            nameController.text = state.name;
+            phoneController.text = state.phone;
+            emailController.text = state.email;
+          }
+        },
+        builder: (context, state) {
+          if (state is EditAccountLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          return Column(
+            children: [
+              Form(
+                key: formKey,
+                child: Column(
+                  children: [
+                    CustomInfoFeild(
+                      description: 'Full Name',
+                      controller: nameController,
+                    ),
+                    CustomInfoFeild(
+                      description: 'Phone Number',
+                      controller: phoneController,
+                    ),
+                    CustomInfoFeild(
+                      description: 'Email',
+                      controller: emailController,
+                    ),
+                    SizedBox(height: 24.h),
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blue,
+                        padding: EdgeInsets.symmetric(vertical: 12.h),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                      ),
+                      onPressed: () {
+                        context.read<EditAccountInfoBloc>().add(
+                          UpdateUserData(
+                            name: nameController.text.trim(),
+                            phone: phoneController.text.trim(),
+                            email: emailController.text.trim(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        'Save',
+                        style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
