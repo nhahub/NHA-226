@@ -33,7 +33,7 @@ class _CoustomTextFormFieldState extends State<CoustomTextFormField> {
         controller: widget.controller,
         obscureText: widget.obscureText ? _isObscure : false,
         validator: widget.validator,
-        style: TextStyle(color: AppColor().black),
+        style: TextStyle(color: AppColor.black),
         decoration: InputDecoration(
           suffixIcon: widget.obscureText
               ? IconButton(

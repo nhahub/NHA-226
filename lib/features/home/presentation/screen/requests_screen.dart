@@ -7,7 +7,7 @@ class RequestsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       body: Center(child: Text('Requests')),
     );
   }

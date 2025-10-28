@@ -33,7 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
         imageUrl:
             'https://media.licdn.com/dms/image/v2/D5603AQEUdpkTlQjVRQ/profile-displayphoto-scale_400_400/B56ZgnhQ42H0Ak-/0/1753009688865?e=1762992000&v=beta&t=SFU2yF_lHcxGTVTp9sHwvHFFUOH3sE6Ta4r_N3IZ2SI',
       ),
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       body: Column(
         children: [
           CustomTapBar(tabController: _tabController),

@@ -44,7 +44,7 @@ class _LogInScreenState extends State<LogInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -61,7 +61,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Email',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     const SizedBox(height: 6),
@@ -80,7 +80,7 @@ class _LogInScreenState extends State<LogInScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'password',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     SizedBox(height: 6),
@@ -211,7 +211,7 @@ class _LogInScreenState extends State<LogInScreen> {
                           'Don\'t have an account? ',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColor().black,
+                            color: AppColor.black,
                           ),
                         ),
                         GestureDetector(
@@ -227,7 +227,7 @@ class _LogInScreenState extends State<LogInScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: AppColor().main,
+                              color: AppColor.main,
                             ),
                           ),
                         ),

@@ -22,7 +22,7 @@ class _EmailVerificationDialogState extends State<EmailVerificationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.center,

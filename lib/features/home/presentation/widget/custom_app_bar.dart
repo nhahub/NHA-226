@@ -10,14 +10,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       elevation: 0,
       // leading:
       title: Row(
         children: [
           CircleAvatar(
             backgroundImage: NetworkImage(imageUrl),
-            backgroundColor: AppColor().white,
+            backgroundColor: AppColor.white,
             radius: 22,
           ),
           SizedBox(width: 8),
@@ -27,7 +27,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Text(
                 'Good Morning!',
                 style: TextStyle(
-                  color: AppColor().darkGray,
+                  color: AppColor.darkGray,
                   fontSize: 12,
                   fontWeight: FontWeight.w600,
                 ),
@@ -47,11 +47,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.search, color: AppColor().darkGray),
+          icon: Icon(Icons.search, color: AppColor.darkGray),
         ),
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.notifications, color: AppColor().darkGray),
+          icon: Icon(Icons.notifications, color: AppColor.darkGray),
         ),
       ],
     );

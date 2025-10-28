@@ -35,7 +35,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       body: SingleChildScrollView(
         child: SafeArea(
           child: Form(
@@ -63,21 +63,21 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     'Forget Password',
                     style: TextStyle(
                       fontSize: 18,
-                      color: AppColor().main,
+                      color: AppColor.main,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   SizedBox(height: 24),
                   Text(
                     'Enter the email to received the reset password link',
-                    style: TextStyle(fontSize: 16, color: AppColor().black),
+                    style: TextStyle(fontSize: 16, color: AppColor.black),
                   ),
                   SizedBox(height: 24),
                   Align(
                     alignment: Alignment.centerLeft,
                     child: Text(
                       'Email',
-                      style: TextStyle(fontSize: 16, color: AppColor().black),
+                      style: TextStyle(fontSize: 16, color: AppColor.black),
                     ),
                   ),
                   const SizedBox(height: 8),
@@ -131,7 +131,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                     children: [
                       Text(
                         "Didn't received the email? ",
-                        style: TextStyle(fontSize: 14, color: AppColor().black),
+                        style: TextStyle(fontSize: 14, color: AppColor.black),
                       ),
                       GestureDetector(
                         onTap: () {},
@@ -140,7 +140,7 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                           style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w600,
-                            color: AppColor().main,
+                            color: AppColor.main,
                           ),
                         ),
                       ),

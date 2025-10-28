@@ -75,7 +75,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
                     painter: _BarPainter(
                       xPos: targetX + (circleSize / 2),
                       progress: _animation.value,
-                      color: AppColor().second,
+                      color: AppColor.second,
                     ),
                   );
                 },
@@ -90,7 +90,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
                   height: circleSize,
                   width: circleSize,
                   decoration: BoxDecoration(
-                    color: AppColor().main,
+                    color: AppColor.main,
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
@@ -146,14 +146,14 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppColor().darkGray, size: 26),
+              Icon(icon, color: AppColor.darkGray, size: 26),
               const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppColor().darkGray,
+                  color: AppColor.darkGray,
                 ),
               ),
             ],

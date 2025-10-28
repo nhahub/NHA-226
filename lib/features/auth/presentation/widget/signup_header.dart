@@ -16,7 +16,7 @@ class SignupHeader extends StatelessWidget {
             width: 150,
             height: 150,
             decoration: BoxDecoration(
-              color: AppColor().main,
+              color: AppColor.main,
               borderRadius: BorderRadius.only(
                 bottomRight: Radius.circular(160),
               ),

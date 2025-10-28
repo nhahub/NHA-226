@@ -46,7 +46,7 @@ class _SignupScreenState extends State<SignupScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor().white,
+      backgroundColor: AppColor.white,
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -62,7 +62,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Full name',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     SizedBox(height: 6),
@@ -80,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Email',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     SizedBox(height: 6),
@@ -99,7 +99,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Password',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     SizedBox(height: 6),
@@ -121,7 +121,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Confirm password',
-                        style: TextStyle(fontSize: 16, color: AppColor().black),
+                        style: TextStyle(fontSize: 16, color: AppColor.black),
                       ),
                     ),
                     SizedBox(height: 6),
@@ -220,7 +220,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           'Already have an account? ',
                           style: TextStyle(
                             fontSize: 14,
-                            color: AppColor().black,
+                            color: AppColor.black,
                           ),
                         ),
                         GestureDetector(
@@ -236,7 +236,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             style: TextStyle(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: AppColor().main,
+                              color: AppColor.main,
                             ),
                           ),
                         ),

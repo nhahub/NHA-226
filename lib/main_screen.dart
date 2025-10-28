@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/widget/custom_bottom_navigation_bar.dart';
 import 'package:lingo_sign/features/home/presentation/screen/home_screen.dart';
+import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -12,9 +13,9 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> {
   final List<Widget> screen = [
-    Scaffold(backgroundColor: AppColor().white), // Translation Screen
+    TranslationScreen(),
     HomeScreen(),
-    Scaffold(backgroundColor: AppColor().white), // Profile Screen
+    Scaffold(backgroundColor: AppColor.white), // Profile Screen
   ];
   int index = 1;
 
@@ -23,7 +24,7 @@ class _MainScreenState extends State<MainScreen> {
     return SafeArea(
       top: false,
       child: Scaffold(
-        backgroundColor: AppColor().white,
+        backgroundColor: AppColor.white,
         body: screen[index],
         bottomNavigationBar: CustomBottomNavigationBar(
           onTap: (value) {

@@ -16,7 +16,7 @@ class SigninHeader extends StatelessWidget {
             width: 150,
             height: 150,
             decoration: BoxDecoration(
-              color: AppColor().main,
+              color: AppColor.main,
               borderRadius: BorderRadius.only(bottomLeft: Radius.circular(160)),
             ),
           ),

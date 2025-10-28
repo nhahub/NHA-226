@@ -13,7 +13,7 @@ class CustomTapBar extends StatelessWidget {
       child: Container(
         height: 40,
         decoration: BoxDecoration(
-          color: AppColor().white,
+          color: AppColor.white,
           borderRadius: BorderRadius.circular(12),
           boxShadow: [
             BoxShadow(
@@ -26,11 +26,11 @@ class CustomTapBar extends StatelessWidget {
         child: TabBar(
           controller: tabController,
           labelColor: Colors.white,
-          unselectedLabelColor: AppColor().main,
+          unselectedLabelColor: AppColor.main,
           dividerColor: Colors.transparent,
           indicatorColor: Colors.transparent,
           indicator: BoxDecoration(
-            color: AppColor().main,
+            color: AppColor.main,
             borderRadius: BorderRadius.circular(12),
           ),
           indicatorSize: TabBarIndicatorSize.tab,
