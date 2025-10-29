@@ -69,20 +69,38 @@ class AccountInfoScreen extends StatelessWidget {
                     CustomInfoFeild(
                       description: 'Full Name',
                       controller: nameController,
-                      validator: (value) =>
-                          value!.isEmpty ? 'Enter your name' : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter YourFull Name ';
+                        }
+
+                        return null;
+                      },
                     ),
                     CustomInfoFeild(
                       description: 'Phone Number',
                       controller: phoneController,
-                      validator: (value) =>
-                          !value!.contains('@') ? 'Enter a valid email' : null,
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter Your Phone Number';
+                        }
+                        if (value.length <= 10) {
+                          return 'Phone Number should be more than 10';
+                        }
+                        return null;
+                      },
                     ),
                     CustomInfoFeild(
                       description: 'Email',
                       controller: emailController,
-                      validator: (value) =>
-                          value!.isEmpty ? 'Enter your phone number' : null,
+                      validator: (value) {
+                        if (!value!.contains('@')) return 'Enter a valid email';
+
+                        if (value == null || value.isEmpty) {
+                          return 'Enter Your Email';
+                        }
+                        return null;
+                      },
                     ),
 
                     const SizedBox(height: 20),
