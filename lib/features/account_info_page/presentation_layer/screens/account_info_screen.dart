@@ -4,16 +4,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_bloc.dart';
 import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_event.dart';
 import 'package:lingo_sign/features/account_info_page/presentation_layer/bloc/edit_account_info_state.dart';
-
 import 'package:lingo_sign/features/account_info_page/presentation_layer/widgits/custom_info_feild.dart';
 
-// ignore: must_be_immutable
-class AccountInfoScreen extends StatelessWidget {
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController phoneController = TextEditingController();
+class AccountInfoScreen extends StatefulWidget {
+  const AccountInfoScreen({super.key});
+
+  @override
+  State<AccountInfoScreen> createState() => _AccountInfoScreenState();
+}
+
+class _AccountInfoScreenState extends State<AccountInfoScreen> {
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
-  AccountInfoScreen({super.key});
+
+  @override
+  void initState() {
+    super.initState();
+    context.read<EditAccountInfoBloc>().add(LoadUserData());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,108 +42,86 @@ class AccountInfoScreen extends StatelessWidget {
             fontSize: 18.h,
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
+        actions: [Icon(Icons.edit)],
       ),
       backgroundColor: Colors.white,
-      body: BlocConsumer<EditAccountInfoBloc, EditAccountInfoState>(
+      body: BlocListener<EditAccountInfoBloc, EditAccountInfoState>(
         listener: (context, state) {
-          if (state is EditAccountError) {
-            ScaffoldMessenger.of(
-              context,
-            ).showSnackBar(SnackBar(content: Text(state.message)));
+          if (state is EditAccountLoaded) {
+            nameController.text = state.name;
+            emailController.text = state.email;
+            phoneController.text = state.phone;
           } else if (state is AccountInfoUpdated) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("Profile updated successfully!")),
             );
+          } else if (state is EditAccountError) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
-        builder: (context, state) {
-          if (state is EditAccountLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is EditAccountLoaded) {
-            nameController.text = state.name;
-            phoneController.text = state.phone;
-            emailController.text = state.email;
-          }
-          return Column(
-            children: [
-              Form(
+        child: BlocBuilder<EditAccountInfoBloc, EditAccountInfoState>(
+          builder: (context, state) {
+            if (state is EditAccountLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            return Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
                 key: formKey,
                 child: Column(
                   children: [
                     CustomInfoFeild(
                       description: 'Full Name',
                       controller: nameController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter YourFull Name ';
-                        }
-
-                        return null;
-                      },
+                      validator: (value) =>
+                          value == null || value.isEmpty ? 'Enter name' : null,
                     ),
                     CustomInfoFeild(
                       description: 'Phone Number',
                       controller: phoneController,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Enter Your Phone Number';
-                        }
-                        if (value.length <= 10) {
-                          return 'Phone Number should be more than 10';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          value == null || value.isEmpty ? 'Enter phone' : null,
                     ),
                     CustomInfoFeild(
                       description: 'Email',
                       controller: emailController,
-                      validator: (value) {
-                        if (!value!.contains('@')) return 'Enter a valid email';
-
-                        if (value == null || value.isEmpty) {
-                          return 'Enter Your Email';
-                        }
-                        return null;
-                      },
+                      validator: (value) =>
+                          value == null || !value.contains('@')
+                          ? 'Enter valid email'
+                          : null,
                     ),
-
-                    const SizedBox(height: 20),
-                    ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                          Color(0xff31326F),
+                    const SizedBox(height: 30),
+                    Flexible(
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xff31326F),
                         ),
-                      ),
-                      onPressed: () {
-                        if (formKey.currentState!.validate()) {
-                          context.read<EditAccountInfoBloc>().add(
-                            UpdateUserData(
-                              name: nameController.text,
-                              email: emailController.text,
-                              phone: phoneController.text,
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text(
-                        'Save',
-                        style: TextStyle(
-                          color: Color.fromARGB(255, 255, 255, 255),
+                        onPressed: () {
+                          if (formKey.currentState!.validate()) {
+                            context.read<EditAccountInfoBloc>().add(
+                              UpdateUserData(
+                                name: nameController.text,
+                                email: emailController.text,
+                                phone: phoneController.text,
+                              ),
+                            );
+                          }
+                        },
+                        child: const Text(
+                          'Save',
+                          style: TextStyle(color: Colors.white),
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

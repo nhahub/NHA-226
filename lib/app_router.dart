@@ -16,13 +16,12 @@ class AppRouter {
             final firestore = FirebaseFirestore.instance;
             final auth = FirebaseAuth.instance;
             return BlocProvider(
-              create: (context) =>
+              create: (_) =>
                   EditAccountInfoBloc(AccountRepository(firestore, auth)),
               child: AccountInfoScreen(),
             );
           },
         );
     }
-    return null;
   }
 }

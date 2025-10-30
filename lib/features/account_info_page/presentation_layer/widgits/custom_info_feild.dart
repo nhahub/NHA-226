@@ -4,13 +4,15 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class CustomInfoFeild extends StatelessWidget {
   final String description;
   final TextEditingController controller;
-  final FormFieldValidator validator;
+  final FormFieldValidator<String>? validator;
+
   const CustomInfoFeild({
     super.key,
     required this.description,
     required this.controller,
     required this.validator,
   });
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -18,8 +20,20 @@ class CustomInfoFeild extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(description, style: TextStyle(fontSize: 16.h)),
-          TextFormField(),
+          Text(
+            description,
+            style: TextStyle(fontSize: 16.h, color: Colors.black),
+          ),
+          TextFormField(
+            controller: controller,
+            validator: validator,
+            decoration: InputDecoration(
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 12.w,
+                vertical: 10.h,
+              ),
+            ),
+          ),
         ],
       ),
     );
