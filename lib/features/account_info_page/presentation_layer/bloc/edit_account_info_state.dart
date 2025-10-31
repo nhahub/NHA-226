@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:lingo_sign/features/account_info_page/presentation_layer/screens/account_info_screen.dart';
 
 abstract class EditAccountInfoState extends Equatable {
   const EditAccountInfoState();
