@@ -39,8 +39,8 @@ class AppRouter {
             },
           ),
         );
-      // case notificationScreen:
-      //   return MaterialPageRoute(builder: (_) => NotificationScreen());
+      case notificationScreen:
+        return MaterialPageRoute(builder: (_) => NotificationScreen());
     }
     return null;
   }
