@@ -15,32 +15,32 @@ import 'package:shared_preferences/shared_preferences.dart';
 class AppRouter {
   Route? generateRouter(RouteSettings setting) {
     switch (setting.name) {
-      case loginScreen:
-        return MaterialPageRoute(builder: (_) => LogInScreen());
-      case signupScreen:
-        return MaterialPageRoute(builder: (_) => SignupScreen());
-      case forgetPasswordScreen:
-        return MaterialPageRoute(builder: (_) => ForgetPasswordScreen());
-      case mainScreen:
-        return MaterialPageRoute(builder: (_) => MainScreen());
-      case searchScreen:
-        return MaterialPageRoute(
-          builder: (_) => FutureBuilder(
-            future: SharedPreferences.getInstance(),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) return const CircularProgressIndicator();
-              final prefs = snapshot.data!;
-              return BlocProvider(
-                create: (_) => SearchBloc(
-                  SearchRepository(FirebaseFirestore.instance, prefs),
-                ),
-                child: const SearchScreen(),
-              );
-            },
-          ),
-        );
-      // case notificationScreen:
-      //   return MaterialPageRoute(builder: (_) => NotificationScreen());
+      // case loginScreen:
+      //   return MaterialPageRoute(builder: (_) => LogInScreen());
+      // case signupScreen:
+      //   return MaterialPageRoute(builder: (_) => SignupScreen());
+      // case forgetPasswordScreen:
+      //   return MaterialPageRoute(builder: (_) => ForgetPasswordScreen());
+      // case mainScreen:
+      //   return MaterialPageRoute(builder: (_) => MainScreen());
+      // case searchScreen:
+      //   return MaterialPageRoute(
+      //     builder: (_) => FutureBuilder(
+      //       future: SharedPreferences.getInstance(),
+      //       builder: (context, snapshot) {
+      //         if (!snapshot.hasData) return const CircularProgressIndicator();
+      //         final prefs = snapshot.data!;
+      //         return BlocProvider(
+      //           create: (_) => SearchBloc(
+      //             SearchRepository(FirebaseFirestore.instance, prefs),
+      //           ),
+      //           child: const SearchScreen(),
+      //         );
+      //       },
+      //     ),
+      //   );
+      case notificationScreen:
+        return MaterialPageRoute(builder: (_) => NotificationScreen());
     }
     return null;
   }
