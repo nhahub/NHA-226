@@ -17,6 +17,5 @@ class AppRouter {
       case mainScreen:
         return MaterialPageRoute(builder: (_) => MainScreen());
     }
-    return null;
   }
 }
