@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
 class DefaultFirebaseOptions {
   static FirebaseOptions get currentPlatform {
     if (kIsWeb) {
-      return web;
+      throw UnsupportedError(
+        'DefaultFirebaseOptions have not been configured for web - '
+        'you can reconfigure this by running the FlutterFire CLI again.',
+      );
     }
     switch (defaultTargetPlatform) {
       case TargetPlatform.android:
@@ -25,9 +28,15 @@ class DefaultFirebaseOptions {
       case TargetPlatform.iOS:
         return ios;
       case TargetPlatform.macOS:
-        return macos;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for macos - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.windows:
-        return windows;
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for windows - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -39,16 +48,6 @@ class DefaultFirebaseOptions {
         );
     }
   }
-
-  static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDkgXh1NPB-M-Gak6eCpdmMJ30ToqI1zh4',
-    appId: '1:671655381307:web:bf29b132dc914478af0f1e',
-    messagingSenderId: '671655381307',
-    projectId: 'lingo-sign',
-    authDomain: 'lingo-sign.firebaseapp.com',
-    storageBucket: 'lingo-sign.firebasestorage.app',
-    measurementId: 'G-1RFXR7GH97',
-  );
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyC9A3iqBQV9U19r2xqX2h8LAJT14pquYpk',
@@ -64,30 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671655381307',
     projectId: 'lingo-sign',
     storageBucket: 'lingo-sign.firebasestorage.app',
-    androidClientId: '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
-    iosClientId: '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
     iosBundleId: 'com.example.lingoSign',
   );
-
-  static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyATNE_xkaAIIVq11gog45ivEbim6EO7qF8',
-    appId: '1:671655381307:ios:8505b0ef68afd103af0f1e',
-    messagingSenderId: '671655381307',
-    projectId: 'lingo-sign',
-    storageBucket: 'lingo-sign.firebasestorage.app',
-    androidClientId: '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
-    iosClientId: '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
-    iosBundleId: 'com.example.lingoSign',
-  );
-
-  static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDkgXh1NPB-M-Gak6eCpdmMJ30ToqI1zh4',
-    appId: '1:671655381307:web:fe887b7b7a4f56b3af0f1e',
-    messagingSenderId: '671655381307',
-    projectId: 'lingo-sign',
-    authDomain: 'lingo-sign.firebaseapp.com',
-    storageBucket: 'lingo-sign.firebasestorage.app',
-    measurementId: 'G-8MS04LYPDR',
-  );
-
 }
