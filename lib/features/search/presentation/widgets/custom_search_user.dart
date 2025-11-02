@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/search_feature/data_layer/model/user_model.dart';
+import 'package:lingo_sign/features/search/data/model/user_model.dart';
 
 // ignore: must_be_immutable
 class CustomSearchUser extends StatelessWidget {
@@ -34,7 +34,6 @@ class CustomSearchUser extends StatelessWidget {
               ),
             ),
             SizedBox(width: 16.w),
-
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -46,7 +45,6 @@ class CustomSearchUser extends StatelessWidget {
               ],
             ),
             const Spacer(),
-
             Container(
               width: 36.w,
               height: 36.h,

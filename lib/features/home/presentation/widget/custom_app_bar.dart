@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/features/home/domain/entities/user_app.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const CustomAppBar({super.key, required this.name, required this.imageUrl});
+  const CustomAppBar({super.key, required this.user});
 
-  final String name;
-  final String imageUrl;
+  final UserApp user;
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +17,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: Row(
         children: [
           CircleAvatar(
-            backgroundImage: NetworkImage(imageUrl),
+            backgroundImage: NetworkImage(user.imageUrl),
             backgroundColor: AppColor.white,
             radius: 22,
           ),
@@ -33,7 +34,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ),
               Text(
-                name,
+                user.name,
                 style: const TextStyle(
                   color: Colors.black,
                   fontSize: 14,
@@ -46,11 +47,11 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       ),
       actions: [
         IconButton(
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, searchScreen),
           icon: Icon(Icons.search, color: AppColor.darkGray),
         ),
         IconButton(
-          onPressed: () {},
+          onPressed: () => Navigator.pushNamed(context, notificationScreen),
           icon: Icon(Icons.notifications, color: AppColor.darkGray),
         ),
       ],

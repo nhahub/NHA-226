@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:lingo_sign/search_feature/data_layer/model/user_model.dart';
+import 'package:lingo_sign/features/search/data/model/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SearchRepository {

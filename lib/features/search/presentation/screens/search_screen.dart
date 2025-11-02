@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_event.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_state.dart';
-import 'package:lingo_sign/search_feature/presentation_layer/widgets/custom_search_user.dart';
-
+import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/search/presentation/bloc/search_event.dart';
+import 'package:lingo_sign/features/search/presentation/bloc/search_state.dart';
+import 'package:lingo_sign/features/search/presentation/widgets/custom_search_user.dart';
 import '../bloc/search_bloc.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -17,6 +17,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late final SearchBloc bloc;
   bool showAll = false;
+
   @override
   void initState() {
     super.initState();
@@ -27,19 +28,19 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColor.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.white,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          icon: const Icon(Icons.arrow_back_ios, color: AppColor.black),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
           'Search',
           style: TextStyle(
-            color: Colors.black,
+            color: AppColor.black,
             fontWeight: FontWeight.bold,
-            fontSize: 18.h,
+            fontSize: 18,
           ),
         ),
         actions: [
@@ -50,15 +51,13 @@ class _SearchScreenState extends State<SearchScreen> {
         ],
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 16.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
         child: Column(
           children: [
             Card(
               clipBehavior: Clip.antiAlias,
               elevation: 4,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8.0.h),
-              ),
+              shape: RoundedRectangleBorder(),
               child: TextField(
                 onChanged: (value) => bloc.add(SearchTextChangedEvent(value)),
                 decoration: InputDecoration(
@@ -67,7 +66,7 @@ class _SearchScreenState extends State<SearchScreen> {
                   hintText: 'Search for...',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: const Color(0xff575757),
+                    color: AppColor.darkGray,
                     size: 24.h,
                   ),
                   border: InputBorder.none,
@@ -76,7 +75,6 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             SizedBox(height: 16.h),
-
             Align(
               alignment: Alignment.centerLeft,
               child: Row(
@@ -116,11 +114,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: CustomSearchUser(user: user),
                           onTap: () {
                             bloc.add(UserProfileClickedEvent(user));
-                            Navigator.pushNamed(
-                              context,
-                              '/profile',
-                              arguments: user,
-                            );
+                            // Navigator.pushNamed(
+                            //   context,
+                            //   '/profile',
+                            //   arguments: user,
+                            // );
                           },
                         );
                       },
