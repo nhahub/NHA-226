@@ -8,60 +8,39 @@ class TranslationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
+      backgroundColor: AppColor.white,
+      appBar: AppBar(
+        backgroundColor: AppColor.white,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.history, size: 26),
+        ),
+        actions: [
+          IconButton(
+            onPressed: () {},
+            icon: Icon(Icons.notifications, size: 26),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16.0,
-                vertical: 10,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      InkWell(onTap: () {}, child: Icon(Icons.history)),
-
-                      const SizedBox(width: 10),
-                    ],
-                  ),
-                  InkWell(
-                    onTap: () {},
-                    child: SvgPicture.asset(
-                      'assets/images/si_notifications-fill.svg',
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
             const SizedBox(height: 250),
-
             Center(
-              child: InkWell(
-                onTap: () {},
-                child: SvgPicture.asset(
-                  'assets/images/person.svg',
-                  height: 120,
-                ),
-              ),
+              child: SvgPicture.asset('assets/images/person.svg', height: 120),
             ),
-
-            const SizedBox(height: 250),
+            const SizedBox(height: 150),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
                 children: [
                   Expanded(
                     child: Container(
+                      height: 50,
                       decoration: BoxDecoration(
                         color: AppColor.second,
-                        borderRadius: BorderRadius.circular(15),
+                        borderRadius: BorderRadius.circular(12),
                       ),
                       padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: Row(
@@ -82,24 +61,26 @@ class TranslationScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 10),
-
                   Container(
+                    height: 50,
                     decoration: BoxDecoration(
                       color: AppColor.second,
-                      borderRadius: BorderRadius.circular(15),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                     padding: const EdgeInsets.all(10),
                     child: InkWell(
                       onTap: () {},
-                      child: SvgPicture.asset('assets/images/mic.svg'),
+                      child: SvgPicture.asset(
+                        'assets/images/mic.svg',
+                        height: 26,
+                        width: 26,
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-
             const SizedBox(height: 50),
           ],
         ),
