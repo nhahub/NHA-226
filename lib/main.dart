@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
+import 'package:lingo_sign/features/home/presentation/screen/friends_screen.dart';
+import 'package:lingo_sign/features/home/presentation/screen/home_screen.dart';
 import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
@@ -11,8 +13,7 @@ import 'app_router.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  runApp(MyApp(appRouter: AppRouter())
-  );
+  runApp(MyApp(appRouter: AppRouter()));
 }
 
 class MyApp extends StatelessWidget {
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
             return LogInScreen();
           },
         ),
+        
       ),
     );
   }

@@ -40,7 +40,7 @@ class TranslationScreen extends StatelessWidget {
               ),
             ),
 
-            const SizedBox(height: 280),
+            const SizedBox(height: 250),
 
             Center(
               child: InkWell(
