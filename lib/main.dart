@@ -7,6 +7,8 @@ import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
+import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/onboarding/data/local_onboarding_data_source.dart';
 import 'package:lingo_sign/features/onboarding/data/onboarding_repository_impl.dart';
 import 'package:lingo_sign/features/onboarding/presentation/cubit/onboarding_cubit.dart';
@@ -42,6 +44,9 @@ class MyApp extends StatelessWidget {
             create: (_) => OnboardingCubit(
               OnboardingRepositoryImpl(LocalOnboardingDataSource()),
             )..checkUserStatus(),
+          ),
+          BlocProvider(
+            create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
         ],
         child: MaterialApp(

@@ -29,7 +29,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
       parent: _controller,
       curve: Curves.easeOutBack,
     );
-    
+
     _controller.value = 1.0;
     _controller.forward();
   }
@@ -80,7 +80,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
                   );
                 },
               ),
-
               AnimatedPositioned(
                 duration: const Duration(milliseconds: 400),
                 curve: Curves.easeOutBack,
@@ -107,7 +106,6 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
                   ),
                 ),
               ),
-
               Positioned.fill(
                 top: 4,
                 child: Row(
@@ -129,9 +127,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
   Widget _navItem(IconData icon, String label, int index) {
     final isSelected = _selectedIndex == index;
 
-    if (isSelected) {
-      return SizedBox(width: context.width / 3);
-    }
+    if (isSelected) return SizedBox(width: context.width / 3);
 
     return GestureDetector(
       onTap: () => _onItemTap(index),
@@ -191,7 +187,6 @@ class _BarPainter extends CustomPainter {
     final paint = Paint()..color = color;
     final path = Path();
 
-    // Larger, deeper curve
     final notchWidth = 155.0 * progress;
     final notchDepth = 50.0 * progress;
 

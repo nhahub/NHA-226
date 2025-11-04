@@ -35,6 +35,63 @@ class RequestsScreen extends StatelessWidget {
           'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
       lastSeen: '2 days ago',
     ),
+    Request(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Today',
+    ),
+    Request(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: 'Today',
+    ),
+    Request(
+      uid: '',
+      name: 'Youssef.A',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Yesterday',
+    ),
+    Request(
+      uid: '',
+      name: 'Omar.S',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: '2 days ago',
+    ),
+
+    Request(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Today',
+    ),
+    Request(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: 'Today',
+    ),
+    Request(
+      uid: '',
+      name: 'Youssef.A',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Yesterday',
+    ),
+    Request(
+      uid: '',
+      name: 'Omar.S',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: '2 days ago',
+    ),
   ];
 
   @override
@@ -42,25 +99,27 @@ class RequestsScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColor.white,
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "Requests",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: ListView.builder(
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  "Requests",
+                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: requests.length,
                   itemBuilder: (context, index) {
                     return RequestFriend(request: requests[index]);
                   },
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

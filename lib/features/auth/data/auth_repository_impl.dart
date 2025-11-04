@@ -162,6 +162,7 @@ class AuthRepositoryImpl extends AuthRepository {
       final doc = await ref.get();
       if (!doc.exists) {
         await ref.set({
+          'uid': user.uid,
           'name': user.displayName,
           'email': user.email ?? 'Facebook',
           'createdAt': FieldValue.serverTimestamp(),
