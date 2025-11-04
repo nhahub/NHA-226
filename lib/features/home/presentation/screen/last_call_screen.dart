@@ -1,72 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_favourite.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_friend.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart';
-import 'package:lingo_sign/features/home/presentation/widget/friend_user_call.dart';
+import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_card.dart';
 
 class LastCallScreen extends StatelessWidget {
   LastCallScreen({super.key});
-  final List<UserFavourite> favourites = [
-    UserFavourite(
-      imageUrl:
-          'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?w=500',
-      name: 'Ahmed.H',
-    ),
-    UserFavourite(
-      imageUrl:
-          'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=500',
-      name: 'Omar.S',
-    ),
-    UserFavourite(
-      imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500",
-      name: 'Youssef.A',
-    ),
-    UserFavourite(
-      imageUrl:
-          'https://images.unsplash.com/photo-1603415526960-f7e0328c63b1?w=500',
-      name: 'Ahmed.H',
-    ),
-    UserFavourite(
-      imageUrl:
-          'https://images.unsplash.com/photo-1544723795-3fb6469f5b39?w=500',
-      name: 'Omar.S',
-    ),
-    UserFavourite(
-      imageUrl:
-          "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=500",
-      name: 'Youssef.A',
-    ),
-  ];
-  final List<UserFriend> friends = [
-    UserFriend(
+
+  final List<Friend> friends = [
+    Friend(
       uid: '',
       name: 'Ahmed.H',
       imageUrl:
           'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
       lastSeen: 'Today',
+      isFavourite: false,
     ),
-    UserFriend(
+    Friend(
       uid: '',
       name: 'Ahmed.H',
       imageUrl:
           'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
       lastSeen: 'Today',
+
+      isFavourite: false,
     ),
-    UserFriend(
+    Friend(
       uid: '',
       name: 'Youssef.A',
       imageUrl:
           'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
       lastSeen: 'Yesterday',
+
+      isFavourite: false,
     ),
-    UserFriend(
+    Friend(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Today',
+      isFavourite: true,
+    ),
+    Friend(
+      uid: '',
+      name: 'Ahmed.H',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: 'Today',
+
+      isFavourite: true,
+    ),
+    Friend(
+      uid: '',
+      name: 'Youssef.A',
+      imageUrl:
+          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
+      lastSeen: 'Yesterday',
+
+      isFavourite: true,
+    ),
+    Friend(
       uid: '',
       name: 'Omar.S',
       imageUrl:
           'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
       lastSeen: '2 days ago',
+      isFavourite: true,
+    ),
+    Friend(
+      uid: '',
+      name: 'Omar.S',
+      imageUrl:
+          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
+      lastSeen: '2 days ago',
+      isFavourite: false,
     ),
   ];
 
@@ -92,9 +100,12 @@ class LastCallScreen extends StatelessWidget {
               child: ListView.builder(
                 padding: EdgeInsets.only(left: 16),
                 scrollDirection: Axis.horizontal,
-                itemCount: favourites.length,
+                itemCount: friends.length,
                 itemBuilder: (context, index) {
-                  return FavouriteUser(userFavourite: favourites[index]);
+                  if (friends[index].isFavourite) {
+                    return FavouriteUser(userFavourite: friends[index]);
+                  }
+                  return null;
                 },
               ),
             ),
@@ -113,7 +124,7 @@ class LastCallScreen extends StatelessWidget {
                 child: ListView.builder(
                   itemCount: friends.length,
                   itemBuilder: (context, index) {
-                    return FriendUserCall(userFriend: friends[index]);
+                    return FriendUserCallCard(userFriend: friends[index]);
                   },
                 ),
               ),

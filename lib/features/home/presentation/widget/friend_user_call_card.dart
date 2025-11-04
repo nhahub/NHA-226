@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_friend.dart';
-// import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
-class FriendUserCall extends StatelessWidget {
-  const FriendUserCall({super.key, required this.userFriend});
+class FriendUserCallCard extends StatelessWidget {
+  const FriendUserCallCard({super.key, required this.userFriend});
 
-  final UserFriend userFriend;
+  final Friend userFriend;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +18,10 @@ class FriendUserCall extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: NetworkImage(userFriend.imageUrl),
+                backgroundColor: AppColor.white,
+                backgroundImage: userFriend.imageUrl.isNotEmpty
+                    ? NetworkImage(userFriend.imageUrl)
+                    : AssetImage('assets/images/placeholder_user.jpg'),
               ),
               const SizedBox(width: 10),
               Column(

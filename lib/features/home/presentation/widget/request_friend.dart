@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_request.dart';
+import 'package:lingo_sign/features/home/domain/entities/request.dart';
 
 class RequestFriend extends StatelessWidget {
   const RequestFriend({super.key, required this.request});
 
-  final UserRequest request;
+  final Request request;
 
   @override
   Widget build(BuildContext context) {

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_favourite.dart';
+import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 class FavouriteUser extends StatelessWidget {
   const FavouriteUser({super.key, required this.userFavourite});
 
-  final UserFavourite userFavourite;
+  final Friend userFavourite;
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,10 @@ class FavouriteUser extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundImage: NetworkImage(userFavourite.imageUrl),
+            backgroundColor: AppColor.white,
+            backgroundImage: userFavourite.imageUrl.isNotEmpty
+                ? NetworkImage(userFavourite.imageUrl)
+                : AssetImage('assets/images/placeholder_user.jpg'),
           ),
           const SizedBox(height: 6),
           Text(

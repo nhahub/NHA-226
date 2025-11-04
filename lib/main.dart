@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lingo_sign/core/screen/loading_screen.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
@@ -49,9 +50,7 @@ class MyApp extends StatelessWidget {
           home: BlocBuilder<OnboardingCubit, OnboardingState>(
             builder: (context, state) {
               if (state is OnboardingLoading || state is OnboardingInitial) {
-                return const Scaffold(
-                  body: Center(child: CircularProgressIndicator()),
-                );
+                return const LoadingScreen();
               }
               if (state is UserIsNew) {
                 return const OnboardingScreen();
@@ -60,6 +59,9 @@ class MyApp extends StatelessWidget {
                   builder: (context, state) {
                     if (state is Authenticated) {
                       return MainScreen();
+                    }
+                    if (state is AuthLoading) {
+                      return LoadingScreen();
                     }
                     return LogInScreen();
                   },

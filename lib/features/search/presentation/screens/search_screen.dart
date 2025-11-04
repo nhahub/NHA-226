@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/widget/custom_app_bar.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_event.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_state.dart';
 import 'package:lingo_sign/features/search/presentation/widgets/custom_search_user.dart';
@@ -29,40 +30,25 @@ class _SearchScreenState extends State<SearchScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.white,
-      appBar: AppBar(
-        backgroundColor: AppColor.white,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios, color: AppColor.black),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        title: Text(
-          'Search',
-          style: TextStyle(
-            color: AppColor.black,
-            fontWeight: FontWeight.bold,
-            fontSize: 18,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings, color: Color(0xff575757)),
-            onPressed: () {},
-          ),
-        ],
-      ),
+      appBar: CustomAppBar(title: 'Search'),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
+        padding: EdgeInsets.all(16.h),
         child: Column(
           children: [
             Card(
               clipBehavior: Clip.antiAlias,
-              elevation: 4,
-              shape: RoundedRectangleBorder(),
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadiusGeometry.circular(12.h),
+              ),
+              margin: EdgeInsets.all(0),
               child: TextField(
                 onChanged: (value) => bloc.add(SearchTextChangedEvent(value)),
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
+                  contentPadding: EdgeInsets.all(12),
+
                   hintText: 'Search for...',
                   prefixIcon: Icon(
                     Icons.search,
@@ -71,7 +57,6 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   border: InputBorder.none,
                 ),
-                cursorRadius: Radius.circular(8.h),
               ),
             ),
             SizedBox(height: 16.h),

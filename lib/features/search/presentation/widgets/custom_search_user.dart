@@ -1,64 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/search/data/model/user_model.dart';
 
-// ignore: must_be_immutable
 class CustomSearchUser extends StatelessWidget {
-  final UserModel user;
-
   const CustomSearchUser({super.key, required this.user});
+  
+  final UserModel user;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16.w),
-      child: SizedBox(
-        width: 344.w,
-        height: 56.h,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              width: 56.w,
-              height: 56.h,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                image: DecorationImage(
-                  image: NetworkImage(
-                    user.image.isNotEmpty
-                        ? user.image
-                        : 'assets/images/placeholder_user.jpg',
-                  ),
-                  fit: BoxFit.contain,
-                ),
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 25,
+                backgroundColor: AppColor.white,
+                backgroundImage: user.image.isNotEmpty
+                    ? NetworkImage(user.image)
+                    : AssetImage('assets/images/placeholder_user.jpg'),
               ),
-            ),
-            SizedBox(width: 16.w),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  user.name,
-                  style: TextStyle(fontSize: 16.h, fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-            const Spacer(),
-            Container(
+              const SizedBox(width: 10),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    user.name,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  // Text(
+                  //   user.lastSeen,
+                  //   style: const TextStyle(color: Colors.grey),
+                  // ),
+                ],
+              ),
+            ],
+          ),
+          InkWell(
+            child: Container(
               width: 36.w,
               height: 36.h,
-              decoration: const BoxDecoration(
-                color: Color(0xff31326F),
-                shape: BoxShape.circle,
+              decoration: BoxDecoration(
+                color: AppColor.main,
+                borderRadius: BorderRadius.circular(50),
               ),
-              child: IconButton(
-                icon: Icon(Icons.call, color: Colors.white, size: 20.h),
-                onPressed: () {},
-              ),
+              child: Icon(Icons.call, color: AppColor.white, size: 20),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

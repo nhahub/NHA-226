@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:timeago/timeago.dart' as timeago;
-import 'package:lingo_sign/features/notification/domain/entities/app_notification.dart';
+import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
 class NotificationCard extends StatelessWidget {
   final AppNotification notification;

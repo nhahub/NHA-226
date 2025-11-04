@@ -1,34 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_request.dart';
+import 'package:lingo_sign/features/home/domain/entities/request.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend.dart';
 
 class RequestsScreen extends StatelessWidget {
   RequestsScreen({super.key});
 
-  final List<UserRequest> requests = [
-    UserRequest(
+  final List<Request> requests = [
+    Request(
       uid: '',
       name: 'Ahmed.H',
       imageUrl:
           'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
       lastSeen: 'Today',
     ),
-    UserRequest(
+    Request(
       uid: '',
       name: 'Ahmed.H',
       imageUrl:
           'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
       lastSeen: 'Today',
     ),
-    UserRequest(
+    Request(
       uid: '',
       name: 'Youssef.A',
       imageUrl:
           'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
       lastSeen: 'Yesterday',
     ),
-    UserRequest(
+    Request(
       uid: '',
       name: 'Omar.S',
       imageUrl:

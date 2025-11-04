@@ -19,10 +19,12 @@ class _HomeScreenState extends State<HomeScreen>
   List<Widget> sections = [FriendsScreen(), LastCallScreen(), RequestsScreen()];
 
   late TabController _tabController;
+
   final UserApp user = UserApp(
+    uid: '',
     name: 'Mohamed.A',
     imageUrl:
-        'https://media.licdn.com/dms/image/v2/D5603AQEUdpkTlQjVRQ/profile-displayphoto-scale_400_400/B56ZgnhQ42H0Ak-/0/1753009688865?e=1762992000&v=beta&t=SFU2yF_lHcxGTVTp9sHwvHFFUOH3sE6Ta4r_N3IZ2SI',
+        'https://idfzqftyfepzfypxwmst.supabase.co/storage/v1/object/sign/user_images/linkedinPhoto-2.JPG?token=eyJraWQiOiJzdG9yYWdlLXVybC1zaWduaW5nLWtleV9kNmVlMDZmNy05YTg4LTQzYmYtODliZS01MDA4ZTljN2FjYmMiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJ1c2VyX2ltYWdlcy9saW5rZWRpblBob3RvLTIuSlBHIiwiaWF0IjoxNzYyMTkxMjY3LCJleHAiOjE3OTM3MjcyNjd9.G-BMkHqZCv7j7mPirc0fc1gKHkcTFUziVw2IxXqy3lo',
   );
 
   @override
