@@ -1,8 +1,19 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/friend_account/Freind.dart';
-import 'package:lingo_sign/features/friend_account/Screen/freind_account_screen.dart';
-// import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lingo_sign/core/screen/loading_screen.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
+import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
+import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
+import 'package:lingo_sign/features/onboarding/data/local_onboarding_data_source.dart';
+import 'package:lingo_sign/features/onboarding/data/onboarding_repository_impl.dart';
+import 'package:lingo_sign/features/onboarding/presentation/cubit/onboarding_cubit.dart';
+import 'package:lingo_sign/features/onboarding/presentation/screen/onboarding_screen.dart';
+import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
 
@@ -19,19 +30,50 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      
-      debugShowCheckedModeBanner: false,
-      onGenerateRoute: appRouter.generateRouter,
-      //  home: FreindAccountScreen(userId: '7MNZhIsumBa3IqXPrZXoB6gZB9Y2',),
-      home: FriendAccountScreen(
-        friend: Friend(
-          uid: '7MNZhIsumBa3IqXPrZXoB6gZB9Y2',
-          name: 'John Doe',
-          imageUrl:
-              'https://www.reputationdefender.com/wp-content/uploads/2024/03/personal_branding_ideas.jpg',
-          lastSeen: 'Online',
-          isFavourite: false,
+    return ScreenUtilInit(
+      designSize: Size(context.width, context.height),
+      builder: (_, child) =>
+          MaterialApp(debugShowCheckedModeBanner: false, home: child),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) =>
+                AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
+          ),
+          BlocProvider(
+            create: (_) => OnboardingCubit(
+              OnboardingRepositoryImpl(LocalOnboardingDataSource()),
+            )..checkUserStatus(),
+          ),
+          BlocProvider(
+            create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
+          ),
+        ],
+        child: MaterialApp(
+          debugShowCheckedModeBanner: false,
+          onGenerateRoute: appRouter.generateRouter,
+          home: BlocBuilder<OnboardingCubit, OnboardingState>(
+            builder: (context, state) {
+              if (state is OnboardingLoading || state is OnboardingInitial) {
+                return const LoadingScreen();
+              }
+              if (state is UserIsNew) {
+                return const OnboardingScreen();
+              } else {
+                return BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is Authenticated) {
+                      return MainScreen();
+                    }
+                    if (state is AuthLoading) {
+                      return LoadingScreen();
+                    }
+                    return LogInScreen();
+                  },
+                );
+              }
+            },
+          ),
         ),
       ),
     );
