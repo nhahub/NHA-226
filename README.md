@@ -16,6 +16,9 @@ It combines accessibility, artificial intelligence, and simplicity to create a s
 
 - AI Video Call Translation – Translates sign language into text in real time during video calls.  
 - Sign Language Dictionary – Converts sign gestures into text for easier understanding and learning.  
+- Login & Authentication – Secure sign-in and sign-up system for users.  
+- Password Verification – Ensures safe and verified access for registered users.  
+- Dark Mode – Switch between light and dark themes for better accessibility.  
 - Simple & Intuitive UI – Clean interface designed for accessibility and ease of use.
 
 ---
