@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/friend_account/Freind.dart';
-import 'package:lingo_sign/features/friend_account/Screen/state_managment/freind_bloc.dart';
-import 'package:lingo_sign/features/friend_account/Screen/state_managment/friend_events.dart';
-import 'package:lingo_sign/features/friend_account/Screen/state_managment/friend_states.dart';
-import 'package:lingo_sign/features/friend_account/friend_data/friend_data_source.dart';
-import 'package:lingo_sign/features/friend_account/friend_data/friend_repository.dart';
+import 'package:lingo_sign/features/friend_account/data/friend_data_source.dart';
+import 'package:lingo_sign/features/friend_account/data/friend_repository.dart';
+import 'package:lingo_sign/features/friend_account/screen/bloc/freind_bloc.dart';
+import 'package:lingo_sign/features/friend_account/screen/bloc/friend_events.dart';
+import 'package:lingo_sign/features/friend_account/screen/bloc/friend_states.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 class FriendAccountScreen extends StatelessWidget {
   final Friend friend;

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingo_sign/features/friend_account/Freind.dart';
-import 'package:lingo_sign/features/friend_account/friend_data/friend_repository.dart';
+import 'package:lingo_sign/features/friend_account/data/friend_repository.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'friend_events.dart';
 import 'friend_states.dart';
 
