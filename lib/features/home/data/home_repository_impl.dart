@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lingo_sign/features/home/data/model/friend_model.dart';
 import 'package:lingo_sign/features/home/data/model/user_model.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:lingo_sign/features/home/domain/entities/last_call.dart';
@@ -44,13 +43,13 @@ class HomeRepositoryImpl implements HomeRepository {
         return [];
       }
 
-      final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
+      // final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
 
-      final freinds = validDocs
-          .map((doc) => FriendModel.fromJson(doc.data()).toFriend())
-          .toList();
+      // final freinds = validDocs
+      //     .map((doc) => FriendModel.fromJson(doc.data()).toFriend())
+      //     .toList();
 
-      return freinds;
+      return [];
     } catch (e) {
       throw Exception(e);
     }
