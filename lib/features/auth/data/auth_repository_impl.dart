@@ -170,6 +170,13 @@ class AuthRepositoryImpl extends AuthRepository {
           'image_url': user.photoURL ?? '',
           'created_at': FieldValue.serverTimestamp(),
         });
+
+        // Create supCollection
+        await ref.collection('notifications').doc('_init').set({});
+        await ref.collection('friends').doc('_init').set({});
+        await ref.collection('searched').doc('_init').set({}); // remove it
+        await ref.collection('request').doc('_init').set({});
+        await ref.collection('last_call').doc('_init').set({});
       }
     } catch (e) {
       throw Exception('Failed to create user');
