@@ -32,7 +32,7 @@ class RequestFriend extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    request.lastSeen,
+                    request.createdAt.toString(),
                     style: const TextStyle(color: Colors.grey),
                   ),
                 ],

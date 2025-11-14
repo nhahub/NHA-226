@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:lingo_sign/features/home/data/model/friend_model.dart';
 import 'package:lingo_sign/features/home/data/model/user_model.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
-import 'package:lingo_sign/features/home/domain/entities/last_call.dart';
 import 'package:lingo_sign/features/home/domain/entities/request.dart';
 import 'package:lingo_sign/features/home/domain/entities/user_app.dart';
 import 'package:lingo_sign/features/home/domain/home_repository.dart';
@@ -25,6 +25,17 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
+  Future<UserApp> getUserInfoById(String id) async {
+    try {
+      final userDoc = await firebaseFirestore.collection('users').doc(id).get();
+      final user = UserModel.fromJson(userDoc.data()!).toUserApp();
+      return user;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
   Future<List<Friend>> getFriends() async {
     final uid = firebaseAuth.currentUser!.uid;
 
@@ -35,21 +46,25 @@ class HomeRepositoryImpl implements HomeRepository {
           .collection('friends');
 
       final friendsDoc = await friendsRef.get();
+      final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
 
-      if (friendsDoc.docs.isEmpty) {
-        await friendsRef.doc('_init').set({
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-        return [];
-      }
+      final friends = validDocs
+          .map((doc) => FriendModel.fromJson(doc.data()))
+          .toList();
 
-      // final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
+      final friendsInfo = await Future.wait(
+        friends.map((friend) async {
+          UserApp userApp = await getUserInfoById(friend.uid);
+          return friend.toFriend(
+            name: userApp.name,
+            email: userApp.email,
+            imageUrl: userApp.imageUrl,
+            lastSeen: userApp.lastSeen,
+          );
+        }),
+      );
 
-      // final freinds = validDocs
-      //     .map((doc) => FriendModel.fromJson(doc.data()).toFriend())
-      //     .toList();
-
-      return [];
+      return friendsInfo;
     } catch (e) {
       throw Exception(e);
     }
@@ -61,7 +76,7 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<List<LastCall>> getLastCalls() async {
+  Future<List<Friend>> getLastCalls() async {
     return [];
   }
 

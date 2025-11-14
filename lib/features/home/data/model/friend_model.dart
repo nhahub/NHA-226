@@ -14,10 +14,16 @@ class FriendModel {
     return {'uid': uid, 'is_favourite': isFavourite};
   }
 
-  Friend toFriend(String name, String imageUrl, String lastSeen) {
+  Friend toFriend({
+    required String name,
+    required String email,
+    required String imageUrl,
+    required DateTime lastSeen,
+  }) {
     return Friend(
       uid: uid,
       name: name,
+      email: email,
       imageUrl: imageUrl,
       lastSeen: lastSeen,
       isFavourite: isFavourite,

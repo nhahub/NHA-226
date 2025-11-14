@@ -19,6 +19,7 @@ class FriendDataSource {
       final data = snapshot.data()!;
       return Friend(
         uid: uid,
+        email: '',
         name: data["name"],
         imageUrl: data["imageUrl"],
         lastSeen: data["lastSeen"],

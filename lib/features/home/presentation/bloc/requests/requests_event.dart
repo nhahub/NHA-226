@@ -6,3 +6,5 @@ sealed class RequestsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+final class GetAllRequests extends RequestsEvent {}

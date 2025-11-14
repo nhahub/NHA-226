@@ -6,3 +6,5 @@ sealed class LastCallsEvent extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+final class GetAllLastCalls extends LastCallsEvent {}
