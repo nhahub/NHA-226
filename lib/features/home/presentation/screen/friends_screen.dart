@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/add_friend/presentation/add_friend.dart';
 import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/custom_floating_action_button.dart';
@@ -104,7 +105,7 @@ class FriendsScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: CustomFloatingActionButton(),
+      floatingActionButton: AddFriend()
     );
   }
 }
