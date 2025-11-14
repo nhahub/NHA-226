@@ -1,9 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
+import 'package:lingo_sign/features/add_friend/add_friend.dart';
+import 'package:lingo_sign/features/add_friend/data/repository/request_friend_Repository.dart';
+import 'package:lingo_sign/features/add_friend/logic/cubit/friend_request_cubit.dart';
 import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
@@ -48,6 +53,16 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+
+          BlocProvider(
+            create: (_) => FriendRequestCubit( 
+              RequestFriendRepository(
+                firestore: FirebaseFirestore.instance, 
+                auth: FirebaseAuth.instance
+            ),
+            ),
+            child: AddFriend(),
+            )
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
