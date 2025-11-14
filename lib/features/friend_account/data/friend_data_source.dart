@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lingo_sign/features/friend_account/Freind.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 class FriendDataSource {
   final FirebaseFirestore firestore;

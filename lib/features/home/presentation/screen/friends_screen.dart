@@ -45,7 +45,6 @@ class FriendsScreen extends StatelessWidget {
                         if (favourites.isEmpty) {
                           return const Center(child: Text('No favourites yet'));
                         }
-
                         return ListView.builder(
                           padding: EdgeInsets.only(left: 16.w),
                           scrollDirection: Axis.horizontal,

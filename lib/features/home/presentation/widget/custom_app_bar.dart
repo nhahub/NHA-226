@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/message.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:shimmer/shimmer.dart';
@@ -87,6 +88,17 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           actions: [
+            // todo: remove this logout button
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LogoutEvent());
+                  },
+                  icon: Icon(Icons.logout, color: AppColor.darkGray),
+                );
+              },
+            ),
             IconButton(
               onPressed: () => Navigator.pushNamed(context, searchScreen),
               icon: Icon(Icons.search, color: AppColor.darkGray),
