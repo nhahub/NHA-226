@@ -3,13 +3,13 @@ import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
 class NotificationModel {
   final String title;
-  final NotificationType notificationType;
+  final String type;
   final DateTime createdAt;
   final bool isRead;
 
   NotificationModel({
     required this.title,
-    required this.notificationType,
+    required this.type,
     required this.createdAt,
     required this.isRead,
   });
@@ -17,22 +17,19 @@ class NotificationModel {
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
       title: json['title'] ?? '',
-      notificationType: NotificationType.values.firstWhere(
-        (e) => e.name == json['type'],
-        orElse: () => NotificationType.request,
-      ),
-      createdAt: (json['date'] is Timestamp)
-          ? (json['date'] as Timestamp).toDate()
-          : DateTime.parse(json['date']),
-      isRead: json['isSeen'] ?? false,
+      type: json['type'] ?? '',
+      createdAt: (json['created_at'] is Timestamp)
+          ? (json['created_at'] as Timestamp).toDate()
+          : DateTime.parse(json['created_at']),
+      isRead: json['is_read'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'type': notificationType.name,
-      'created_at': createdAt.toIso8601String(),
+      'type': type,
+      'created_at': createdAt.toString(),
       'is_read': isRead,
     };
   }
@@ -40,7 +37,9 @@ class NotificationModel {
   AppNotification toAppNotification() {
     return AppNotification(
       title: title,
-      type: notificationType,
+      type: type == 'request'
+          ? NotificationType.request
+          : NotificationType.missedCall,
       createdAt: createdAt,
       isRead: isRead,
     );
