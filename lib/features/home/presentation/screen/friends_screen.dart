@@ -105,7 +105,7 @@ class FriendsScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: AddFriend(),
+      floatingActionButton: AddFriend()
     );
   }
 }

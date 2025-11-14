@@ -1,14 +1,16 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart' show FirebaseMessaging;
 import 'package:lingo_sign/features/add_friend/data/models/request_model.dart';
-import 'package:lingo_sign/features/home/domain/entities/friend.dart';
+
 
 class RequestFriendRepository {
-  final FirebaseFirestore firestore;
-  final FirebaseAuth auth;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final messaging = FirebaseMessaging.instance;
 
-  RequestFriendRepository({required this.firestore, required this.auth});
+  RequestFriendRepository();
 
   Future<void> sendFriendRequest(String email) async {
     final currentUser = auth.currentUser;
@@ -23,9 +25,10 @@ class RequestFriendRepository {
     if (friend.docs.isEmpty) throw Exception('user not found');
 
     final friendId = friend.docs.first.id;
+    final friendToken = friend.docs.first.data()['token'];
 
     final exist = await firestore
-        .collection('friend_requests')
+        .collection('requests')
         .where('fromId', isEqualTo: currentUser.uid)
         .where('toId', isEqualTo: friendId)
         .where('status', isEqualTo: 'pending')

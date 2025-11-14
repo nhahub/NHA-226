@@ -10,6 +10,7 @@ class AddFriend extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return BlocConsumer<FriendRequestCubit, FriendRequestState>(
       listener: (context, state) {
         if (state is FriendRequestSuccess) {

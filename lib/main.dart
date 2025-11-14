@@ -55,13 +55,7 @@ class MyApp extends StatelessWidget {
           ),
 
           BlocProvider(
-            create: (_) => FriendRequestCubit( 
-              RequestFriendRepository(
-                firestore: FirebaseFirestore.instance, 
-                auth: FirebaseAuth.instance
-            ),
-            ),
-            child: AddFriend(),
+            create: (_) => FriendRequestCubit(RequestFriendRepository()),
             )
         ],
         child: MaterialApp(
