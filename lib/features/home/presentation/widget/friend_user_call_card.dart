@@ -38,7 +38,7 @@ class FriendUserCallCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      userFriend.lastSeen,
+                      userFriend.lastSeen.toString(),
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],
