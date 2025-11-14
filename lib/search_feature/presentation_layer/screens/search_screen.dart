@@ -45,7 +45,9 @@ class _SearchScreenState extends State<SearchScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings, color: Color(0xff575757)),
-            onPressed: () {},
+            onPressed: () {
+              bloc.add(LoadRecentUsersEvent());
+            },
           ),
         ],
       ),
@@ -89,14 +91,19 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   Spacer(),
-                  Checkbox(
-                    value: showAll,
-                    onChanged: (value) {
-                      setState(() {
-                        showAll = !showAll;
-                        bloc.add(LoadRecentUsersEvent(showAll: showAll));
-                      });
+                  TextButton(
+                    onPressed: () {
+                      bloc.add(LoadRecentUsersEvent());
                     },
+                    child: BlocBuilder<SearchBloc, SearchState>(
+                      builder: (context, state) {
+                        bool showAll = false;
+                        if (state is SearchLoadedState) {
+                          showAll = state.showAll;
+                        }
+                        return Text(showAll ? 'Show Less' : 'Show All');
+                      },
+                    ),
                   ),
                 ],
               ),

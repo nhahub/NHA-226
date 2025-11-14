@@ -14,11 +14,12 @@ class SearchLoadingState extends SearchState {}
 
 class SearchLoadedState extends SearchState {
   final List<UserModel> users;
+  final bool showAll;
 
-  const SearchLoadedState(this.users);
+  const SearchLoadedState(this.users, {this.showAll = false});
 
   @override
-  List<Object?> get props => [users];
+  List<Object?> get props => [users, showAll];
 }
 
 class SearchEmptyState extends SearchState {

@@ -6,6 +6,8 @@ import 'package:lingo_sign/search_feature/presentation_layer/bloc/search_state.d
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository repo;
 
+  bool showAllRecent = true;
+
   SearchBloc(this.repo) : super(SearchInitialState()) {
     on<SearchTextChangedEvent>(_onTextChanged);
     on<UserProfileClickedEvent>(_onUserClicked);
@@ -42,13 +44,20 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     LoadRecentUsersEvent e,
     Emitter<SearchState> emit,
   ) async {
-    final users = await repo.getRecent();
+    emit(SearchLoadingState());
 
-    if (users.isEmpty) {
-      emit(SearchEmptyState('No recent searches yet.'));
-    } else {
-      final shownList = e.showAll ? users : users.take(10).toList();
-      emit(SearchLoadedState(shownList));
+    try {
+      final users = await repo.getRecent();
+
+      if (users.isEmpty) {
+        emit(SearchEmptyState('No recent searches yet.'));
+        return;
+      }
+      showAllRecent = !showAllRecent;
+      final shownList = showAllRecent ? users : users.take(4).toList();
+      emit(SearchLoadedState(shownList, showAll: showAllRecent));
+    } catch (error) {
+      emit(SearchEmptyState('Error loading recent users: $error'));
     }
   }
 }
