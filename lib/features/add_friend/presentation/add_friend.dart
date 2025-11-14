@@ -80,19 +80,20 @@ class _AddFriendState extends State<AddFriend> {
                         SizedBox(height: 32),
                         ElevatedButton(
                           onPressed: () {},
+                          
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.main,
+                            fixedSize: Size(311, 40),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
                           child: Text(
                             "Request",
                             style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.w500,
                               color: AppColor.white,
-                            ),
-                          ),
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.main,
-                            fixedSize: Size(311, 40),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
                             ),
                           ),
                         ),
@@ -102,9 +103,9 @@ class _AddFriendState extends State<AddFriend> {
                 ),
               );
             },
-            child: Icon(Icons.add, color: AppColor.white),
             shape: CircleBorder(),
             backgroundColor: AppColor.main,
+            child: Icon(Icons.add, color: AppColor.white),
           ),
         );
       },

@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
-import 'package:lingo_sign/features/add_friend/add_friend.dart';
 import 'package:lingo_sign/features/add_friend/data/repository/request_friend_Repository.dart';
 import 'package:lingo_sign/features/add_friend/logic/cubit/friend_request_cubit.dart';
 import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
