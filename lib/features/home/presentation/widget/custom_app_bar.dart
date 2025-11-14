@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
-import 'package:lingo_sign/features/home/domain/entities/user_app.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -25,6 +24,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundImage: imageUrl.isNotEmpty
           ? NetworkImage(imageUrl)
           : const AssetImage('assets/images/placeholder_user.jpg'),
+    );
+  }
+
+  Widget _imageError() {
+    return CircleAvatar(
+      radius: 22,
+      backgroundColor: AppColor.white,
+      backgroundImage: const AssetImage('assets/images/placeholder_user.jpg'),
     );
   }
 
@@ -57,14 +64,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 _imageShimmer()
               else if (state is UserInfoLoaded)
                 _image(state.user.imageUrl),
-              if (state is UserInfoError)
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: AppColor.white,
-                  backgroundImage: const AssetImage(
-                    'assets/images/placeholder_user.jpg',
-                  ),
-                ),
+              if (state is UserInfoError) _imageError(),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

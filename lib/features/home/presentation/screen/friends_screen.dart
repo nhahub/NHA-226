@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/add_friend/presentation/add_friend.dart';
+import 'package:lingo_sign/core/widget/message.dart';
+import 'package:lingo_sign/features/add_friend/presentation/cubit/friend_request_cubit.dart';
+import 'package:lingo_sign/features/add_friend/presentation/widget/add_friend.dart';
 import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
-import 'package:lingo_sign/features/home/presentation/widget/custom_floating_action_button.dart';
 import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart';
 import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_card.dart';
 
@@ -45,6 +46,7 @@ class FriendsScreen extends StatelessWidget {
                         if (favourites.isEmpty) {
                           return const Center(child: Text('No favourites yet'));
                         }
+
                         return ListView.builder(
                           padding: EdgeInsets.only(left: 16.w),
                           scrollDirection: Axis.horizontal,
@@ -105,7 +107,27 @@ class FriendsScreen extends StatelessWidget {
           ),
         ),
       ),
-      floatingActionButton: AddFriend()
+      floatingActionButton:
+          BlocConsumer<FriendRequestCubit, FriendRequestState>(
+            listener: (context, state) {
+              if (state is FriendRequestSuccess) {
+                Message(
+                  context: context,
+                  message: 'Friend request sent successfully!',
+                  color: Colors.green,
+                );
+              } else if (state is FriendRequestError) {
+                Message(
+                  context: context,
+                  message: state.message!,
+                  color: Colors.red,
+                );
+              }
+            },
+            builder: (context, state) {
+              return AddFriend();
+            },
+          ),
     );
   }
 }

@@ -2,14 +2,14 @@ enum NotificationType { missedCall, request }
 
 class AppNotification {
   final String title;
-  final NotificationType notificationType;
-  final DateTime date;
-  final bool isSeen;
+  final NotificationType type;
+  final DateTime createdAt;
+  final bool isRead;
 
   AppNotification({
     required this.title,
-    required this.notificationType,
-    required this.date,
-    required this.isSeen,
+    required this.type,
+    required this.createdAt,
+    required this.isRead,
   });
 }

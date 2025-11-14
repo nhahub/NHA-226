@@ -175,8 +175,8 @@ class AuthRepositoryImpl extends AuthRepository {
         await ref.collection('notifications').doc('_init').set({});
         await ref.collection('friends').doc('_init').set({});
         await ref.collection('searched').doc('_init').set({}); // remove it
-        await ref.collection('request').doc('_init').set({});
-        await ref.collection('last_call').doc('_init').set({});
+        await ref.collection('requests').doc('_init').set({});
+        await ref.collection('last_calls').doc('_init').set({});
       }
     } catch (e) {
       throw Exception('Failed to create user');

@@ -17,8 +17,7 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isRequest =
-        notification.notificationType == NotificationType.request;
+    final bool isRequest = notification.type == NotificationType.request;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -56,12 +55,12 @@ class NotificationCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          timeago.format(notification.date),
+                          timeago.format(notification.createdAt),
                           style: TextStyle(color: AppColor.gray, fontSize: 13),
                         ),
                       ],
                     ),
-                    if (!notification.isSeen)
+                    if (!notification.isRead)
                       Container(
                         width: 10,
                         height: 10,
@@ -121,7 +120,7 @@ class NotificationCard extends StatelessWidget {
   }
 
   Widget _buildIcon() {
-    IconData icon = notification.notificationType == NotificationType.missedCall
+    IconData icon = notification.type == NotificationType.missedCall
         ? Icons.call_missed
         : Icons.person_add_alt_1;
 
