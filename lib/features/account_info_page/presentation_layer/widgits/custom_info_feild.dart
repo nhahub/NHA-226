@@ -5,12 +5,13 @@ class CustomInfoFeild extends StatelessWidget {
   final String description;
   final TextEditingController controller;
   final FormFieldValidator<String>? validator;
-
+  final bool enableToEdited;
   const CustomInfoFeild({
     super.key,
     required this.description,
     required this.controller,
     required this.validator,
+    this.enableToEdited = false,
   });
 
   @override
@@ -33,6 +34,7 @@ class CustomInfoFeild extends StatelessWidget {
                 vertical: 10.h,
               ),
             ),
+            enabled: enableToEdited,
           ),
         ],
       ),

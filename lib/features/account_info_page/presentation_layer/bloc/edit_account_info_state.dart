@@ -32,3 +32,11 @@ class EditAccountError extends EditAccountInfoState {
   @override
   List<Object> get props => [message];
 }
+
+class EditModeState extends EditAccountInfoState {
+  final bool isEditing;
+  const EditModeState(this.isEditing);
+
+  @override
+  List<Object> get props => [isEditing];
+}

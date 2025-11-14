@@ -11,10 +11,15 @@ class EditAccountInfoBloc
   final AccountRepository repository;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  bool isEditing = false;
 
   EditAccountInfoBloc(this.repository) : super(EditAccountInitial()) {
     on<LoadUserData>(_onLoadUserData);
     on<UpdateUserData>(_onUpdateUserData);
+    on<ToggleEditMode>((event, emit) {
+      isEditing = !isEditing;
+      emit(EditModeState(isEditing));
+    });
   }
 
   Future<void> _onLoadUserData(

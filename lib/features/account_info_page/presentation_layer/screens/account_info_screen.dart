@@ -42,7 +42,14 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
             fontSize: 18.h,
           ),
         ),
-        actions: [Icon(Icons.edit)],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () {
+              context.read<EditAccountInfoBloc>().add(ToggleEditMode());
+            },
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
       body: BlocListener<EditAccountInfoBloc, EditAccountInfoState>(
@@ -78,12 +85,15 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                       controller: nameController,
                       validator: (value) =>
                           value == null || value.isEmpty ? 'Enter name' : null,
+                      enableToEdited: state is EditModeState && state.isEditing,
                     ),
+
                     CustomInfoFeild(
                       description: 'Phone Number',
                       controller: phoneController,
                       validator: (value) =>
                           value == null || value.isEmpty ? 'Enter phone' : null,
+                      enableToEdited: state is EditModeState && state.isEditing,
                     ),
                     CustomInfoFeild(
                       description: 'Email',
@@ -92,6 +102,7 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                           value == null || !value.contains('@')
                           ? 'Enter valid email'
                           : null,
+                      enableToEdited: state is EditModeState && state.isEditing,
                     ),
                     const SizedBox(height: 30),
                     Flexible(
@@ -108,8 +119,12 @@ class _AccountInfoScreenState extends State<AccountInfoScreen> {
                                 phone: phoneController.text,
                               ),
                             );
+                            context.read<EditAccountInfoBloc>().add(
+                              ToggleEditMode(),
+                            );
                           }
                         },
+
                         child: const Text(
                           'Save',
                           style: TextStyle(color: Colors.white),

@@ -16,3 +16,8 @@ class UpdateUserData extends EditAccountInfoEvent {
   @override
   List<Object?> get props => [name, email, phone];
 }
+
+class ToggleEditMode extends EditAccountInfoEvent {
+  @override
+  List<Object?> get props => [];
+}
