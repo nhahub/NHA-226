@@ -6,7 +6,7 @@ import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/auth_button.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/coustom_text_field.dart';
-import 'package:lingo_sign/features/auth/presentation/widget/message.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});

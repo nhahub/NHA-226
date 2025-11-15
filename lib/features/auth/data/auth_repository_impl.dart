@@ -1,17 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/error/failure.dart';
 import 'package:lingo_sign/core/utils/firebase_auth_error_mapper.dart';
-
 import 'package:lingo_sign/features/auth/domain/app_user.dart';
 import 'package:lingo_sign/features/auth/domain/auth_repository.dart';
 
 class AuthRepositoryImpl extends AuthRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final firebaseFirestore = FirebaseFirestore.instance.collection('users');
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
 
   @override
   Future<AppUser?> loginWithEmailAndPassword(
@@ -22,7 +23,7 @@ class AuthRepositoryImpl extends AuthRepository {
       UserCredential userCredential = await firebaseAuth
           .signInWithEmailAndPassword(email: email, password: password);
       if (userCredential.user == null) throw AuthFailure('Login failed');
-      await createUserinFirestore(userCredential.user!);
+      await updateUserinFirestore(userCredential.user!);
       if (userCredential.user!.emailVerified) {
         AppUser user = AppUser(uid: userCredential.user!.uid, email: email);
         return user;
@@ -114,6 +115,7 @@ class AuthRepositoryImpl extends AuthRepository {
       final user = userCredential.user;
       if (user == null) throw AuthFailure('User not found');
       await createUserinFirestore(user);
+      await updateUserinFirestore(user);
       return AppUser(uid: user.uid, email: user.email ?? '');
     } on FirebaseAuthException catch (e) {
       throw AuthFailure(mapFirebaseAuthError(e));
@@ -165,11 +167,32 @@ class AuthRepositoryImpl extends AuthRepository {
           'uid': user.uid,
           'name': user.displayName,
           'email': user.email ?? 'Facebook',
-          'createdAt': FieldValue.serverTimestamp(),
+          'image_url': user.photoURL ?? '',
+          'created_at': FieldValue.serverTimestamp(),
         });
+
+        // Create supCollection
+        await ref.collection('notifications').doc('_init').set({});
+        await ref.collection('friends').doc('_init').set({});
+        await ref.collection('searched').doc('_init').set({}); // remove it
+        await ref.collection('requests').doc('_init').set({});
+        await ref.collection('last_calls').doc('_init').set({});
       }
     } catch (e) {
       throw Exception('Failed to create user');
+    }
+  }
+
+  // Update User in firestore
+  Future updateUserinFirestore(User user) async {
+    try {
+      final ref = firebaseFirestore.doc(user.uid);
+      await ref.set({
+        'last_seen': FieldValue.serverTimestamp(), // need to update (fix) it.
+        'token': await firebaseMessaging.getToken(),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      throw Exception('Failed to update user');
     }
   }
 }

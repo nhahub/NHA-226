@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
-import 'package:lingo_sign/features/auth/presentation/widget/message.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -14,6 +14,24 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: const CircleAvatar(radius: 22, backgroundColor: Colors.white),
+    );
+  }
+
+  Widget _image(String imageUrl) {
+    return CircleAvatar(
+      radius: 22,
+      backgroundColor: AppColor.white,
+      backgroundImage: imageUrl.isNotEmpty
+          ? NetworkImage(imageUrl)
+          : const AssetImage('assets/images/placeholder_user.jpg'),
+    );
+  }
+
+  Widget _imageError() {
+    return CircleAvatar(
+      radius: 22,
+      backgroundColor: AppColor.white,
+      backgroundImage: const AssetImage('assets/images/placeholder_user.jpg'),
     );
   }
 
@@ -37,7 +55,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
         bool isLoading = state is UserInfoLoading;
-
         return AppBar(
           backgroundColor: AppColor.white,
           elevation: 0,
@@ -46,16 +63,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               if (isLoading)
                 _imageShimmer()
               else if (state is UserInfoLoaded)
-                CircleAvatar(
-                  radius: 22,
-                  backgroundColor: AppColor.white,
-                  backgroundImage: state.user.imageUrl.isNotEmpty
-                      ? NetworkImage(state.user.imageUrl)
-                      : const AssetImage('assets/images/placeholder_user.jpg')
-                            as ImageProvider,
-                ),
-              if (state is UserInfoError)
-                CircleAvatar(radius: 22, backgroundColor: Colors.red),
+                _image(state.user.imageUrl),
+              if (state is UserInfoError) _imageError(),
               const SizedBox(width: 8),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +84,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                     Text(
                       state.user.name,
                       style: const TextStyle(
-                        color: Colors.black,
+                        color: AppColor.black,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -85,6 +94,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             ],
           ),
           actions: [
+            // todo: remove this logout button
+            BlocBuilder<AuthBloc, AuthState>(
+              builder: (context, state) {
+                return IconButton(
+                  onPressed: () {
+                    context.read<AuthBloc>().add(LogoutEvent());
+                    Navigator.pushNamedAndRemoveUntil(
+                      context,
+                      loginScreen,
+                      (context) => false,
+                    );
+                  },
+                  icon: Icon(Icons.logout, color: AppColor.darkGray),
+                );
+              },
+            ),
             IconButton(
               onPressed: () => Navigator.pushNamed(context, searchScreen),
               icon: Icon(Icons.search, color: AppColor.darkGray),

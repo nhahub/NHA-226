@@ -3,46 +3,45 @@ import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
 class NotificationModel {
   final String title;
-  final NotificationType notificationType;
-  final DateTime date;
-  final bool isSeen;
+  final String type;
+  final DateTime createdAt;
+  final bool isRead;
 
   NotificationModel({
     required this.title,
-    required this.notificationType,
-    required this.date,
-    required this.isSeen,
+    required this.type,
+    required this.createdAt,
+    required this.isRead,
   });
 
   factory NotificationModel.fromJson(Map<String, dynamic> json) {
     return NotificationModel(
       title: json['title'] ?? '',
-      notificationType: NotificationType.values.firstWhere(
-        (e) => e.name == json['notificationType'],
-        orElse: () => NotificationType.request,
-      ),
-      date: (json['date'] is Timestamp)
-          ? (json['date'] as Timestamp).toDate()
-          : DateTime.parse(json['date']),
-      isSeen: json['isSeen'] ?? false,
+      type: json['type'] ?? '',
+      createdAt: (json['created_at'] is Timestamp)
+          ? (json['created_at'] as Timestamp).toDate()
+          : DateTime.parse(json['created_at']),
+      isRead: json['is_read'] ?? false,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
       'title': title,
-      'notificationType': notificationType.name,
-      'date': date.toIso8601String(),
-      'isSeen': isSeen,
+      'type': type,
+      'created_at': createdAt.toString(),
+      'is_read': isRead,
     };
   }
 
   AppNotification toAppNotification() {
     return AppNotification(
       title: title,
-      notificationType: notificationType,
-      date: date,
-      isSeen: isSeen,
+      type: type == 'request'
+          ? NotificationType.request
+          : NotificationType.missedCall,
+      createdAt: createdAt,
+      isRead: isRead,
     );
   }
 }

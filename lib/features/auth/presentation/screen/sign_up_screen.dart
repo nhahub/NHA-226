@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
-import 'package:lingo_sign/features/auth/presentation/widget/message.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/or_line.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/signin_with_facebook_button.dart';
 import 'package:lingo_sign/features/auth/presentation/widget/signin_with_google_button.dart';

@@ -1,98 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/home/domain/entities/request.dart';
+import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend.dart';
 
 class RequestsScreen extends StatelessWidget {
-  RequestsScreen({super.key});
-
-  final List<Request> requests = [
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Youssef.A',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Yesterday',
-    ),
-    Request(
-      uid: '',
-      name: 'Omar.S',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: '2 days ago',
-    ),
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Youssef.A',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Yesterday',
-    ),
-    Request(
-      uid: '',
-      name: 'Omar.S',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: '2 days ago',
-    ),
-
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Ahmed.H',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: 'Today',
-    ),
-    Request(
-      uid: '',
-      name: 'Youssef.A',
-      imageUrl:
-          'https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=500',
-      lastSeen: 'Yesterday',
-    ),
-    Request(
-      uid: '',
-      name: 'Omar.S',
-      imageUrl:
-          'https://images.unsplash.com/photo-1552058544-f2b08422138a?w=500',
-      lastSeen: '2 days ago',
-    ),
-  ];
+  const RequestsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -110,13 +24,47 @@ class RequestsScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 16),
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: requests.length,
-                  itemBuilder: (context, index) {
-                    return RequestFriend(request: requests[index]);
-                  },
+                BlocProvider(
+                  create: (context) =>
+                      RequestsBloc(HomeRepositoryImpl())
+                        ..add(GetAllRequestsEvent()),
+                  child: BlocBuilder<RequestsBloc, RequestsState>(
+                    builder: (context, state) {
+                      if (state is RequestsLoaded) {
+                        final requests = state.requests;
+                        if (requests.isNotEmpty) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: requests.length,
+                            itemBuilder: (context, index) {
+                              return RequestFriend(
+                                request: requests[index],
+                                onIgnore: () =>
+                                    context.read<RequestsBloc>().add(
+                                      RejectRequestEvent(requests[index].uid),
+                                    ),
+                                onAccept: () =>
+                                    context.read<RequestsBloc>().add(
+                                      AcceptRequestEvent(requests[index].uid),
+                                    ),
+                              );
+                            },
+                          );
+                        }
+                        return Center(
+                          child: Text('There are not any requestes yet'),
+                        );
+                      }
+                      if (state is RequestsLoading) {
+                        return Center(child: CircularProgressIndicator());
+                      }
+                      if (state is RequestsError) {
+                        return Center(child: Text(state.message));
+                      }
+                      return SizedBox.shrink();
+                    },
+                  ),
                 ),
               ],
             ),

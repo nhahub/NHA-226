@@ -1,5 +1,4 @@
-
-import 'package:lingo_sign/features/home/domain/entities/friend.dart';
+import 'package:lingo_sign/features/friend_account/Freind.dart';
 
 abstract class FriendState {}
 

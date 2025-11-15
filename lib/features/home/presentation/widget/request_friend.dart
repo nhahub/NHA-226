@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/domain/entities/request.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class RequestFriend extends StatelessWidget {
-  const RequestFriend({super.key, required this.request});
+  const RequestFriend({
+    super.key,
+    required this.request,
+    this.onIgnore,
+    this.onAccept,
+  });
 
   final Request request;
+  final void Function()? onIgnore;
+  final void Function()? onAccept;
 
   @override
   Widget build(BuildContext context) {
@@ -18,24 +27,32 @@ class RequestFriend extends StatelessWidget {
             children: [
               CircleAvatar(
                 radius: 25,
-                backgroundImage: NetworkImage(request.imageUrl),
+                backgroundColor: AppColor.white,
+                backgroundImage: request.imageUrl.isNotEmpty
+                    ? NetworkImage(request.imageUrl)
+                    : AssetImage('assets/images/placeholder_user.jpg'),
               ),
               const SizedBox(width: 8),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    request.name,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
+              SizedBox(
+                width: context.width / 2.7,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      request.name,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  Text(
-                    request.lastSeen,
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
+                    Text(
+                      timeago.format(request.createdAt),
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
@@ -43,7 +60,7 @@ class RequestFriend extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               GestureDetector(
-                onTap: () {},
+                onTap: onIgnore,
                 child: Container(
                   width: 70,
                   height: 30,
@@ -62,7 +79,7 @@ class RequestFriend extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               GestureDetector(
-                onTap: () {},
+                onTap: onAccept,
                 child: Container(
                   width: 70,
                   height: 30,

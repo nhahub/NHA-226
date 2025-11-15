@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
@@ -17,8 +18,7 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isRequest =
-        notification.notificationType == NotificationType.request;
+    final bool isRequest = notification.type == NotificationType.request;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -44,24 +44,32 @@ class NotificationCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          notification.title,
-                          style: const TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.w500,
+                    SizedBox(
+                      width: context.width / 1.5,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            notification.title,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          timeago.format(notification.date),
-                          style: TextStyle(color: AppColor.gray, fontSize: 13),
-                        ),
-                      ],
+                          const SizedBox(height: 4),
+                          Text(
+                            timeago.format(notification.createdAt),
+                            style: TextStyle(
+                              color: AppColor.gray,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    if (!notification.isSeen)
+                    if (!notification.isRead)
                       Container(
                         width: 10,
                         height: 10,
@@ -121,7 +129,7 @@ class NotificationCard extends StatelessWidget {
   }
 
   Widget _buildIcon() {
-    IconData icon = notification.notificationType == NotificationType.missedCall
+    IconData icon = notification.type == NotificationType.missedCall
         ? Icons.call_missed
         : Icons.person_add_alt_1;
 

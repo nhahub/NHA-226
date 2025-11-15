@@ -15,17 +15,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
       final notificationRef = firebaseFirestore
           .collection('users')
           .doc(user.uid)
-          .collection('notification');
+          .collection('notifications');
 
       final notificationDoc = await notificationRef.get();
-
-      if (notificationDoc.docs.isEmpty) {
-        await notificationRef.doc('_init').set({
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-
-        return [];
-      }
 
       final validDocs = notificationDoc.docs.where((doc) => doc.id != '_init');
 

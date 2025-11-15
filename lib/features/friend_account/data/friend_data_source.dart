@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:lingo_sign/features/home/domain/entities/friend.dart';
-
+import 'package:lingo_sign/features/friend_account/Freind.dart';
 
 class FriendDataSource {
   final FirebaseFirestore firestore;
@@ -20,6 +19,7 @@ class FriendDataSource {
       final data = snapshot.data()!;
       return Friend(
         uid: uid,
+        email: '',
         name: data["name"],
         imageUrl: data["imageUrl"],
         lastSeen: data["lastSeen"],

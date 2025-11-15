@@ -4,7 +4,7 @@ class LastCall {
   final String uid;
   final String name;
   final String imageUrl;
-  final String lastSeen;
+  final DateTime lastSeen;
 
   LastCall({
     required this.uid,
