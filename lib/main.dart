@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
       designSize: Size(context.width, context.height),
       builder: (_, child) =>
           MaterialApp(debugShowCheckedModeBanner: false, home: child),
-      child: MultiBlocProvider(
+      child: MultiBlocProvider( 
         providers: [
           BlocProvider(
             create: (context) =>
