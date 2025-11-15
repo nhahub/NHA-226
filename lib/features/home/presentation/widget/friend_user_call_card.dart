@@ -22,61 +22,64 @@ class FriendUserCallCard extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColor.white,
-                  backgroundImage: userFriend.imageUrl.isNotEmpty
-                      ? NetworkImage(userFriend.imageUrl)
-                      : AssetImage('assets/images/placeholder_user.jpg'),
-                ),
-                const SizedBox(width: 10),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      userFriend.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+        child: Container(
+          color: Colors.transparent,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: AppColor.white,
+                    backgroundImage: userFriend.imageUrl.isNotEmpty
+                        ? NetworkImage(userFriend.imageUrl)
+                        : AssetImage('assets/images/placeholder_user.jpg'),
+                  ),
+                  const SizedBox(width: 10),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        userFriend.name,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
-                    Text(
-                      timeago.format(userFriend.lastSeen),
-                      style: const TextStyle(color: Colors.grey),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            InkWell(
-              // onTap: () {
-              //   ZegoSendCallInvitationButton(
-              //     isVideoCall: true,
-              //     resourceID: "zegouikit_call",
-              //     invitees: [
-              //       ZegoUIKitUser(
-              //         id: userFriend.uid,
-              //         name: userFriend.name,
-              //       ),
-              //     ],
-              //   );
-              // },
-              child: Container(
-                width: 36,
-                height: 36,
-                decoration: BoxDecoration(
-                  color: AppColor.main,
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: Icon(Icons.call, color: AppColor.white, size: 20),
+                      Text(
+                        timeago.format(userFriend.lastSeen),
+                        style: const TextStyle(color: Colors.grey),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ),
-          ],
+              InkWell(
+                // onTap: () {
+                //   ZegoSendCallInvitationButton(
+                //     isVideoCall: true,
+                //     resourceID: "zegouikit_call",
+                //     invitees: [
+                //       ZegoUIKitUser(
+                //         id: userFriend.uid,
+                //         name: userFriend.name,
+                //       ),
+                //     ],
+                //   );
+                // },
+                child: Container(
+                  width: 36,
+                  height: 36,
+                  decoration: BoxDecoration(
+                    color: AppColor.main,
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: Icon(Icons.call, color: AppColor.white, size: 20),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

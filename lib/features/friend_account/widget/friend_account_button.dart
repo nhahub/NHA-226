@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 class FriendAccountButton extends StatelessWidget {
@@ -9,26 +8,37 @@ class FriendAccountButton extends StatelessWidget {
     required this.isTablet,
     required this.friend,
     required this.text,
+    this.onTap,
   });
+
   final bool isTablet;
   final Friend friend;
   final String text;
+  final void Function()? onTap;
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: isTablet ? 200 : 150,
+      width: isTablet ? 200 : 95,
       height: isTablet ? 60 : 50,
-      child: OutlinedButton(
-        onPressed: () {},
-        style: OutlinedButton.styleFrom(
-          side: const BorderSide(color: AppColor.black),
-          shape: RoundedRectangleBorder(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColor.black),
             borderRadius: BorderRadius.circular(12),
           ),
-        ),
-        child: Text(
-          text,
-          style: TextStyle(color: AppColor.black, fontSize: isTablet ? 20 : 17),
+          child: Center(
+            child: Text(
+              text,
+              overflow: TextOverflow.visible,
+              maxLines: 1,
+              style: TextStyle(
+                color: AppColor.black,
+                fontSize: isTablet ? 20 : 16,
+              ),
+            ),
+          ),
         ),
       ),
     );

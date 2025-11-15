@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/friend_account/widget/friend_account_button.dart';
@@ -28,7 +29,7 @@ class FriendAccountScreen extends StatelessWidget {
           ),
           Center(
             child: SizedBox(
-              width: isTablet ? context.width * 0.5 : context.width * 0.85,
+              width: isTablet ? context.width * 0.5 : context.width - 32,
               child: Card(
                 color: AppColor.white,
                 shape: RoundedRectangleBorder(
@@ -42,7 +43,10 @@ class FriendAccountScreen extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: isTablet ? 60 : 40,
-                        backgroundImage: NetworkImage(friend.imageUrl),
+                        backgroundColor: AppColor.white,
+                        backgroundImage: friend.imageUrl.isNotEmpty
+                            ? NetworkImage(friend.imageUrl)
+                            : AssetImage('assets/images/placeholder_user.jpg'),
                       ),
                       SizedBox(height: context.height * 0.02),
 
@@ -64,26 +68,28 @@ class FriendAccountScreen extends StatelessWidget {
                           color: AppColor.gray,
                         ),
                       ),
-                      SizedBox(height: context.height * 0.004),
-
-                      FriendAccountButton(
-                        isTablet: isTablet,
-                        friend: friend,
-                        text: friend.isFavourite ? 'UnFavourite' : 'Favourite',
-                      ),
-
-                      SizedBox(height: context.height * 0.02),
-                      FriendAccountButton(
-                        isTablet: isTablet,
-                        friend: friend,
-                        text: 'Unfriend',
-                      ),
-
-                      SizedBox(height: context.height * 0.02),
-                      FriendAccountButton(
-                        isTablet: isTablet,
-                        friend: friend,
-                        text: 'Call',
+                      SizedBox(height: 16.h),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          FriendAccountButton(
+                            isTablet: isTablet,
+                            friend: friend,
+                            text: friend.isFavourite
+                                ? 'UnFavourite'
+                                : 'Favourite',
+                          ),
+                          FriendAccountButton(
+                            isTablet: isTablet,
+                            friend: friend,
+                            text: 'Unfriend',
+                          ),
+                          FriendAccountButton(
+                            isTablet: isTablet,
+                            friend: friend,
+                            text: 'Call',
+                          ),
+                        ],
                       ),
                     ],
                   ),
