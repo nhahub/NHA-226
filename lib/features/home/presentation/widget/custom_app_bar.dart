@@ -36,10 +36,6 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        if (state is UserInfoError) {
-          Message(context: context, message: state.message, color: Colors.red);
-        }
-
         bool isLoading = state is UserInfoLoading;
 
         return AppBar(

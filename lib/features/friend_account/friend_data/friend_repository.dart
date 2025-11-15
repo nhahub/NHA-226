@@ -1,5 +1,6 @@
-import 'package:lingo_sign/features/friend_account/Freind.dart';
+
 import 'package:lingo_sign/features/friend_account/friend_data/friend_data_source.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 class FriendRepository {
   final FriendDataSource remoteDataSource;
