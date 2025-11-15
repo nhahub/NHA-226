@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingo_sign/features/home/domain/entities/user_app.dart';
 
 class UserModel {
@@ -21,7 +22,9 @@ class UserModel {
       name: json['name'],
       email: json['email'],
       imageUrl: json['image_url'],
-      lastSeen: json['last_seen'],
+      lastSeen: (json['last_seen'] is Timestamp)
+          ? (json['last_seen'] as Timestamp).toDate()
+          : DateTime.parse(json['last_seen']),
     );
   }
 

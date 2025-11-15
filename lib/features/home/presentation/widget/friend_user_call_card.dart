@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class FriendUserCallCard extends StatelessWidget {
   const FriendUserCallCard({super.key, required this.userFriend, this.onTap});
@@ -38,7 +39,7 @@ class FriendUserCallCard extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      userFriend.lastSeen.toString(),
+                      timeago.format(userFriend.lastSeen),
                       style: const TextStyle(color: Colors.grey),
                     ),
                   ],

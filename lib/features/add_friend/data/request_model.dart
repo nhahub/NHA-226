@@ -13,7 +13,7 @@ class RequestModel {
     return {'uid': uid, 'status': status, 'created_at': createdAt};
   }
 
-  factory RequestModel.fromMap(Map<String, dynamic> map) {
+  factory RequestModel.fromJson(Map<String, dynamic> map) {
     return RequestModel(
       uid: map['uid'],
       status: map['status'],

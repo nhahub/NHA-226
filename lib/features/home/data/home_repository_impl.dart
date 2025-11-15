@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingo_sign/features/home/data/model/friend_model.dart';
+import 'package:lingo_sign/features/home/data/model/last_call_model.dart';
+import 'package:lingo_sign/features/home/data/model/request_model.dart';
 import 'package:lingo_sign/features/home/data/model/user_model.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:lingo_sign/features/home/domain/entities/request.dart';
@@ -38,7 +40,6 @@ class HomeRepositoryImpl implements HomeRepository {
   @override
   Future<List<Friend>> getFriends() async {
     final uid = firebaseAuth.currentUser!.uid;
-
     try {
       final friendsRef = firebaseFirestore
           .collection('users')
@@ -47,7 +48,6 @@ class HomeRepositoryImpl implements HomeRepository {
 
       final friendsDoc = await friendsRef.get();
       final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
-
       final friends = validDocs
           .map((doc) => FriendModel.fromJson(doc.data()))
           .toList();
@@ -77,11 +77,134 @@ class HomeRepositoryImpl implements HomeRepository {
 
   @override
   Future<List<Friend>> getLastCalls() async {
-    return [];
+    final uid = firebaseAuth.currentUser!.uid;
+    try {
+      final lastCallsRef = firebaseFirestore
+          .collection('users')
+          .doc(uid)
+          .collection('last_calls');
+
+      final lastCallsDoc = await lastCallsRef.get();
+      final validDocs = lastCallsDoc.docs.where((doc) => doc.id != '_init');
+      final lastCalls = validDocs
+          .map((doc) => LastCallModel.fromJson(doc.data()))
+          .toList();
+
+      final lastCallsInfo = await Future.wait(
+        lastCalls.map((lastCall) async {
+          UserApp userApp = await getUserInfoById(lastCall.uid);
+          return lastCall.toFriend(
+            email: userApp.email,
+            name: userApp.name,
+            imageUrl: userApp.imageUrl,
+            isFavourite: false,
+          );
+        }),
+      );
+
+      return lastCallsInfo;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 
   @override
   Future<List<Request>> getRequstes() async {
-    return [];
+    final uid = firebaseAuth.currentUser!.uid;
+    try {
+      final requstesRef = firebaseFirestore
+          .collection('users')
+          .doc(uid)
+          .collection('requests');
+
+      final requstesDoc = await requstesRef.get();
+      final validDocs = requstesDoc.docs.where((doc) => doc.id != '_init');
+      final requstes = validDocs
+          .map((doc) => RequestModel.fromJson(doc.data()))
+          .toList();
+
+      final requstesInfo = await Future.wait(
+        requstes.map((requst) async {
+          UserApp userApp = await getUserInfoById(requst.uid);
+          return requst.toRequste(
+            name: userApp.name,
+            imageUrl: userApp.imageUrl,
+          );
+        }),
+      );
+
+      return requstesInfo;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<bool> acceptFriendRequest(String friendId) async {
+    final uid = firebaseAuth.currentUser!.uid;
+    try {
+      final batch = firebaseFirestore.batch();
+
+      final userFriendRef = firebaseFirestore
+          .collection('users')
+          .doc(uid)
+          .collection('friends')
+          .doc(friendId);
+
+      batch.set(userFriendRef, {
+        'uid': friendId,
+        'is_favourite': false,
+        'created_at': Timestamp.now(),
+      });
+
+      final friendUserRef = firebaseFirestore
+          .collection('users')
+          .doc(friendId)
+          .collection('friends')
+          .doc(uid);
+
+      batch.set(friendUserRef, {
+        'uid': uid,
+        'is_favourite': false,
+        'created_at': Timestamp.now(),
+      });
+
+      final requestRef = await firebaseFirestore
+          .collection('users')
+          .doc(uid)
+          .collection('requests')
+          .where('uid', isEqualTo: friendId)
+          .get();
+
+      if (requestRef.docs.isNotEmpty) {
+        batch.delete(requestRef.docs.first.reference);
+      }
+
+      await batch.commit();
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+  @override
+  Future<bool> rejectFriendRequest(String friendId) async {
+    final uid = firebaseAuth.currentUser!.uid;
+    try {
+      final requestRef = await firebaseFirestore
+          .collection('users')
+          .doc(uid)
+          .collection('requests')
+          .where('uid', isEqualTo: friendId)
+          .get();
+
+      if (requestRef.docs.isNotEmpty) {
+        await requestRef.docs.first.reference.delete();
+      }
+
+      return true;
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }
