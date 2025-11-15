@@ -15,7 +15,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screen = [
     TranslationScreen(),
     HomeScreen(),
-    Scaffold(backgroundColor: AppColor.white), // Profile Screen
+    Scaffold(backgroundColor: AppColor.white), 
   ];
   int index = 1;
 
