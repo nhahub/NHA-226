@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/call/screen/video_screen.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -56,18 +57,9 @@ class FriendUserCallCard extends StatelessWidget {
                 ],
               ),
               InkWell(
-                // onTap: () {
-                //   ZegoSendCallInvitationButton(
-                //     isVideoCall: true,
-                //     resourceID: "zegouikit_call",
-                //     invitees: [
-                //       ZegoUIKitUser(
-                //         id: userFriend.uid,
-                //         name: userFriend.name,
-                //       ),
-                //     ],
-                //   );
-                // },
+                onTap: () {
+                  _showCallDialog(context, userFriend);
+                },
                 child: Container(
                   width: 36,
                   height: 36,
@@ -82,6 +74,37 @@ class FriendUserCallCard extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  void _showCallDialog(BuildContext context, Friend friend) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Video Call"),
+          content: Text("Call ${friend.name}?"),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text("Cancel"),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        CallScreen(channelName: "channel_${friend.uid}"),
+                  ),
+                );
+              },
+              child: Text("Call"),
+            ),
+          ],
+        );
+      },
     );
   }
 }
