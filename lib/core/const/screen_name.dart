@@ -12,3 +12,4 @@ const String accountInfoScreen = '/profile/account_info';
 const String translateScreen = '/translate';
 const String settingScreen = '/setting';
 const String friendAccountScreen = '/friend_account';
+

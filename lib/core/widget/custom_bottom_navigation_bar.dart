@@ -5,7 +5,15 @@ import 'package:lingo_sign/core/utils/helper.dart';
 
 class CustomBottomNavigationBar extends StatefulWidget {
   final ValueChanged<int>? onTap;
-  const CustomBottomNavigationBar({super.key, this.onTap});
+
+  final int currentIndex;
+
+  const CustomBottomNavigationBar({
+    super.key,
+    this.onTap,
+    this.currentIndex = 1,
+  });
+
 
   @override
   State<CustomBottomNavigationBar> createState() =>
@@ -14,13 +22,18 @@ class CustomBottomNavigationBar extends StatefulWidget {
 
 class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     with SingleTickerProviderStateMixin {
-  int _selectedIndex = 1;
+
+  late int _selectedIndex;
+
   late AnimationController _controller;
   late Animation<double> _animation;
 
   @override
   void initState() {
     super.initState();
+
+    _selectedIndex = widget.currentIndex;
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 400),
@@ -54,6 +67,17 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
     const double barHeight = 80;
     const double circleSize = 70;
 
+
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final Color mainColor = AppColor.main;
+    final Color secondColor =
+        isDark ? Colors.grey[850]! : AppColor.second;
+    final Color iconColor =
+        isDark ? Colors.white70 : AppColor.darkGray;
+    final Color backgroundColor =
+        isDark ? const Color(0xFF121212) : Colors.white;
+
     return SizedBox(
       height: barHeight,
       child: LayoutBuilder(
@@ -64,70 +88,83 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
           final targetX =
               (itemWidth * _selectedIndex) + (itemWidth / 2) - (circleSize / 2);
 
-          return Stack(
-            clipBehavior: Clip.none,
-            children: [
-              AnimatedBuilder(
-                animation: _animation,
-                builder: (context, _) {
-                  return CustomPaint(
-                    size: Size(totalWidth, barHeight),
-                    painter: _BarPainter(
-                      xPos: targetX + (circleSize / 2),
-                      progress: _animation.value,
-                      color: AppColor.second,
-                    ),
-                  );
-                },
-              ),
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 400),
-                curve: Curves.easeOutBack,
-                top: -circleSize / 2 + 6,
-                left: targetX,
-                child: Container(
-                  height: circleSize,
-                  width: circleSize,
-                  decoration: BoxDecoration(
-                    color: AppColor.main,
-                    shape: BoxShape.circle,
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black26,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
+
+          return Container(
+            color: backgroundColor,
+            child: Stack(
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedBuilder(
+                  animation: _animation,
+                  builder: (context, _) {
+                    return CustomPaint(
+                      size: Size(totalWidth, barHeight),
+                      painter: _BarPainter(
+                        xPos: targetX + (circleSize / 2),
+                        progress: _animation.value,
+                        color: secondColor,
                       ),
+                    );
+                  },
+                ),
+
+                // Floating circle button
+                AnimatedPositioned(
+                  duration: const Duration(milliseconds: 400),
+                  curve: Curves.easeOutBack,
+                  top: -circleSize / 2 + 6,
+                  left: targetX,
+                  child: Container(
+                    height: circleSize,
+                    width: circleSize,
+                    decoration: BoxDecoration(
+                      color: mainColor,
+                      shape: BoxShape.circle,
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 8,
+                          offset: Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Icon(
+                      _getCenterIcon(_selectedIndex),
+                      color: Colors.white,
+                      size: 28,
+                    ),
+                  ),
+                ),
+
+                // Navigation items
+                Positioned.fill(
+                  top: 4,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _navItem(Iconsax.translate, "Translation", 0, iconColor),
+                      _navItem(Icons.home, "Home", 1, iconColor),
+                      _navItem(Iconsax.user, "Profile", 2, iconColor),
                     ],
                   ),
-                  child: Icon(
-                    _getCenterIcon(_selectedIndex),
-                    color: Colors.white,
-                    size: 28,
-                  ),
                 ),
-              ),
-              Positioned.fill(
-                top: 4,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    _navItem(Iconsax.translate, "Translation", 0),
-                    _navItem(Icons.home, "Home", 1),
-                    _navItem(Iconsax.user, "Profile", 2),
-                  ],
-                ),
-              ),
-            ],
+              ],
+            ),
+
           );
         },
       ),
     );
   }
 
-  Widget _navItem(IconData icon, String label, int index) {
+
+  Widget _navItem(IconData icon, String label, int index, Color iconColor) {
     final isSelected = _selectedIndex == index;
 
-    if (isSelected) return SizedBox(width: context.width / 3);
+    if (isSelected) {
+      return SizedBox(width: context.width / 3);
+    }
+
 
     return GestureDetector(
       onTap: () => _onItemTap(index),
@@ -135,21 +172,24 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
         duration: const Duration(milliseconds: 200),
         opacity: 1.0,
         child: Container(
-          color: Color.fromARGB(0, 255, 255, 255),
+
+          color: Colors.transparent,
           width: context.width / 3,
           height: 80,
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(icon, color: AppColor.darkGray, size: 26),
+              Icon(icon, color: iconColor, size: 26),
               const SizedBox(height: 4),
               Text(
                 label,
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: AppColor.darkGray,
+
+
+                  color: iconColor,
+
                 ),
               ),
             ],
@@ -218,7 +258,9 @@ class _BarPainter extends CustomPainter {
     path.lineTo(0, size.height);
     path.close();
 
-    canvas.drawShadow(path, Colors.black.withAlpha(2), 8, true);
+
+    canvas.drawShadow(path, Colors.black.withAlpha(25), 8, true);
+
     canvas.drawPath(path, paint);
   }
 

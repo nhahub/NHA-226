@@ -1,3 +1,4 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,11 +15,14 @@ import 'package:lingo_sign/features/search/presentation/screens/search_screen.da
 import 'package:lingo_sign/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
 class AppRouter {
   Route? generateRouter(RouteSettings setting) {
     switch (setting.name) {
       case loginScreen:
+
         return MaterialPageRoute(builder: (_) => LogInScreen());
+
       case signupScreen:
         return MaterialPageRoute(builder: (_) => SignupScreen());
       case forgetPasswordScreen:
@@ -49,6 +53,7 @@ class AppRouter {
             child: NotificationScreen(),
           ),
         );
+
     }
     return null;
   }
