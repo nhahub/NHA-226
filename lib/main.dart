@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
+import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/add_friend/data/request_friend_repository_impl.dart';
@@ -16,13 +18,14 @@ import 'package:lingo_sign/features/onboarding/data/local_onboarding_data_source
 import 'package:lingo_sign/features/onboarding/data/onboarding_repository_impl.dart';
 import 'package:lingo_sign/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:lingo_sign/features/onboarding/presentation/screen/onboarding_screen.dart';
-import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
+import 'package:lingo_sign/main_screen.dart';
 import 'app_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -52,7 +55,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
-          BlocProvider(create: (_) => FriendsBloc(HomeRepositoryImpl())),
+          BlocProvider(
+            create: (_) =>
+                FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

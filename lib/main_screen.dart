@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/widget/custom_bottom_navigation_bar.dart';
 import 'package:lingo_sign/features/home/presentation/screen/home_screen.dart';
+import 'package:lingo_sign/features/profile/view/profile_screen.dart';
 import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
 
 class MainScreen extends StatefulWidget {
@@ -15,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screen = [
     TranslationScreen(),
     HomeScreen(),
-    Scaffold(backgroundColor: AppColor.white), 
+    ProfileScreen(), 
   ];
   int index = 1;
 
