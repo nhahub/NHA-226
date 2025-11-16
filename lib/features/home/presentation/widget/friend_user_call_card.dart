@@ -1,13 +1,16 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/call/call_system/call_service.dart';
+import 'package:lingo_sign/features/call/call_system/firestore_call_model.dart';
 import 'package:lingo_sign/features/call/screen/video_screen.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 class FriendUserCallCard extends StatelessWidget {
-  const FriendUserCallCard({super.key, required this.userFriend, this.onTap});
-
+  FriendUserCallCard({super.key, required this.userFriend, this.onTap});
+  FirebaseAuth auth = FirebaseAuth.instance;
   final Friend userFriend;
   final void Function()? onTap;
 
@@ -90,13 +93,20 @@ class FriendUserCallCard extends StatelessWidget {
               child: Text("Cancel"),
             ),
             TextButton(
-              onPressed: () {
-                Navigator.pop(context);
+              onPressed: () async {
+                final call = Call(
+                  callerId: auth.currentUser!.uid,
+                  receiverId: friend.uid,
+                  channel: "channel_${friend.uid}",
+                  status: "ringing",
+                );
+
+                await CallService().makeCall(call);
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (_) =>
-                        CallScreen(channelName: "channel_${friend.uid}"),
+                    builder: (_) => CallScreen(channelName: call.channel),
                   ),
                 );
               },
