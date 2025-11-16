@@ -35,7 +35,7 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
     final friendExist = await firestore
         .collection('users')
         .doc(currentUser.uid)
-        .collection('requests')
+        .collection('friends')
         .doc(friendId)
         .get();
 
