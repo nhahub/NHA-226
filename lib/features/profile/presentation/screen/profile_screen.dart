@@ -3,18 +3,29 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_state.dart';
-import 'package:lingo_sign/features/profile/view/settings_screen.dart';
+import 'package:lingo_sign/features/settings/settings_screen.dart';
 import 'package:lingo_sign/features/profile/widgets/profile_menu_item.dart';
 import 'package:lingo_sign/features/profile/view/helpUs.dart';
 import 'package:lingo_sign/features/profile/view/account_info_screen.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
+
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  @override
+   void initState() {
+    super.initState();
+    context.read<ProfileBloc>().add(LoadUserProfile());
+  }
 
   @override
   Widget build(BuildContext context) {
-    context.read<ProfileBloc>().add(LoadUserProfile() as ProfileEvent);
-
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text("Profile"),
@@ -31,8 +42,8 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
-
-
+    
+     
       body: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           if (state is ProfileLoading) {
@@ -62,12 +73,12 @@ class ProfileScreen extends StatelessWidget {
                         onTap: () => context
                         .read<ProfileBloc>()
                                 .add(UploadProfileImage(context)),
-                            child: CircleAvatar(
+                          child: CircleAvatar(
                               radius: 40,
                               backgroundImage: state.imageUrl != null
-                                  ? NetworkImage(state.imageUrl!)
+                                 ? NetworkImage(state.imageUrl!)
                                   : const AssetImage("assets/images/profile.png")
-                                      as ImageProvider,
+                                    as ImageProvider,
                             ),
                           ),
 
@@ -75,16 +86,16 @@ class ProfileScreen extends StatelessWidget {
                             bottom: -5,
                             right: -5,
                             child: IconButton(
-                              padding: EdgeInsets.zero,
-                              icon: Container(
-                                padding: const EdgeInsets.all(3),
+                            padding: EdgeInsets.zero,
+                               icon: Container(
+                               padding: const EdgeInsets.all(3),
                                 decoration: BoxDecoration(
                                 shape: BoxShape.circle,
                                 color: Theme.of(context).colorScheme.primary,
-                                ),
+                              ),
                                 child: Icon(
                             Icons.camera_alt,
-                             color: Theme.of(context).colorScheme.onPrimary,
+                            color: Theme.of(context).colorScheme.onPrimary,
                                   size: 20,
                                 ),
                               ),
@@ -145,15 +156,15 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
 
-                  
+
                   ProfileMenuItem(
-                    icon: Icons.logout,
-                    text: "Logout",
-                    textColor: Colors.red,
+                icon: Icons.logout,
+                  text: "Logout",
+                  textColor: Colors.red,
                     onTap: () async {
                       final shouldLogout = await showDialog<bool>(
-                        context: context,
-                        builder: (context) => AlertDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
                           title: const Text("Confirm Logout"),
                           content: const Text(
                               "Are you sure you want to log out?"),

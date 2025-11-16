@@ -15,16 +15,16 @@ import 'package:lingo_sign/features/onboarding/data/local_onboarding_data_source
 import 'package:lingo_sign/features/onboarding/data/onboarding_repository_impl.dart';
 import 'package:lingo_sign/features/onboarding/presentation/cubit/onboarding_cubit.dart';
 import 'package:lingo_sign/features/onboarding/presentation/screen/onboarding_screen.dart';
-import 'package:lingo_sign/features/profile/data/model/repositries/profile_repositry.dart';
+import 'package:lingo_sign/features/profile/data/repositries/profile_repositry.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
-import 'package:lingo_sign/features/profile/controller/settings_controller.dart';
+import 'package:lingo_sign/features/settings/controller/settings_controller.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:lingo_sign/features/profile/presentation/bloc/screen/profile_screen.dart';
+import 'package:lingo_sign/features/profile/presentation/screen/profile_screen.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart';
 
 void main() async {

@@ -12,14 +12,12 @@ class ProfileRepository {
   final supabase = Supabase.instance.client;
   final ImagePicker picker = ImagePicker();
 
-  
   Future<UserModel?> loadUserProfile() async {
     try {
       final user = _auth.currentUser;
       if (user == null) return null;
 
       final doc = await _firestore.collection('users').doc(user.uid).get();
-
       if (!doc.exists) return null;
 
       return UserModel.fromMap(doc.data()!, user.uid);
@@ -30,18 +28,13 @@ class ProfileRepository {
 
   Future<String?> uploadProfileImage() async {
     try {
-    
-      final statuses = await [
-        Permission.photos,
-        Permission.storage,
-      ].request();
+      final statuses = await [Permission.photos, Permission.storage].request();
 
       if (statuses[Permission.photos] != PermissionStatus.granted &&
           statuses[Permission.storage] != PermissionStatus.granted) {
         throw Exception("Storage permission denied");
       }
 
-      
       final XFile? image = await picker.pickImage(
         source: ImageSource.gallery,
         maxWidth: 512,
@@ -52,12 +45,10 @@ class ProfileRepository {
       if (image == null) return null;
 
       final File file = File(image.path);
-
       final user = _auth.currentUser;
       if (user == null) return null;
 
-      final fileName =
-          "${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+      final fileName = "${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
 
       await supabase.storage.from('images').upload(
             fileName,
@@ -68,11 +59,8 @@ class ProfileRepository {
             ),
           );
 
-      final publicUrl =
-          supabase.storage.from('images').getPublicUrl(fileName);
-
-      final finalUrl =
-          "$publicUrl?t=${DateTime.now().millisecondsSinceEpoch}";
+      final publicUrl = supabase.storage.from('images').getPublicUrl(fileName);
+      final finalUrl = "$publicUrl?t=${DateTime.now().millisecondsSinceEpoch}";
 
       await _firestore.collection('users').doc(user.uid).update({
         "image_url": finalUrl,
@@ -85,7 +73,6 @@ class ProfileRepository {
     }
   }
 
- 
   Future<void> logout() async {
     try {
       await _auth.signOut();

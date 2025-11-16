@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
-import 'package:lingo_sign/features/profile/data/model/repositries/profile_repositry.dart';
+import 'package:lingo_sign/features/profile/data/repositries/profile_repositry.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_state.dart';
 import 'package:lingo_sign/features/profile/data/model/user_model.dart';
@@ -40,11 +40,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
+
   Future<void> _onUploadProfileImage(UploadProfileImage event, Emitter<ProfileState> emit) async {
     emit(ProfileImageUploading());
     try {
-      await profileRepository.uploadProfileImage();
-     
+      await profileRepository.uploadProfileImage(); 
       add(RefreshUserProfile());
     } catch (e) {
       emit(ProfileError("Image upload failed: $e"));
