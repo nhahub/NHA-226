@@ -4,7 +4,7 @@ import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart'
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_state.dart';
 import 'package:lingo_sign/features/settings/settings_screen.dart';
-import 'package:lingo_sign/features/profile/widgets/profile_menu_item.dart';
+import 'package:lingo_sign/features/profile/presentation/widgets/profile_menu_item.dart';
 import 'package:lingo_sign/features/profile/view/helpUs.dart';
 import 'package:lingo_sign/features/profile/view/account_info_screen.dart';
 
