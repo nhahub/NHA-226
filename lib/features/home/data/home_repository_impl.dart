@@ -208,6 +208,21 @@ class HomeRepositoryImpl implements HomeRepository {
     }
   }
 
+  @override
+  Future<void> addToFavourite(String uid) {
+    return updateFavourite(uid, true);
+  }
+
+  @override
+  Future<void> removeFromFavourite(String uid) {
+    return updateFavourite(uid, false);
+  }
+
+  @override
+  Future<void> unfriend(String uid) {
+    return deleteFriend(uid);
+  }
+
   Future<void> updateFavourite(String uid, bool value) async {
     await firebaseFirestore
         .collection('users')
@@ -224,17 +239,5 @@ class HomeRepositoryImpl implements HomeRepository {
         .collection('friends')
         .doc(uid)
         .delete();
-  }
-
-  Future<void> addToFavourite(String uid) {
-    return updateFavourite(uid, true);
-  }
-
-  Future<void> removeFromFavourite(String uid) {
-    return updateFavourite(uid, false);
-  }
-
-  Future<void> unfriend(String uid) {
-    return deleteFriend(uid);
   }
 }

@@ -2,6 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/features/account_info_page/data/account_repository.dart';
+import 'package:lingo_sign/features/account_info_page/presentation/bloc/edit_account_info_bloc.dart';
+import 'package:lingo_sign/features/account_info_page/presentation/screens/account_info_screen.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/forgot_password_screen.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/sign_up_screen.dart';
@@ -25,6 +28,13 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ForgetPasswordScreen());
       case mainScreen:
         return MaterialPageRoute(builder: (_) => MainScreen());
+      case accountInfoScreen:
+        return MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => EditAccountInfoBloc(AccountRepository()),
+            child: AccountInfoScreen(),
+          ),
+        );
       case searchScreen:
         return MaterialPageRoute(
           builder: (_) => FutureBuilder(

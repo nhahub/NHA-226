@@ -8,7 +8,12 @@ plugins {
     id("dev.flutter.flutter-gradle-plugin")
 }
 
+
+
 android {
+    compileSdk = 34
+    ndkVersion = "27.0.12077973"
+
     namespace = "com.example.lingo_sign"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
@@ -18,6 +23,8 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
 
+
+  
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
@@ -27,10 +34,13 @@ android {
         applicationId = "com.example.lingo_sign"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+         
+
     }
 
     buildTypes {

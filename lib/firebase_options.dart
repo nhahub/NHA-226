@@ -33,10 +33,12 @@ class DefaultFirebaseOptions {
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
       case TargetPlatform.windows:
+
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for windows - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
+
       case TargetPlatform.linux:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for linux - '
@@ -63,6 +65,11 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671655381307',
     projectId: 'lingo-sign',
     storageBucket: 'lingo-sign.firebasestorage.app',
+
     iosBundleId: 'com.example.lingoSign',
+    androidClientId: '671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com',
+    iosClientId: '671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com',
+    
   );
 }
+
