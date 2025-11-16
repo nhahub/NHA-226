@@ -32,6 +32,15 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
 
     if (exist.docs.isNotEmpty) throw Exception("Request already sent");
 
+    final friendExist = await firestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('requests')
+        .doc(friendId)
+        .get();
+
+    if (friendExist.exists) throw Exception("User is in your friends");
+
     final request = RequestModel(
       uid: currentUser.uid,
       status: 'pending',

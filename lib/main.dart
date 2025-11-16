@@ -110,8 +110,7 @@ class MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(context.width, context.height),
-      builder: (_, child) => child!,
-      child: MultiBlocProvider(
+      builder: (_, child) => MultiBlocProvider( 
         providers: [
           BlocProvider(
             create: (context) =>

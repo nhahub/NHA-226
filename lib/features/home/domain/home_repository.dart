@@ -14,4 +14,8 @@ abstract class HomeRepository {
   Future<List<Friend>> getLastCalls();
 
   Future<List<Request>> getRequstes();
+
+  Future<bool> acceptFriendRequest(String friendId);
+
+  Future<bool> rejectFriendRequest(String friendId);
 }
