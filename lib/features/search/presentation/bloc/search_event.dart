@@ -1,3 +1,4 @@
+
 import 'package:lingo_sign/features/search/data/model/user_model.dart';
 
 abstract class SearchEvent {}

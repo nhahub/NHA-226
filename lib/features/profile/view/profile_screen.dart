@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/profile/controller/profile_controller.dart';
 import 'package:lingo_sign/features/profile/widgets/profile_menu_item.dart';
-import 'package:lingo_sign/features/profile/view/account_info_screen.dart';
-import 'package:lingo_sign/features/profile/view/helpUs.dart';
 import 'package:lingo_sign/features/profile/model/user_model.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -41,7 +40,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
-                controller.onLogoutTap(context);
               },
               child: Text(
                 "Yes",
@@ -202,26 +200,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProfileMenuItem(
                     icon: Icons.person_outline,
                     text: "Profile info",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const AccountInfoScreen(),
-                      ),
-                    ),
+                    onTap: () =>
+                        Navigator.pushNamed(context, accountInfoScreen),
                   ),
                   ProfileMenuItem(
                     icon: Icons.help_outline,
                     text: "Help / Send us",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const HelpUs()),
-                    ),
+                    onTap: () {},
                   ),
                   ProfileMenuItem(
                     icon: Icons.logout,
                     text: "Logout",
                     textColor: theme.colorScheme.error,
-                    onTap: () => _showLogoutConfirmation(context),
+                    onTap: () => _showLogoutConfirmation,
                   ),
                 ],
               ),
