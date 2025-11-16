@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/core/widget/message.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/profile/controller/profile_controller.dart';
 import 'package:lingo_sign/features/profile/widgets/profile_menu_item.dart';
 import 'package:lingo_sign/features/profile/model/user_model.dart';
@@ -19,31 +21,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? _currentImageUrl;
   bool _isLoading = false;
 
-  void _showLogoutConfirmation(BuildContext context) {
+  void _showLogoutConfirmation(BuildContext context, void Function() onAccept) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+          backgroundColor: AppColor.white,
           title: const Text("Logout"),
           content: const Text("Are you sure you want to logout?"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
-              child: Text(
-                "Cancel",
-                style: TextStyle(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
+              child: Text("Cancel", style: TextStyle(color: AppColor.black)),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop();
+                onAccept();
               },
               child: Text(
                 "Yes",
                 style: TextStyle(
-                  color: Theme.of(context).colorScheme.error,
+                  color: Colors.red,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -180,11 +179,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     text: "Help / Send us",
                     onTap: () {},
                   ),
-                  ProfileMenuItem(
-                    icon: Icons.logout,
-                    text: "Logout",
-                    textColor: Colors.red,
-                    onTap: () => _showLogoutConfirmation(context),
+                  BlocBuilder<AuthBloc, AuthState>(
+                    builder: (context, state) {
+                      return ProfileMenuItem(
+                        icon: Icons.logout,
+                        text: "Logout",
+                        textColor: Colors.red,
+                        onTap: () => _showLogoutConfirmation(context, () {
+                          context.read<AuthBloc>().add(LogoutEvent());
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            loginScreen,
+                            (context) => false,
+                          );
+                        }),
+                      );
+                    },
                   ),
                 ],
               ),
