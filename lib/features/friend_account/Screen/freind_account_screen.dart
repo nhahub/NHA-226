@@ -1,10 +1,12 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/friend_account/widget/friend_account_button.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
 
 class FriendAccountScreen extends StatelessWidget {
   final Friend friend;
@@ -69,27 +71,63 @@ class FriendAccountScreen extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: 16.h),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          FriendAccountButton(
-                            isTablet: isTablet,
-                            friend: friend,
-                            text: friend.isFavourite
-                                ? 'UnFavourite'
-                                : 'Favourite',
-                          ),
-                          FriendAccountButton(
-                            isTablet: isTablet,
-                            friend: friend,
-                            text: 'Unfriend',
-                          ),
-                          FriendAccountButton(
-                            isTablet: isTablet,
-                            friend: friend,
-                            text: 'Call',
-                          ),
-                        ],
+                      BlocConsumer(
+                        listener: (context, state) {
+                          if (state is FriendSuccessState) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(state.message),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+                          } else if (state is FriendsError) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  state.message,
+                                  style: TextStyle(color: AppColor.white),
+                                ),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
+                        bloc: context.read<FriendsBloc>(),
+                        builder: (context, state) => Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            FriendAccountButton(
+                              onTap: () {
+                                context.read<FriendsBloc>().add(
+                                  friend.isFavourite
+                                      ? RemoveFromFavouriteEvent(friend.uid)
+                                      : AddToFavouriteEvent(friend.uid),
+                                );
+                              },
+                              isTablet: isTablet,
+                              friend: friend,
+                              text: friend.isFavourite
+                                  ? 'UnFavourite'
+                                  : 'Favourite',
+                            ),
+                            FriendAccountButton(
+                              isTablet: isTablet,
+                              friend: friend,
+                              text: 'Unfriend',
+                              onTap: () {
+                                context.read<FriendsBloc>().add(
+                                  UnfriendEvent(friend.uid),
+                                );
+                              },
+                            ),
+                            FriendAccountButton(
+                              isTablet: isTablet,
+                              friend: friend,
+                              text: 'Call',
+                              onTap: () {},
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),

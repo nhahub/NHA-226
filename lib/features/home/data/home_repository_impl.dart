@@ -207,4 +207,34 @@ class HomeRepositoryImpl implements HomeRepository {
       throw Exception(e);
     }
   }
+
+  Future<void> updateFavourite(String uid, bool value) async {
+    await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection('friends')
+        .doc(uid)
+        .update({"is_favourite": value});
+  }
+
+  Future<void> deleteFriend(String uid) async {
+    await firebaseFirestore
+        .collection('users')
+        .doc(firebaseAuth.currentUser!.uid)
+        .collection('friends')
+        .doc(uid)
+        .delete();
+  }
+
+  Future<void> addToFavourite(String uid) {
+    return updateFavourite(uid, true);
+  }
+
+  Future<void> removeFromFavourite(String uid) {
+    return updateFavourite(uid, false);
+  }
+
+  Future<void> unfriend(String uid) {
+    return deleteFriend(uid);
+  }
 }
