@@ -222,18 +222,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ),
 
-      bottomNavigationBar: CustomBottomNavigationBar(
-        currentIndex: _navIndex,
-        onTap: _onNavTap,
-      ),
+      
     );
   }
 
   ImageProvider _getProfileImage() {
-    if (_currentImageUrl != null && _currentImageUrl!.isNotEmpty) {
+    
       return NetworkImage(_currentImageUrl!);
-    } else {
-      return const AssetImage('assets/images/profile.png');
-    }
+    
   }
 }
