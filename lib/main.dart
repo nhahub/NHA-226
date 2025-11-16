@@ -19,7 +19,6 @@ import 'package:lingo_sign/main_screen.dart';
 import 'package:lingo_sign/firebase_options.dart';
 import 'app_router.dart';
 import 'package:lingo_sign/features/profile/controller/settings_controller.dart';
-import 'package:lingo_sign/features/profile/view/profile_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:firebase_messaging/firebase_messaging.dart';

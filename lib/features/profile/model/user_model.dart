@@ -20,7 +20,7 @@ class UserModel {
       id: id,
       name: map['name'] ?? 'No name',
       email: map['email'] ?? 'No email',
-      imageUrl: map['imageUrl'], 
+      imageUrl: map['image_url'], 
       createdAt: _parseDateTime(map['createdAt']),
     );
   }
@@ -38,7 +38,7 @@ class UserModel {
     return {
       'name': name,
       'email': email,
-      'imageUrl': imageUrl,
+      'image_url': imageUrl,
       'createdAt': createdAt?.toIso8601String(),
     };
   }

@@ -16,7 +16,7 @@ class _MainScreenState extends State<MainScreen> {
   final List<Widget> screen = [
     TranslationScreen(),
     HomeScreen(),
-    ProfileScreen(), // Profile Screen
+    ProfileScreen(), 
   ];
   int index = 1;
 

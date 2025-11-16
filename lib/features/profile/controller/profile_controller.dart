@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/auth/presentation/screen/signin_screen.dart';
+import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
 import 'package:lingo_sign/features/profile/model/user_model.dart';
 import 'package:lingo_sign/features/profile/view/profile_screen.dart';
 import 'dart:io';
@@ -200,7 +200,7 @@ Future<void> pickAndUploadImage(BuildContext context, Function refreshUI) async 
             .collection('users')
             .doc(user.uid)
             .update({
-          "imageUrl": publicUrlWithTimestamp,  
+          "image_url": publicUrlWithTimestamp,  
           "updatedAt": FieldValue.serverTimestamp(),
         });
         
@@ -257,7 +257,7 @@ Future<void> pickAndUploadImage(BuildContext context, Function refreshUI) async 
 
       Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => const SigninScreen()),
+        MaterialPageRoute(builder: (_) => const LogInScreen()),
         (route) => false,
       );
     } catch (e) {
