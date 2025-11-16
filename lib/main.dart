@@ -10,6 +10,7 @@ import 'package:lingo_sign/features/auth/data/auth_repository_impl.dart';
 import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:lingo_sign/features/auth/presentation/screen/login_screen.dart';
 import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/onboarding/data/local_onboarding_data_source.dart';
 import 'package:lingo_sign/features/onboarding/data/onboarding_repository_impl.dart';
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(context.width, context.height),
-      builder: (_, child) => MultiBlocProvider( 
+      builder: (_, child) => MultiBlocProvider(
         providers: [
           BlocProvider(
             create: (context) =>
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
+          BlocProvider(create: (_) => FriendsBloc(HomeRepositoryImpl())),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

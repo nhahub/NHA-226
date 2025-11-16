@@ -17,6 +17,11 @@ final class FriendsLoaded extends FriendsState {
   const FriendsLoaded(this.friends);
 }
 
+class FriendSuccessState extends FriendsState {
+  final String message;
+  const FriendSuccessState(this.message);
+}
+
 final class FriendsError extends FriendsState {
   final String message;
 

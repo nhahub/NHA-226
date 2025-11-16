@@ -18,4 +18,7 @@ abstract class HomeRepository {
   Future<bool> acceptFriendRequest(String friendId);
 
   Future<bool> rejectFriendRequest(String friendId);
+  Future<void> addToFavourite(String friendUid);
+  Future<void> removeFromFavourite(String friendUid);
+  Future<void> unfriend(String friendUid);
 }
