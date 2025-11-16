@@ -1,0 +1,15 @@
+const String onboardingScreen = '/onboarding';
+const String mainScreen = '/main';
+const String loginScreen = '/login';
+const String signupScreen = '/signup';
+const String verifyAccountScreen = '/verify_account';
+const String forgetPasswordScreen = '/forget_password';
+const String searchScreen = '/search';
+const String notificationScreen = '/notification';
+const String profileScreen = '/profile';
+const String sendUsScreen = '/profile/send_us';
+const String accountInfoScreen = '/profile/account_info';
+const String translateScreen = '/translate';
+const String settingScreen = '/setting';
+const String friendAccountScreen = '/friend_account';
+
