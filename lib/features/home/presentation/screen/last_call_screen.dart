@@ -18,17 +18,9 @@ class LastCallScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12),
-          child: MultiBlocProvider(
-            providers: [
-              BlocProvider(
-                create: (context) =>
-                    FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
-              ),
-              BlocProvider(
-                create: (context) =>
-                    LastCallsBloc(HomeRepositoryImpl())..add(GetAllLastCalls()),
-              ),
-            ],
+          child: BlocProvider(
+            create: (context) =>
+                LastCallsBloc(HomeRepositoryImpl())..add(GetAllLastCalls()),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

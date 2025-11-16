@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lingo_sign/core/const/app_color.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   const CustomAppBar({super.key, required this.title});
@@ -11,23 +12,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: true,
       shadowColor: Color.fromARGB(0, 255, 255, 255),
       elevation: 0,
-      iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1),
-        child: Container(
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-          height: 1,
-        ),
-      ),
+      iconTheme: IconThemeData(color: AppColor.black),
       title: Text(
         title,
         style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.primary,
+          color: AppColor.black,
         ),
       ),
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: AppColor.white,
     );
   }
 

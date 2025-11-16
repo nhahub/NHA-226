@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/profile/controller/profile_controller.dart';
 import 'package:lingo_sign/features/profile/widgets/profile_menu_item.dart';
 import 'package:lingo_sign/features/profile/model/user_model.dart';
@@ -16,9 +17,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final controller = ProfileController();
   UserModel? _currentUser;
   String? _currentImageUrl;
-  // bool _isRefreshing = false;
   bool _isLoading = false;
-  bool _initialLoadCompleted = false;
 
   void _showLogoutConfirmation(BuildContext context) {
     showDialog(
@@ -56,25 +55,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _refreshUserData() async {
-    if (_isLoading || _initialLoadCompleted) return;
-
+    if (_isLoading) return;
     _isLoading = true;
-    print(" Starting _refreshUserData");
-
     try {
       final userData = await controller.getUserData();
-      print(" User data received - Image URL: ${userData?.imageUrl}");
-
       if (mounted) {
         setState(() {
           _currentUser = userData;
           _currentImageUrl = userData?.imageUrl;
-          _initialLoadCompleted = true;
-          print("Profile data loaded successfully");
         });
       }
     } catch (e) {
-      print(" Error in _refreshUserData: $e");
+      // ignore: use_build_context_synchronously
+      Message(context: context, message: 'Error: $e');
     } finally {
       _isLoading = false;
     }
@@ -88,8 +81,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
     return Scaffold(
       backgroundColor: AppColor.white,
       appBar: AppBar(
@@ -101,44 +92,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-
       body: _currentUser == null
           ? const Center(child: CircularProgressIndicator())
           : SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  // Profile Header
+                  const SizedBox(height: 16),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 16,
-                      vertical: 10,
+                      vertical: 8,
                     ),
                     child: Row(
                       children: [
                         Stack(
                           children: [
-                            GestureDetector(
-                              onTap: () async {
-                                await controller.pickAndUploadImage(
-                                  context,
-                                  _refreshUserData,
-                                );
-                              },
-                              child: CircleAvatar(
-                                radius: 40,
-                                backgroundImage: _getProfileImage(),
-                                child:
-                                    _currentImageUrl == null ||
-                                        _currentImageUrl!.isEmpty
-                                    ? const Icon(
-                                        Icons.person,
-                                        size: 40,
-                                        color: Colors.grey,
-                                      )
-                                    : null,
-                              ),
+                            CircleAvatar(
+                              radius: 40,
+                              backgroundColor: AppColor.white,
+                              backgroundImage: _getProfileImage(),
                             ),
                             Positioned(
                               bottom: -12,
@@ -155,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     padding: const EdgeInsets.all(2),
                                     child: Icon(
                                       Icons.camera_alt,
-                                      color: theme.colorScheme.onPrimary,
+                                      color: AppColor.white,
                                       size: 14,
                                     ),
                                   ),
@@ -177,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Text(
                               _currentUser!.name,
                               style: TextStyle(
-                                fontSize: 20,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold,
                                 color: AppColor.black,
                               ),
@@ -186,7 +159,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             Text(
                               _currentUser!.email,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 color: AppColor.darkGray,
                               ),
                             ),
@@ -195,8 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 8),
-                  Divider(color: theme.dividerColor),
+                  Divider(color: AppColor.darkGray),
                   ProfileMenuItem(
                     icon: Icons.person_outline,
                     text: "Profile info",
@@ -211,8 +183,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ProfileMenuItem(
                     icon: Icons.logout,
                     text: "Logout",
-                    textColor: theme.colorScheme.error,
-                    onTap: () => _showLogoutConfirmation,
+                    textColor: Colors.red,
+                    onTap: () => _showLogoutConfirmation(context),
                   ),
                 ],
               ),
