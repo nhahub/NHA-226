@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/core/widget/custom_app_bar.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_event.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_state.dart';
 import 'package:lingo_sign/features/search/presentation/widgets/custom_search_user.dart';
+
 import '../bloc/search_bloc.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -18,7 +17,6 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   late final SearchBloc bloc;
   bool showAll = false;
-
   @override
   void initState() {
     super.initState();
@@ -29,37 +27,58 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.white,
-      appBar: CustomAppBar(title: 'Search'),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: Text(
+          'Search',
+          style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+            fontSize: 18.h,
+          ),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings, color: Color(0xff575757)),
+            onPressed: () {
+              bloc.add(LoadRecentUsersEvent());
+            },
+          ),
+        ],
+      ),
       body: Padding(
-        padding: EdgeInsets.all(16.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.0.w, vertical: 16.h),
         child: Column(
           children: [
             Card(
               clipBehavior: Clip.antiAlias,
-              elevation: 3,
+              elevation: 4,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadiusGeometry.circular(12.h),
+                borderRadius: BorderRadius.circular(8.0.h),
               ),
-              margin: EdgeInsets.all(0),
               child: TextField(
                 onChanged: (value) => bloc.add(SearchTextChangedEvent(value)),
                 decoration: InputDecoration(
                   fillColor: Colors.white,
                   filled: true,
-                  contentPadding: EdgeInsets.all(12),
-
                   hintText: 'Search for...',
                   prefixIcon: Icon(
                     Icons.search,
-                    color: AppColor.darkGray,
+                    color: const Color(0xff575757),
                     size: 24.h,
                   ),
                   border: InputBorder.none,
                 ),
+                cursorRadius: Radius.circular(8.h),
               ),
             ),
             SizedBox(height: 16.h),
+
             Align(
               alignment: Alignment.centerLeft,
               child: Row(
@@ -72,14 +91,19 @@ class _SearchScreenState extends State<SearchScreen> {
                     ),
                   ),
                   Spacer(),
-                  Checkbox(
-                    value: showAll,
-                    onChanged: (value) {
-                      setState(() {
-                        showAll = !showAll;
-                        bloc.add(LoadRecentUsersEvent(showAll: showAll));
-                      });
+                  TextButton(
+                    onPressed: () {
+                      bloc.add(LoadRecentUsersEvent());
                     },
+                    child: BlocBuilder<SearchBloc, SearchState>(
+                      builder: (context, state) {
+                        bool showAll = false;
+                        if (state is SearchLoadedState) {
+                          showAll = state.showAll;
+                        }
+                        return Text(showAll ? 'Show Less' : 'Show All');
+                      },
+                    ),
                   ),
                 ],
               ),
@@ -99,11 +123,11 @@ class _SearchScreenState extends State<SearchScreen> {
                           child: CustomSearchUser(user: user),
                           onTap: () {
                             bloc.add(UserProfileClickedEvent(user));
-                            // Navigator.pushNamed(
-                            //   context,
-                            //   '/profile',
-                            //   arguments: user,
-                            // );
+                            Navigator.pushNamed(
+                              context,
+                              '/profile',
+                              arguments: user,
+                            );
                           },
                         );
                       },

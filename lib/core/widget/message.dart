@@ -4,7 +4,7 @@ class Message {
   Message({
     required BuildContext context,
     required String message,
-    required Color color,
+    Color? color,
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(

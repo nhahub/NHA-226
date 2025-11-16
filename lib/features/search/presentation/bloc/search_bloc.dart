@@ -1,10 +1,13 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/search/data/repositories/search_repository.dart';
+
 import 'package:lingo_sign/features/search/presentation/bloc/search_event.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository repo;
+
+  bool showAllRecent = true;
 
   SearchBloc(this.repo) : super(SearchInitialState()) {
     on<SearchTextChangedEvent>(_onTextChanged);
@@ -42,13 +45,20 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     LoadRecentUsersEvent e,
     Emitter<SearchState> emit,
   ) async {
-    final users = await repo.getRecent();
+    emit(SearchLoadingState());
 
-    if (users.isEmpty) {
-      emit(SearchEmptyState('No recent searches yet.'));
-    } else {
-      final shownList = e.showAll ? users : users.take(10).toList();
-      emit(SearchLoadedState(shownList));
+    try {
+      final users = await repo.getRecent();
+
+      if (users.isEmpty) {
+        emit(SearchEmptyState('No recent searches yet.'));
+        return;
+      }
+      showAllRecent = !showAllRecent;
+      final shownList = showAllRecent ? users : users.take(4).toList();
+      emit(SearchLoadedState(shownList, showAll: showAllRecent));
+    } catch (error) {
+      emit(SearchEmptyState('Error loading recent users: $error'));
     }
   }
 }
