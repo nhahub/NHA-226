@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/home/presentation/screen/friends_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/last_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/requests_screen.dart';
@@ -23,7 +25,11 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    context.read<UserInfoCubit>().getUserInfo();
   }
+
+  
+
 
   @override
   Widget build(BuildContext context) {
