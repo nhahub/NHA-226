@@ -4,6 +4,7 @@ import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/home/data/home_repository_impl.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend.dart';
+import 'package:lingo_sign/features/home/presentation/widget/request_friend_shimmer.dart';
 
 class RequestsScreen extends StatelessWidget {
   const RequestsScreen({super.key});
@@ -57,7 +58,14 @@ class RequestsScreen extends StatelessWidget {
                         );
                       }
                       if (state is RequestsLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 10,
+                          itemBuilder: (context, index) {
+                            return RequestFriendShimmer();
+                          },
+                        );
                       }
                       if (state is RequestsError) {
                         return Center(child: Text(state.message));

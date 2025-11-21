@@ -31,11 +31,13 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     }
   }
 
-  Future<void> _onAddToFavouriteEvent(AddToFavouriteEvent event, Emitter emit) async {
-    emit(FriendsLoading());
+  Future<void> _onAddToFavouriteEvent(
+    AddToFavouriteEvent event,
+    Emitter emit,
+  ) async {
     try {
       await homeRepository.addToFavourite(event.friendUid);
-      emit(FriendSuccessState("Added to favourites"));
+      add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
@@ -45,20 +47,18 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     RemoveFromFavouriteEvent event,
     Emitter emit,
   ) async {
-    emit(FriendsLoading());
     try {
       await homeRepository.removeFromFavourite(event.friendUid);
-      emit(FriendSuccessState("Removed from favourites"));
+      add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
   }
 
   Future<void> _onUnfriendEvent(UnfriendEvent event, Emitter emit) async {
-    emit(FriendsLoading());
     try {
       await homeRepository.unfriend(event.friendUid);
-      emit(FriendSuccessState("Unfriended successfully"));
+      add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }

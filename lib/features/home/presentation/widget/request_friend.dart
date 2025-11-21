@@ -26,7 +26,7 @@ class RequestFriend extends StatelessWidget {
           Row(
             children: [
               CircleAvatar(
-                radius: 25,
+                radius: 28,
                 backgroundColor: AppColor.white,
                 backgroundImage: request.imageUrl.isNotEmpty
                     ? NetworkImage(request.imageUrl)
@@ -34,7 +34,7 @@ class RequestFriend extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               SizedBox(
-                width: context.width / 2.7,
+                width: context.width / 2.8,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [

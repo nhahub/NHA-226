@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       designSize: Size(context.width, context.height),
       builder: (_, child) => MultiBlocProvider(
         providers: [
-          // Auth 
+          // Auth
           BlocProvider(
             create: (context) =>
                 AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
@@ -60,10 +60,7 @@ class MyApp extends StatelessWidget {
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
           // Friends
-          BlocProvider(
-            create: (_) =>
-                FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
-          ),
+          BlocProvider(create: (_) => FriendsBloc(HomeRepositoryImpl())),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

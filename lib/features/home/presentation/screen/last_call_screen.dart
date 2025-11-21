@@ -7,6 +7,7 @@ import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart';
 import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_card.dart';
+import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_shimmer_card.dart';
 
 class LastCallScreen extends StatelessWidget {
   const LastCallScreen({super.key});
@@ -24,45 +25,53 @@ class LastCallScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 16),
-                  child: const Text(
-                    "Favourites",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SizedBox(
-                  height: 90.h,
-                  child: BlocBuilder<FriendsBloc, FriendsState>(
-                    builder: (context, state) {
-                      if (state is FriendsLoaded) {
-                        final favourites = state.friends
-                            .where((favourite) => favourite.isFavourite)
-                            .toList();
+                BlocBuilder<FriendsBloc, FriendsState>(
+                  builder: (context, state) {
+                    if (state is FriendsLoaded) {
+                      final favourites = state.friends
+                          .where((favourite) => favourite.isFavourite)
+                          .toList();
 
-                        if (favourites.isEmpty) {
-                          return const Center(child: Text('No favourites yet'));
-                        }
-                        return ListView.builder(
-                          padding: EdgeInsets.only(left: 16.w),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: favourites.length,
-                          itemBuilder: (context, index) {
-                            return FavouriteUser(
-                              userFavourite: favourites[index],
-                            );
-                          },
+                      if (favourites.isNotEmpty) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(left: 16),
+                              child: const Text(
+                                "Favourites",
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            SizedBox(
+                              height: 90.h,
+                              child: ListView.builder(
+                                padding: EdgeInsets.only(left: 16.w),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: favourites.length,
+                                itemBuilder: (context, index) {
+                                  return FavouriteUser(
+                                    userFavourite: favourites[index],
+                                  );
+                                },
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
                         );
                       }
-                      if (state is FriendsLoading) {
-                        return Center(child: CircularProgressIndicator());
-                      }
-                      return Center(child: Text('Error'));
-                    },
-                  ),
+                      return SizedBox.shrink();
+                    }
+                    if (state is FriendsLoading) {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                    return Center(child: Text('Error'));
+                  },
                 ),
-                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.only(left: 16),
                   child: const Text(
@@ -93,7 +102,14 @@ class LastCallScreen extends StatelessWidget {
                         );
                       }
                       if (state is LastCallsLoading) {
-                        return Center(child: CircularProgressIndicator());
+                        return ListView.builder(
+                          physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 10,
+                          itemBuilder: (context, index) {
+                            return FriendUserCallShimmerCard();
+                          },
+                        );
                       }
                       return Center(child: Text('Error'));
                     },
