@@ -18,17 +18,23 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     on<UnfriendEvent>(_onUnfriendEvent);
   }
 
-  FutureOr<void> onGetAllFriend(
+  Future<void> onGetAllFriend(
     GetAllFriend event,
     Emitter<FriendsState> emit,
   ) async {
-    emit(FriendsLoading());
-    try {
-      final freinds = await homeRepository.getFriends();
-      emit(FriendsLoaded(freinds));
-    } catch (e) {
-      emit(FriendsError(e.toString()));
+    if (state is! FriendsLoaded) {
+      emit(FriendsLoading());
     }
+
+    await emit.forEach<List<Friend>>(
+      homeRepository.getFriends(),
+      onData: (friends) {
+        return FriendsLoaded(friends);
+      },
+      onError: (e, _) {
+        return FriendsError(e.toString());
+      },
+    );
   }
 
   Future<void> _onAddToFavouriteEvent(
@@ -37,7 +43,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   ) async {
     try {
       await homeRepository.addToFavourite(event.friendUid);
-      add(GetAllFriend());
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
@@ -49,7 +55,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   ) async {
     try {
       await homeRepository.removeFromFavourite(event.friendUid);
-      add(GetAllFriend());
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
@@ -58,7 +64,7 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
   Future<void> _onUnfriendEvent(UnfriendEvent event, Emitter emit) async {
     try {
       await homeRepository.unfriend(event.friendUid);
-      add(GetAllFriend());
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }

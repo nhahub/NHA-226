@@ -12,19 +12,8 @@ import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_ca
 import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_shimmer_card.dart';
 import 'package:lingo_sign/features/home/presentation/widget/text_shimmer.dart';
 
-class FriendsScreen extends StatefulWidget {
+class FriendsScreen extends StatelessWidget {
   const FriendsScreen({super.key});
-
-  @override
-  State<FriendsScreen> createState() => _FriendsScreenState();
-}
-
-class _FriendsScreenState extends State<FriendsScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<FriendsBloc>().add(GetAllFriend());
-  }
 
   @override
   Widget build(BuildContext context) {

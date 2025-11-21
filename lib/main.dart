@@ -60,7 +60,10 @@ class MyApp extends StatelessWidget {
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
           // Friends
-          BlocProvider(create: (_) => FriendsBloc(HomeRepositoryImpl())),
+          BlocProvider(
+            create: (_) =>
+                FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
+          ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
