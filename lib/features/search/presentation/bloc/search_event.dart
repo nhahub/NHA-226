@@ -1,5 +1,4 @@
-
-import 'package:lingo_sign/features/search/data/model/user_model.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
 abstract class SearchEvent {}
 
@@ -8,12 +7,9 @@ class SearchTextChangedEvent extends SearchEvent {
   SearchTextChangedEvent(this.query);
 }
 
-class UserProfileClickedEvent extends SearchEvent {
-  final UserModel user;
-  UserProfileClickedEvent(this.user);
+class FriendClickedEvent extends SearchEvent {
+  final Friend friend;
+  FriendClickedEvent(this.friend);
 }
 
-class LoadRecentUsersEvent extends SearchEvent {
-  final bool showAll;
-  LoadRecentUsersEvent({this.showAll = false});
-}
+class LoadRecentFriendsEvent extends SearchEvent {}

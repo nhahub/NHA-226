@@ -10,6 +10,13 @@ class FriendModel {
     return FriendModel(uid: json['uid'], isFavourite: json['is_favourite']);
   }
 
+  factory FriendModel.fromFriend(Friend friend) {
+  return FriendModel(
+    uid: friend.uid,
+    isFavourite: friend.isFavourite,
+  );
+}
+
   Map<String, dynamic> toJson() {
     return {'uid': uid, 'is_favourite': isFavourite};
   }

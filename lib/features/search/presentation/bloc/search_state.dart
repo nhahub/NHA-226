@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:lingo_sign/features/search/data/model/user_model.dart';
+import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 
-abstract class SearchState extends Equatable {
+sealed class SearchState extends Equatable {
   const SearchState();
 
   @override
@@ -13,13 +13,13 @@ class SearchInitialState extends SearchState {}
 class SearchLoadingState extends SearchState {}
 
 class SearchLoadedState extends SearchState {
-  final List<UserModel> users;
+  final List<Friend> friends;
   final bool showAll;
 
-  const SearchLoadedState(this.users, {this.showAll = false});
+  const SearchLoadedState(this.friends, {this.showAll = true});
 
   @override
-  List<Object?> get props => [users, showAll];
+  List<Object?> get props => [friends, showAll];
 }
 
 class SearchEmptyState extends SearchState {
@@ -29,13 +29,4 @@ class SearchEmptyState extends SearchState {
 
   @override
   List<Object?> get props => [message];
-}
-
-class SearchRecentState extends SearchState {
-  final List<String> recentQueries;
-
-  const SearchRecentState(this.recentQueries);
-
-  @override
-  List<Object?> get props => [recentQueries];
 }
