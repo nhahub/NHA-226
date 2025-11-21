@@ -11,7 +11,7 @@ import 'package:lingo_sign/features/auth/presentation/screen/sign_up_screen.dart
 import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
 import 'package:lingo_sign/features/notification/presentation/cubit/notifications_cubit.dart';
 import 'package:lingo_sign/features/notification/presentation/screen/notification_screen.dart';
-import 'package:lingo_sign/features/search/data/repositories/search_repository.dart';
+import 'package:lingo_sign/features/search/data/search_repository.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_bloc.dart';
 import 'package:lingo_sign/features/search/presentation/screens/search_screen.dart';
 import 'package:lingo_sign/main_screen.dart';
@@ -44,7 +44,7 @@ class AppRouter {
               final prefs = snapshot.data!;
               return BlocProvider(
                 create: (_) => SearchBloc(
-                  SearchRepository(FirebaseFirestore.instance, prefs),
+                  SearchRepository(prefs),
                 ),
                 child: const SearchScreen(),
               );

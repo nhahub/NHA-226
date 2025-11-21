@@ -28,9 +28,6 @@ class _HomeScreenState extends State<HomeScreen>
     context.read<UserInfoCubit>().getUserInfo();
   }
 
-  
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

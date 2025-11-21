@@ -40,21 +40,26 @@ class MyApp extends StatelessWidget {
       designSize: Size(context.width, context.height),
       builder: (_, child) => MultiBlocProvider(
         providers: [
+          // Auth 
           BlocProvider(
             create: (context) =>
                 AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
           ),
+          // Onboarding
           BlocProvider(
             create: (_) => OnboardingCubit(
               OnboardingRepositoryImpl(LocalOnboardingDataSource()),
             )..checkUserStatus(),
           ),
+          // User Information
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+          // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
+          // Friends
           BlocProvider(
             create: (_) =>
                 FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),

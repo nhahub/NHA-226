@@ -13,10 +13,11 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
   FriendsBloc(this.homeRepository) : super(FriendsInitial()) {
     on<GetAllFriend>(onGetAllFriend);
-    on<AddToFavouriteEvent>(_addToFavourite);
-    on<RemoveFromFavouriteEvent>(_removeFromFavourite);
-    on<UnfriendEvent>(_unfriend);
+    on<AddToFavouriteEvent>(_onAddToFavouriteEvent);
+    on<RemoveFromFavouriteEvent>(_onRemoveFromFavouriteEvent);
+    on<UnfriendEvent>(_onUnfriendEvent);
   }
+
   FutureOr<void> onGetAllFriend(
     GetAllFriend event,
     Emitter<FriendsState> emit,
@@ -30,39 +31,33 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
     }
   }
 
-  Future<void> _addToFavourite(AddToFavouriteEvent event, Emitter emit) async {
+  Future<void> _onAddToFavouriteEvent(AddToFavouriteEvent event, Emitter emit) async {
+    emit(FriendsLoading());
     try {
-      emit(FriendsLoading());
-
       await homeRepository.addToFavourite(event.friendUid);
-
       emit(FriendSuccessState("Added to favourites"));
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
   }
 
-  Future<void> _removeFromFavourite(
+  Future<void> _onRemoveFromFavouriteEvent(
     RemoveFromFavouriteEvent event,
     Emitter emit,
   ) async {
+    emit(FriendsLoading());
     try {
-      emit(FriendsLoading());
-
       await homeRepository.removeFromFavourite(event.friendUid);
-
       emit(FriendSuccessState("Removed from favourites"));
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
   }
 
-  Future<void> _unfriend(UnfriendEvent event, Emitter emit) async {
+  Future<void> _onUnfriendEvent(UnfriendEvent event, Emitter emit) async {
+    emit(FriendsLoading());
     try {
-      emit(FriendsLoading());
-
       await homeRepository.unfriend(event.friendUid);
-
       emit(FriendSuccessState("Unfriended successfully"));
     } catch (e) {
       emit(FriendsError(e.toString()));
