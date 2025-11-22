@@ -38,79 +38,76 @@ class _AddFriendState extends State<AddFriend> {
                 content: SizedBox(
                   width: context.width - 32,
                   height: context.height / 3.5,
-                  child: BlocListener<FriendRequestCubit, FriendRequestState>(
+                  child: BlocConsumer<FriendRequestCubit, FriendRequestState>(
                     listener: (context, state) {
                       if (state is FriendRequestSuccess ||
                           state is FriendRequestError) {
                         Navigator.pop(context);
-                        emailController.clear ();
+                        emailController.clear();
                       }
                     },
-                    child: BlocBuilder<FriendRequestCubit, FriendRequestState>(
-                      builder: (context, state) {
-                        return Column(
-                          children: [
-                            const SizedBox(height: 32),
-                            const Text(
-                              "Add Friend",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                              ),
+                    builder: (context, state) {
+                      return Column(
+                        children: [
+                          const SizedBox(height: 32),
+                          const Text(
+                            "Add Friend",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
                             ),
-                            const SizedBox(height: 32),
-
-                            TextFormField(
-                              controller: emailController,
-                              decoration: InputDecoration(
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(
-                                    color: AppColor.gray,
-                                    width: 1,
-                                  ),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                hintText: "Enter friend email",
-                                hintStyle: TextStyle(color: AppColor.gray),
-                                suffixIcon: Icon(
-                                  Icons.email,
+                          ),
+                          const SizedBox(height: 32),
+                          TextFormField(
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(
                                   color: AppColor.gray,
+                                  width: 1,
                                 ),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              hintText: "Enter friend email",
+                              hintStyle: TextStyle(color: AppColor.gray),
+                              suffixIcon: Icon(
+                                Icons.email,
+                                color: AppColor.gray,
                               ),
                             ),
-
-                            const SizedBox(height: 32),
-
-                            state is FriendRequestLoading
-                                ? const CircularProgressIndicator()
-                                : ElevatedButton(
-                                    onPressed: () {
+                          ),
+                          const SizedBox(height: 32),
+                          state is FriendRequestLoading
+                              ? const CircularProgressIndicator()
+                              : ElevatedButton(
+                                  onPressed: () {
+                                    if (emailController.text.isNotEmpty) {
                                       context
                                           .read<FriendRequestCubit>()
                                           .sendRequest(
                                             emailController.text.trim(),
                                           );
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColor.main,
-                                      fixedSize: const Size(311, 40),
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                    ),
-                                    child: const Text(
-                                      "Request",
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: AppColor.white,
-                                      ),
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColor.main,
+                                    fixedSize: const Size(311, 40),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                          ],
-                        );
-                      },
-                    ),
+                                  child: const Text(
+                                    "Request",
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500,
+                                      color: AppColor.white,
+                                    ),
+                                  ),
+                                ),
+                        ],
+                      );
+                    },
                   ),
                 ),
               ),

@@ -7,6 +7,8 @@ import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
 import 'package:lingo_sign/features/call/data/call_repository.dart';
 import 'package:lingo_sign/features/call/presentation/state_managment/call_bloc.dart';
 import 'package:lingo_sign/features/call/services/agora_service.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -45,21 +47,26 @@ class MyApp extends StatelessWidget {
       designSize: Size(context.width, context.height),
       builder: (_, child) => MultiBlocProvider(
         providers: [
+          // Auth
           BlocProvider(
             create: (context) =>
                 AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
           ),
+          // Onboarding
           BlocProvider(
             create: (_) => OnboardingCubit(
               OnboardingRepositoryImpl(LocalOnboardingDataSource()),
             )..checkUserStatus(),
           ),
+          // User Information
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+          // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
+          // Friends
           BlocProvider(
             create: (_) =>
                 FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
@@ -69,6 +76,15 @@ class MyApp extends StatelessWidget {
               CallRepository(CallFirestoreService()),
               AgoraService(),
             ),
+          // Last Calls
+          BlocProvider(
+            create: (_) =>
+                LastCallsBloc(HomeRepositoryImpl())..add(GetAllLastCalls()),
+          ),
+          // Requests
+          BlocProvider(
+            create: (_) =>
+                RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
         ],
         child: MaterialApp(

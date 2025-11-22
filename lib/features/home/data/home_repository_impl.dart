@@ -38,36 +38,45 @@ class HomeRepositoryImpl implements HomeRepository {
   }
 
   @override
-  Future<List<Friend>> getFriends() async {
+  Stream<List<Friend>> getFriends() {
     final uid = firebaseAuth.currentUser!.uid;
-    try {
-      final friendsRef = firebaseFirestore
-          .collection('users')
-          .doc(uid)
-          .collection('friends');
+    final friendsRef = firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .collection('friends');
 
-      final friendsDoc = await friendsRef.get();
-      final validDocs = friendsDoc.docs.where((doc) => doc.id != '_init');
+    return friendsRef.snapshots().asyncExpand((snapshot) async* {
+      final validDocs = snapshot.docs
+          .where((doc) => doc.id != '_init')
+          .toList();
+
+      if (validDocs.isEmpty) {
+        yield [];
+        return;
+      }
+
       final friends = validDocs
           .map((doc) => FriendModel.fromJson(doc.data()))
           .toList();
 
-      final friendsInfo = await Future.wait(
-        friends.map((friend) async {
-          UserApp userApp = await getUserInfoById(friend.uid);
-          return friend.toFriend(
-            name: userApp.name,
-            email: userApp.email,
-            imageUrl: userApp.imageUrl,
-            lastSeen: userApp.lastSeen,
-          );
-        }),
-      );
-
-      return friendsInfo;
-    } catch (e) {
-      throw Exception(e);
-    }
+      try {
+        final friendsInfo = await Future.wait(
+          friends.map(
+            (friend) => getUserInfoById(friend.uid).then(
+              (userApp) => friend.toFriend(
+                name: userApp.name,
+                email: userApp.email,
+                imageUrl: userApp.imageUrl,
+                lastSeen: userApp.lastSeen,
+              ),
+            ),
+          ),
+        );
+        yield friendsInfo;
+      } catch (e) {
+        yield [];
+      }
+    });
   }
 
   @override
@@ -238,6 +247,13 @@ class HomeRepositoryImpl implements HomeRepository {
         .doc(firebaseAuth.currentUser!.uid)
         .collection('friends')
         .doc(uid)
+        .delete();
+
+    await firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .collection('friends')
+        .doc(firebaseAuth.currentUser!.uid)
         .delete();
   }
 }
