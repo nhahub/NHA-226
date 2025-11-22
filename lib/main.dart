@@ -2,6 +2,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -63,6 +65,16 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) =>
                 FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
+          ),
+          // Last Calls
+          BlocProvider(
+            create: (_) =>
+                LastCallsBloc(HomeRepositoryImpl())..add(GetAllLastCalls()),
+          ),
+          // Requests
+          BlocProvider(
+            create: (_) =>
+                RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
         ],
         child: MaterialApp(
