@@ -31,6 +31,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
+  await AgoraService().initialize(appId: "f44d864260b5421c9281f6833bfe7db7");
   runApp(MyApp(appRouter: AppRouter()));
 }
 

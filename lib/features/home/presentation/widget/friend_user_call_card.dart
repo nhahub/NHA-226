@@ -16,7 +16,6 @@ class FriendUserCallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IncomingHandler(myUserId: auth.currentUser!.uid);
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -27,6 +26,7 @@ class FriendUserCallCard extends StatelessWidget {
       },
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
+
         child: Container(
           color: Colors.transparent,
           child: Row(

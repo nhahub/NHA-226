@@ -55,14 +55,20 @@ class CallBloc extends Bloc<CallEvent, CallState> {
 
   Future<void> _onAcceptCall(AcceptCallEvent e, Emitter emit) async {
     final data = e.data;
+
     await repo.acceptCall(receiverId: data['callerId']);
+
     final appId = 'f44d864260b5421c9281f6833bfe7db7';
-    await agora.init(appId);
+    await agora.initialize(appId: appId);
+
     await agora.joinChannel(
       token: data['token'],
       channelName: data['channelName'],
+      uid: data['uid'] ?? 0,
     );
+
     emit(CallInProgress(channel: data['channelName']));
+
     FlutterCallkitIncoming.endAllCalls();
   }
 

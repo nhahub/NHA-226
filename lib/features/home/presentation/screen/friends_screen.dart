@@ -49,7 +49,8 @@ class FriendsScreen extends StatelessWidget {
                         itemCount: favourites.length,
                         itemBuilder: (context, index) {
                           return FavouriteUser(
-                            userFavourite: favourites[index],
+                            userFavourite:  favourites[index],
+
                           );
                         },
                       );

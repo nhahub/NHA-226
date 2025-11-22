@@ -5,7 +5,9 @@ import '../../services/agora_service.dart';
 class CallScreen extends StatefulWidget {
   final String channelName;
   final String token;
+
   const CallScreen({super.key, required this.channelName, required this.token});
+
   @override
   State<CallScreen> createState() => _CallScreenState();
 }
@@ -18,25 +20,32 @@ class _CallScreenState extends State<CallScreen> {
   @override
   void initState() {
     super.initState();
-    _start();
+    _startCall();
   }
 
-  Future<void> _start() async {
-    await _agora.init('f44d864260b5421c9281f6833bfe7db7');
+  Future<void> _startCall() async {
+    await _agora.initialize(appId: 'f44d864260b5421c9281f6833bfe7db7');
+
     await _agora.joinChannel(
       token: widget.token,
       channelName: widget.channelName,
+      uid: 0,
     );
+
     _agora.engine.registerEventHandler(
       RtcEngineEventHandler(
         onUserJoined: (connection, remoteUid, elapsed) {
+          if (!mounted) return;
+
           setState(() => _remoteUid = remoteUid);
         },
         onUserOffline: (connection, remoteUid, reason) {
+          if (!mounted) return;
           setState(() => _remoteUid = null);
         },
       ),
     );
+    if (!mounted) return;
     setState(() => _joined = true);
   }
 
