@@ -31,7 +31,7 @@ class FriendAccountScreen extends StatelessWidget {
           ),
           Center(
             child: SizedBox(
-              width: isTablet ? context.width * 0.5 : context.width - 32,
+              width: isTablet ? context.width * 0.5 : context.width - 16,
               child: Card(
                 color: AppColor.white,
                 shape: RoundedRectangleBorder(

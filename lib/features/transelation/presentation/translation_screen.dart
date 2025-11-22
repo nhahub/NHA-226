@@ -37,10 +37,10 @@ class TranslationScreen extends StatelessWidget {
               Center(
                 child: SvgPicture.asset(
                   'assets/images/person.svg',
-                  height: isTablet ? 200 : 175,
+                  height: isTablet ? 200 : 150,
                 ),
               ),
-              SizedBox(height: isTablet ? context.height * 0.12 : 150),
+              SizedBox(height: isTablet ? context.height * 0.12 : 100),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Row(

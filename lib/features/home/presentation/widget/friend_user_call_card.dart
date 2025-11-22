@@ -1,9 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/call/call_system/call_service.dart';
-import 'package:lingo_sign/features/call/call_system/firestore_call_model.dart';
-import 'package:lingo_sign/features/call/screen/video_screen.dart';
+import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
+import 'package:lingo_sign/features/call/data/call_repository.dart';
+import 'package:lingo_sign/features/call/presentation/screens/incoming_handler.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -16,6 +16,7 @@ class FriendUserCallCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    IncomingHandler(myUserId: auth.currentUser!.uid);
     return GestureDetector(
       onTap: () {
         showDialog(
@@ -60,8 +61,33 @@ class FriendUserCallCard extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () {
-                  _showCallDialog(context, userFriend);
+                onTap: () async {
+                  await CallFirestoreService().createIncomingCall(
+                    receiverId: userFriend.uid,
+                    data: {
+                      "callerId": auth.currentUser!.uid,
+                      "callerName": auth.currentUser!.displayName ?? "Unknown",
+                      "callerAvatar": auth.currentUser!.photoURL ?? "",
+                      "callId": DateTime.now().millisecondsSinceEpoch
+                          .toString(),
+                      "channelName":
+                          "agora_channel_${DateTime.now().millisecondsSinceEpoch}",
+                      "token": "<TEMP_TOKEN>",
+                      "timestamp": DateTime.now().millisecondsSinceEpoch,
+                    },
+                  );
+                  final callerId = auth.currentUser!.uid;
+                  final calleeId = userFriend.uid;
+                  final channel =
+                      'call_${callerId}_$calleeId${DateTime.now().millisecondsSinceEpoch}';
+                  final token = "<TEMP_TOKEN>";
+                  final repo = CallRepository(CallFirestoreService());
+                  await repo.startCall(
+                    callerId: callerId,
+                    receiverId: calleeId,
+                    channelName: channel,
+                    token: token,
+                  );
                 },
                 child: Container(
                   width: 36,
@@ -77,44 +103,6 @@ class FriendUserCallCard extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-
-  void _showCallDialog(BuildContext context, Friend friend) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text("Video Call"),
-          content: Text("Call ${friend.name}?"),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text("Cancel"),
-            ),
-            TextButton(
-              onPressed: () async {
-                final call = Call(
-                  callerId: auth.currentUser!.uid,
-                  receiverId: friend.uid,
-                  channel: "channel_${friend.uid}",
-                  status: "ringing",
-                );
-
-                await CallService().makeCall(call);
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CallScreen(channelName: call.channel),
-                  ),
-                );
-              },
-              child: Text("Call"),
-            ),
-          ],
-        );
-      },
     );
   }
 }

@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/call/call_system/call_service.dart';
-import 'package:lingo_sign/features/call/screen/incoming_call_screen.dart';
+import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
+import 'package:lingo_sign/features/call/services/incoming_call_handler.dart';
 import 'package:lingo_sign/features/home/presentation/screen/friends_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/last_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/requests_screen.dart';
@@ -22,17 +23,16 @@ class _HomeScreenState extends State<HomeScreen>
 
   late TabController _tabController;
   FirebaseAuth auth = FirebaseAuth.instance;
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    CallService().onIncomingCall(auth.currentUser!.uid).listen((call) {
-      if (call == null) return;
-      if (call.status == "ringing") {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (_) => IncomingCallScreen(call: call)),
-        );
+    CallFirestoreService().onIncomingCall(auth.currentUser!.uid).listen((
+      callData,
+    ) {
+      if (callData != null) {
+        IncomingCallHandler().handleIncoming(callData, context);
       }
     });
   }
