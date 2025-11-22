@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:lingo_sign/core/const/string.dart';
 import '../../services/agora_service.dart';
 
 class CallScreen extends StatefulWidget {
+  const CallScreen({super.key, required this.channelName});
+  
   final String channelName;
-  final String token;
-  const CallScreen({super.key, required this.channelName, required this.token});
+
   @override
   State<CallScreen> createState() => _CallScreenState();
 }
@@ -22,11 +24,8 @@ class _CallScreenState extends State<CallScreen> {
   }
 
   Future<void> _start() async {
-    await _agora.init('f44d864260b5421c9281f6833bfe7db7');
-    await _agora.joinChannel(
-      token: widget.token,
-      channelName: widget.channelName,
-    );
+    await _agora.init(appId);
+    await _agora.joinChannel(token: '', channelName: widget.channelName);
     _agora.engine.registerEventHandler(
       RtcEngineEventHandler(
         onUserJoined: (connection, remoteUid, elapsed) {

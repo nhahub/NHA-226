@@ -12,7 +12,11 @@ class CallRinging extends CallState {
   final String callerId;
   final String channel;
   final String token;
-  CallRinging({required this.callerId, required this.channel, required this.token});
+  CallRinging({
+    required this.callerId,
+    required this.channel,
+    required this.token,
+  });
 }
 
 class CallInProgress extends CallState {

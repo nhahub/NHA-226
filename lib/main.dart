@@ -1,11 +1,10 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_callkit_incoming/flutter_callkit_incoming.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
 import 'package:lingo_sign/features/call/data/call_repository.dart';
-import 'package:lingo_sign/features/call/presentation/state_managment/call_bloc.dart';
+import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/services/agora_service.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
@@ -71,11 +70,6 @@ class MyApp extends StatelessWidget {
             create: (_) =>
                 FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
           ),
-          BlocProvider(
-            create: (_) => CallBloc(
-              CallRepository(CallFirestoreService()),
-              AgoraService(),
-            ),
           // Last Calls
           BlocProvider(
             create: (_) =>
@@ -85,6 +79,13 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) =>
                 RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
+          ),
+          // Calls
+          BlocProvider(
+            create: (_) => CallBloc(
+              CallRepository(CallFirestoreService()),
+              AgoraService(),
+            ),
           ),
         ],
         child: MaterialApp(

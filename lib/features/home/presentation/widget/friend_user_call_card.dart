@@ -8,8 +8,10 @@ import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
+// ignore: must_be_immutable
 class FriendUserCallCard extends StatelessWidget {
   FriendUserCallCard({super.key, required this.userFriend, this.onTap});
+  
   FirebaseAuth auth = FirebaseAuth.instance;
   final Friend userFriend;
   final void Function()? onTap;
@@ -72,7 +74,7 @@ class FriendUserCallCard extends StatelessWidget {
                           .toString(),
                       "channelName":
                           "agora_channel_${DateTime.now().millisecondsSinceEpoch}",
-                      "token": "<TEMP_TOKEN>",
+                      "token": "",
                       "timestamp": DateTime.now().millisecondsSinceEpoch,
                     },
                   );
@@ -80,13 +82,12 @@ class FriendUserCallCard extends StatelessWidget {
                   final calleeId = userFriend.uid;
                   final channel =
                       'call_${callerId}_$calleeId${DateTime.now().millisecondsSinceEpoch}';
-                  final token = "<TEMP_TOKEN>";
                   final repo = CallRepository(CallFirestoreService());
                   await repo.startCall(
                     callerId: callerId,
                     receiverId: calleeId,
                     channelName: channel,
-                    token: token,
+                    token: '',
                   );
                 },
                 child: Container(

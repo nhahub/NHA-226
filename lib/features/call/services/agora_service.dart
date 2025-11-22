@@ -25,8 +25,9 @@ class AgoraService {
   }
 
   RtcEngine get engine {
-    if (_engine == null)
+    if (_engine == null) {
       throw Exception('Agora engine used before initialization');
+    }
     return _engine!;
   }
 
@@ -35,8 +36,9 @@ class AgoraService {
     required String channelName,
     int uid = 0,
   }) async {
-    if (!_initialized)
+    if (!_initialized) {
       throw Exception('Agora engine used before initialization');
+    }
     await _engine!.joinChannel(
       token: token,
       channelId: channelName,

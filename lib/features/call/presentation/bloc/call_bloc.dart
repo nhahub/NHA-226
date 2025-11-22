@@ -56,7 +56,7 @@ class CallBloc extends Bloc<CallEvent, CallState> {
   Future<void> _onAcceptCall(AcceptCallEvent e, Emitter emit) async {
     final data = e.data;
     await repo.acceptCall(receiverId: data['callerId']);
-    final appId = 'f44d864260b5421c9281f6833bfe7db7';
+    final appId = 'bee2e80cae984eeba628505cf902ab96';
     await agora.init(appId);
     await agora.joinChannel(
       token: data['token'],

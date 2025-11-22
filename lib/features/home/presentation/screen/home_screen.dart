@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
@@ -34,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
       callData,
     ) {
       if (callData != null) {
+        // ignore: use_build_context_synchronously
         IncomingCallHandler().handleIncoming(callData, context);
       }
     });
@@ -43,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(),
+      appBar: CustomAppBar(), 
       backgroundColor: AppColor.white,
       body: Column(
         children: [

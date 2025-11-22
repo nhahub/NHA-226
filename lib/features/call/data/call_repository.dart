@@ -2,8 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'call_firestore_service.dart';
 
 class CallRepository {
-  final CallFirestoreService fs;
-  CallRepository(this.fs);
+  final CallFirestoreService callFirestoreService;
+
+  CallRepository(this.callFirestoreService);
 
   Future<void> startCall({
     required String callerId,
@@ -11,23 +12,27 @@ class CallRepository {
     required String channelName,
     required String token,
   }) async {
+
     final data = {
       'callerId': callerId,
       'channelName': channelName,
-      'token': token,
+      'token': '',
       'status': 'ringing',
       'timestamp': FieldValue.serverTimestamp(),
     };
-    await fs.createIncomingCall(receiverId: receiverId, data: data);
+
+    await callFirestoreService.createIncomingCall(receiverId: receiverId, data: data);
+
     final callerRef = FirebaseFirestore.instance
         .collection('users')
         .doc(callerId)
         .collection('call')
         .doc('outgoing');
+        
     await callerRef.set({
       'calleeId': receiverId,
       'channelName': channelName,
-      'token': token,
+      'token': '',
       'status': 'calling',
       'timestamp': FieldValue.serverTimestamp(),
     });
@@ -115,5 +120,5 @@ class CallRepository {
   }
 
   Stream<Map<String, dynamic>?> incomingStream(String userId) =>
-      fs.onIncomingCall(userId);
+      callFirestoreService.onIncomingCall(userId);
 }
