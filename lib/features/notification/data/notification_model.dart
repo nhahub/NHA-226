@@ -2,26 +2,30 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
 class NotificationModel {
+  final String id;
   final String title;
   final String type;
   final DateTime createdAt;
   final bool isRead;
 
   NotificationModel({
+    required this.id,
     required this.title,
     required this.type,
     required this.createdAt,
     required this.isRead,
   });
 
-  factory NotificationModel.fromJson(Map<String, dynamic> json) {
+  factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return NotificationModel(
-      title: json['title'] ?? '',
-      type: json['type'] ?? '',
-      createdAt: (json['created_at'] is Timestamp)
-          ? (json['created_at'] as Timestamp).toDate()
-          : DateTime.parse(json['created_at']),
-      isRead: json['is_read'] ?? false,
+      id: doc.id,
+      title: data['title'] ?? '',
+      type: data['type'] ?? '',
+      createdAt: (data['created_at'] is Timestamp)
+          ? (data['created_at'] as Timestamp).toDate()
+          : DateTime.parse(data['created_at']),
+      isRead: data['is_read'] ?? false,
     );
   }
 
@@ -29,13 +33,14 @@ class NotificationModel {
     return {
       'title': title,
       'type': type,
-      'created_at': createdAt.toString(),
+      'created_at': createdAt,
       'is_read': isRead,
     };
   }
 
   AppNotification toAppNotification() {
     return AppNotification(
+      id: id,
       title: title,
       type: type == 'request'
           ? NotificationType.request

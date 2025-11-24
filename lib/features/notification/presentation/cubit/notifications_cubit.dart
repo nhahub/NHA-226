@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 import 'package:lingo_sign/features/notification/domain/notification_repository.dart';
 
@@ -22,5 +21,10 @@ class NotificationsCubit extends Cubit<NotificationsState> {
       emit(NotificationsError(message: e.toString()));
     }
     return null;
+  }
+
+  Future<void> markAsRead(String notifId) async {
+    await notificationRepository.markAsRead(notifId);
+    await getallNotification();
   }
 }

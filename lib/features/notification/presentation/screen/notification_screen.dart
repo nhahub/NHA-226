@@ -18,9 +18,20 @@ class NotificationScreen extends StatefulWidget {
 
 class _NotificationScreenState extends State<NotificationScreen> {
   @override
+  @override
   void initState() {
     super.initState();
-    context.read<NotificationsCubit>().getallNotification();
+
+    final cubit = context.read<NotificationsCubit>();
+    cubit.getallNotification().then((notifications) {
+      if (notifications != null) {
+        for (final notif in notifications) {
+          if (!notif.isRead) {
+            cubit.markAsRead(notif.id);
+          }
+        }
+      }
+    });
   }
 
   @override

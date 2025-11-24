@@ -11,25 +11,44 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   Future<List<AppNotification>> getallNotification() async {
     final user = firebaseAuth.currentUser!;
+
     try {
       final notificationRef = firebaseFirestore
           .collection('users')
           .doc(user.uid)
           .collection('notifications');
 
-      final notificationDoc = await notificationRef.get();
+      final notificationSnapshot = await notificationRef.get();
 
-      final validDocs = notificationDoc.docs.where((doc) => doc.id != '_init');
+      final validDocs = notificationSnapshot.docs.where(
+        (doc) => doc.id != "_init",
+      );
 
       List<AppNotification> notifications = validDocs
           .map(
-            (doc) => NotificationModel.fromJson(doc.data()).toAppNotification(),
+            (doc) => NotificationModel.fromFirestore(doc).toAppNotification(),
           )
           .toList();
 
       return notifications;
     } catch (e) {
-      throw Exception(e);
+      throw Exception("Error loading notifications: $e");
+    }
+  }
+
+  @override
+  Future<void> markAsRead(String notifId) async {
+    final user = firebaseAuth.currentUser!;
+
+    try {
+      await firebaseFirestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('notifications')
+          .doc(notifId)
+          .update({'is_read': true});
+    } catch (e) {
+      throw Exception("Failed to mark notification as read: $e");
     }
   }
 }
