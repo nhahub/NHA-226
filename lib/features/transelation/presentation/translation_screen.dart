@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 
 class TranslationScreen extends StatelessWidget {
@@ -118,13 +119,27 @@ class TranslationScreen extends StatelessWidget {
                             AppColor.main,
                             AppColor.second
                           ],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
                           stops: [
                             0.41, 
                             1.0,
                           ],
-                          )
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              blurRadius: 4,
+                              offset: Offset(0, 4),
+                            )
+                          ],
+                      ),
+                      child: Center(
+                        child: SizedBox(
+                          child: SvgPicture.asset(
+                            'assets/images/mdi_camera.svg',
+                            ),
+                        ),
                       ),
                     )
                     ),
