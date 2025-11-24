@@ -1,104 +1,137 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lingo_sign/core/utils/helper.dart';
 
 class TranslationScreen extends StatelessWidget {
   const TranslationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final isTablet = context.width > 600;
-
+    String name = "Abdelrahman";
     return Scaffold(
-      backgroundColor: AppColor.white,
-      appBar: AppBar(
-        backgroundColor: AppColor.white,
-        leading: IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.history, size: isTablet ? 32 : 26),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(Icons.notifications, size: isTablet ? 32 : 26),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: isTablet ? context.width * 0.1 : 0,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              SizedBox(height: isTablet ? context.height * 0.15 : 250),
-              Center(
-                child: SvgPicture.asset(
-                  'assets/images/person.svg',
-                  height: isTablet ? 200 : 150,
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+
+                SizedBox(height: 88),
+
+                Text(
+                  "Hi ${name},",
+                  style: TextStyle(
+                    fontFamily: 'Gloock',
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: AppColor.black
+                  ),
+                ),
+
+                SizedBox(height: 8),
+
+                Text(
+                  "Let's understand each other better",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: AppColor.darkGray
+                  ),
+                ),
+
+                SizedBox(height: 32,),
+
+                Container(
+                  width: double.infinity,
+                  height: 196,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: AppColor.second
+                    ),
+
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: 
+                    Column(
+                      children: [
+                        Text(
+                          'Use the camera below to capture or record your sign language gestures',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: AppColor.darkGray,
+                          ),
+                          ),
+
+                          SizedBox(height: 70,),
+
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                onPressed: (){}, 
+                                icon: Icon(
+                                Icons.copy,
+                                color: AppColor.darkGray,
+                                )
+                              )
+                            ],
+                          )
+                      ],
+                    ),
+                  ),
+                ),
+
+              SizedBox(height: 32,),
+
+              Text(
+                '• Hold your hand clearly in front of the camera',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColor.darkGray
                 ),
               ),
-              SizedBox(height: isTablet ? context.height * 0.12 : 100),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: isTablet ? 70 : 50,
-                        decoration: BoxDecoration(
-                          color: AppColor.second,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            const Expanded(
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  hintText: "Text Field",
-                                  border: InputBorder.none,
-                                ),
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {},
-                              child: SvgPicture.asset(
-                                'assets/images/Camera.svg',
-                                height: isTablet ? 35 : 26,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+
+              Text(
+                '• Ensure good lighting',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: AppColor.darkGray
+                ),
+              ),
+
+              SizedBox(height: 197,),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ElevatedButton(
+                    onPressed: (){}, 
+                    style: ElevatedButton.styleFrom(
+                      shape: CircleBorder(),
+                      
                     ),
-                    SizedBox(width: isTablet ? 16 : 10),
+                    child: 
                     Container(
-                      height: isTablet ? 70 : 50,
-                      width: isTablet ? 70 : 50,
+                      width: 65,
+                      height: 65,
                       decoration: BoxDecoration(
-                        color: AppColor.second,
-                        borderRadius: BorderRadius.circular(12),
+                        borderRadius: BorderRadius.circular(50),
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColor.main,
+                            AppColor.second
+                          ],
+                          begin: Alignment.centerLeft,
+                          end: Alignment.centerRight,
+                          stops: [
+                            0.41, 
+                            1.0,
+                          ],
+                          )
                       ),
-                      padding: const EdgeInsets.all(10),
-                      child: InkWell(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/images/mic.svg',
-                          height: isTablet ? 35 : 26,
-                          width: isTablet ? 35 : 26,
-                        ),
-                      ),
+                    )
                     ),
-                  ],
-                ),
-              ),
-              SizedBox(height: isTablet ? context.height * 0.1 : 50),
-            ],
-          ),
-        ),
+                ],
+              )
+              ],
+            ),
       ),
     );
   }

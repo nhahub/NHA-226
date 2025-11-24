@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen>
     ) {
       if (callData != null) {
         // ignore: use_build_context_synchronously
-        IncomingCallHandler().handleIncoming(callData, context);
+        // IncomingCallHandler().handleIncoming(callData, context);
       }
     });
     context.read<UserInfoCubit>().getUserInfo();
