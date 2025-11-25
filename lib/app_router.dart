@@ -13,6 +13,7 @@ import 'package:lingo_sign/features/notification/presentation/screen/notificatio
 import 'package:lingo_sign/features/search/data/search_repository.dart';
 import 'package:lingo_sign/features/search/presentation/bloc/search_bloc.dart';
 import 'package:lingo_sign/features/search/presentation/screens/search_screen.dart';
+import 'package:lingo_sign/features/recording_video/presentation/recording_video_screen.dart';
 import 'package:lingo_sign/main_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -27,6 +28,8 @@ class AppRouter {
         return MaterialPageRoute(builder: (_) => ForgetPasswordScreen());
       case mainScreen:
         return MaterialPageRoute(builder: (_) => MainScreen());
+      case recordingVideoScreen:
+        return MaterialPageRoute(builder: (_) => RecordingVideoScreen());
       case accountInfoScreen:
         return MaterialPageRoute(
           builder: (_) => BlocProvider(

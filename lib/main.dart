@@ -1,3 +1,4 @@
+import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -8,6 +9,11 @@ import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/services/agora_service.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
+import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
+import 'package:lingo_sign/features/recording_video/data/video_service.dart';
+import 'package:lingo_sign/features/recording_video/domain/recording_video_repository.dart';
+import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -32,6 +38,9 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
+  WidgetsFlutterBinding.ensureInitialized();
+  
+  
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -87,6 +96,9 @@ class MyApp extends StatelessWidget {
               AgoraService(),
             ),
           ),
+          BlocProvider(
+            create: (_) => RecordingVideoCubit(RecordingVideoRepositoryImpl(VideoService()))
+          )
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
