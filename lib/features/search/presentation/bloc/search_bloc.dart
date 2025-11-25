@@ -1,18 +1,16 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:lingo_sign/features/search/data/repositories/search_repository.dart';
-
-import 'package:lingo_sign/features/search/presentation/bloc/search_event.dart';
-import 'package:lingo_sign/features/search/presentation/bloc/search_state.dart';
+import 'package:lingo_sign/features/search/data/search_repository.dart';
+import 'search_event.dart';
+import 'search_state.dart';
 
 class SearchBloc extends Bloc<SearchEvent, SearchState> {
   final SearchRepository repo;
-
   bool showAllRecent = true;
 
   SearchBloc(this.repo) : super(SearchInitialState()) {
     on<SearchTextChangedEvent>(_onTextChanged);
-    on<UserProfileClickedEvent>(_onUserClicked);
-    on<LoadRecentUsersEvent>(_onLoadRecentUsers);
+    on<FriendClickedEvent>(_onFriendClicked);
+    on<LoadRecentFriendsEvent>(_onLoadRecentFriends);
   }
 
   Future<void> _onTextChanged(
@@ -20,45 +18,56 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
     Emitter<SearchState> emit,
   ) async {
     if (e.query.isEmpty) {
-      add(LoadRecentUsersEvent());
+      add(LoadRecentFriendsEvent());
       return;
     }
 
     emit(SearchLoadingState());
 
-    final users = await repo.search(e.query);
-    if (users.isEmpty) {
-      emit(SearchEmptyState('No users found'));
-    } else {
-      emit(SearchLoadedState(users));
+    try {
+      final friends = await repo.search(e.query);
+
+      if (friends.isEmpty) {
+        emit(SearchEmptyState('No friends found'));
+      } else {
+        emit(SearchLoadedState(friends));
+      }
+    } catch (error) {
+      emit(SearchEmptyState('Search failed: $error'));
     }
   }
 
-  Future<void> _onUserClicked(
-    UserProfileClickedEvent e,
+  Future<void> _onFriendClicked(
+    FriendClickedEvent e,
     Emitter<SearchState> emit,
   ) async {
-    await repo.saveUser(e.user);
+    await repo.saveFriend(e.friend);
   }
 
-  Future<void> _onLoadRecentUsers(
-    LoadRecentUsersEvent e,
+  Future<void> _onLoadRecentFriends(
+    LoadRecentFriendsEvent e,
     Emitter<SearchState> emit,
   ) async {
     emit(SearchLoadingState());
 
     try {
-      final users = await repo.getRecent();
+      final friends = await repo.getRecent();
 
-      if (users.isEmpty) {
-        emit(SearchEmptyState('No recent searches yet.'));
+      if (friends.isEmpty) {
+        emit(SearchEmptyState('No recent friends yet.'));
         return;
       }
+
       showAllRecent = !showAllRecent;
-      final shownList = showAllRecent ? users : users.take(4).toList();
-      emit(SearchLoadedState(shownList, showAll: showAllRecent));
+
+      final shownList = showAllRecent ? friends : friends.take(4).toList();
+
+      emit(SearchLoadedState(
+        shownList,
+        showAll: showAllRecent,
+      ));
     } catch (error) {
-      emit(SearchEmptyState('Error loading recent users: $error'));
+      emit(SearchEmptyState('Error loading recent friends: $error'));
     }
   }
 }

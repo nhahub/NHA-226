@@ -7,7 +7,7 @@ abstract class HomeRepository {
 
   Future<UserApp> getUserInfoById(String id);
 
-  Future<List<Friend>> getFriends();
+  Stream<List<Friend>> getFriends();
 
   Future<List<Friend>> getFavourites();
 

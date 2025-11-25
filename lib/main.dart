@@ -2,9 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/features/meeting_call/data/meeting_firestore_service.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/screens/meeting_screen.dart';
-import 'package:lingo_sign/features/meeting_call/services/agora_service.dart';
+
+import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -29,71 +29,81 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
-
   runApp(MyApp(appRouter: AppRouter()));
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({super.key, required this.appRouter});
+  const MyApp({super.key, required this.appRouter});
 
   final AppRouter appRouter;
-  final AgoraService agoraService = AgoraService();
-  final MeetingFirestoreService firestoreService = MeetingFirestoreService();
+
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: Size(context.width, context.height),
       builder: (_, child) => MultiBlocProvider(
         providers: [
+          // Auth
           BlocProvider(
             create: (context) =>
                 AuthBloc(AuthRepositoryImpl())..add(CheckAuthEvent()),
           ),
+          // Onboarding
           BlocProvider(
             create: (_) => OnboardingCubit(
               OnboardingRepositoryImpl(LocalOnboardingDataSource()),
             )..checkUserStatus(),
           ),
+          // User Information
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+          // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
           ),
+          // Friends
           BlocProvider(
             create: (_) =>
                 FriendsBloc(HomeRepositoryImpl())..add(GetAllFriend()),
           ),
+          // Last Calls
+          BlocProvider(
+            create: (_) =>
+                LastCallsBloc(HomeRepositoryImpl())..add(GetAllLastCalls()),
+          ),
+          // Requests
+          BlocProvider(
+            create: (_) =>
+                RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
+          ),
+
+          // Calls
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           onGenerateRoute: appRouter.generateRouter,
-          // home: BlocBuilder<OnboardingCubit, OnboardingState>(
-          //   builder: (context, state) {
-          //     if (state is OnboardingLoading || state is OnboardingInitial) {
-          //       return const LoadingScreen();
-          //     }
-          //     if (state is UserIsNew) {
-          //       return const OnboardingScreen();
-          //     } else {
-          //       return BlocBuilder<AuthBloc, AuthState>(
-          //         builder: (context, state) {
-          //           if (state is Authenticated) {
-          //             return const MainScreen();
-          //           }
-          //           if (state is AuthLoading) {
-          //             return const LoadingScreen();
-          //           }
-          //           return const LogInScreen();
-          //         },
-          //       );
-          //     }
-          //   },
-          // ),
-          home: MeetingScreen(
-            meetingId: 'test',
-            uid: '2',
-            userName: 'Elmohamdi',
+          home: BlocBuilder<OnboardingCubit, OnboardingState>(
+            builder: (context, state) {
+              if (state is OnboardingLoading || state is OnboardingInitial) {
+                return const LoadingScreen();
+              }
+              if (state is UserIsNew) {
+                return const OnboardingScreen();
+              } else {
+                return BlocBuilder<AuthBloc, AuthState>(
+                  builder: (context, state) {
+                    if (state is Authenticated) {
+                      return MainScreen();
+                    }
+                    if (state is AuthLoading) {
+                      return LoadingScreen();
+                    }
+                    return LogInScreen();
+                  },
+                );
+              }
+            },
           ),
         ),
       ),

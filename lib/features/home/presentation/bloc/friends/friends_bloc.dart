@@ -13,57 +13,58 @@ class FriendsBloc extends Bloc<FriendsEvent, FriendsState> {
 
   FriendsBloc(this.homeRepository) : super(FriendsInitial()) {
     on<GetAllFriend>(onGetAllFriend);
-    on<AddToFavouriteEvent>(_addToFavourite);
-    on<RemoveFromFavouriteEvent>(_removeFromFavourite);
-    on<UnfriendEvent>(_unfriend);
+    on<AddToFavouriteEvent>(_onAddToFavouriteEvent);
+    on<RemoveFromFavouriteEvent>(_onRemoveFromFavouriteEvent);
+    on<UnfriendEvent>(_onUnfriendEvent);
   }
-  FutureOr<void> onGetAllFriend(
+
+  Future<void> onGetAllFriend(
     GetAllFriend event,
     Emitter<FriendsState> emit,
   ) async {
-    emit(FriendsLoading());
-    try {
-      final freinds = await homeRepository.getFriends();
-      emit(FriendsLoaded(freinds));
-    } catch (e) {
-      emit(FriendsError(e.toString()));
-    }
-  }
-
-  Future<void> _addToFavourite(AddToFavouriteEvent event, Emitter emit) async {
-    try {
+    if (state is! FriendsLoaded) {
       emit(FriendsLoading());
+    }
 
+    await emit.forEach<List<Friend>>(
+      homeRepository.getFriends(),
+      onData: (friends) {
+        return FriendsLoaded(friends);
+      },
+      onError: (e, _) {
+        return FriendsError(e.toString());
+      },
+    );
+  }
+
+  Future<void> _onAddToFavouriteEvent(
+    AddToFavouriteEvent event,
+    Emitter emit,
+  ) async {
+    try {
       await homeRepository.addToFavourite(event.friendUid);
-
-      emit(FriendSuccessState("Added to favourites"));
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
   }
 
-  Future<void> _removeFromFavourite(
+  Future<void> _onRemoveFromFavouriteEvent(
     RemoveFromFavouriteEvent event,
     Emitter emit,
   ) async {
     try {
-      emit(FriendsLoading());
-
       await homeRepository.removeFromFavourite(event.friendUid);
-
-      emit(FriendSuccessState("Removed from favourites"));
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
   }
 
-  Future<void> _unfriend(UnfriendEvent event, Emitter emit) async {
+  Future<void> _onUnfriendEvent(UnfriendEvent event, Emitter emit) async {
     try {
-      emit(FriendsLoading());
-
       await homeRepository.unfriend(event.friendUid);
-
-      emit(FriendSuccessState("Unfriended successfully"));
+      // add(GetAllFriend());
     } catch (e) {
       emit(FriendsError(e.toString()));
     }
