@@ -1,11 +1,23 @@
 import 'package:bloc/bloc.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:meta/meta.dart';
+import 'package:flutter_email_sender/flutter_email_sender.dart';
+
+import '../../data/send_us_service.dart';
 
 part 'send_us_state.dart';
 
 class SendUsCubit extends Cubit<SendUsState> {
-  SendUsCubit() : super(SendUsInitial());
-  void sendMessage(String message){
-    emit(SendingMessage(message));
+  final SendEmailService emailService;
+  SendUsCubit({required this.emailService}) : super(SendUsInitial());
+
+  Future<void> sendMessage(String message) async {
+    emit(SendUsLoading());
+
+    try {
+      await emailService.sendEmail(message);
+      emit(SendUsSuccess());
+    } catch (e) {
+      emit(SendUsError(e.toString()));
+    }
   }
 }
