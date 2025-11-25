@@ -3,10 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/profile/model/user_model.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class ProfileController {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
