@@ -30,7 +30,7 @@ class FavouriteUser extends StatelessWidget {
                 backgroundColor: AppColor.white,
                 backgroundImage: userFavourite.imageUrl.isNotEmpty
                     ? NetworkImage(userFavourite.imageUrl)
-                    : AssetImage('assets/images/placeholder_user.jpg'),
+                    : const AssetImage('assets/images/placeholder_user.jpg'),
               ),
               const SizedBox(height: 6),
               Text(

@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,7 +12,8 @@ import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart
 import 'package:lingo_sign/features/home/presentation/widget/friend_user_call_card.dart';
 
 class FriendsScreen extends StatelessWidget {
-  const FriendsScreen({super.key});
+  FriendsScreen({super.key});
+  FirebaseAuth auth = FirebaseAuth.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +25,9 @@ class FriendsScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: const Text(
+              const Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
                   "Favourites",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
@@ -49,23 +52,22 @@ class FriendsScreen extends StatelessWidget {
                         itemCount: favourites.length,
                         itemBuilder: (context, index) {
                           return FavouriteUser(
-                            userFavourite:  favourites[index],
-
+                            userFavourite: favourites[index],
                           );
                         },
                       );
                     }
                     if (state is FriendsLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
-                    return Center(child: Text('Error'));
+                    return const Center(child: Text('Error'));
                   },
                 ),
               ),
               const SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.only(left: 16),
-                child: const Text(
+              const Padding(
+                padding: EdgeInsets.only(left: 16),
+                child: Text(
                   "Friends",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -78,24 +80,59 @@ class FriendsScreen extends StatelessWidget {
                     if (state is FriendsLoaded) {
                       final friends = state.friends;
                       if (friends.isEmpty) {
-                        return Center(child: Text('Start add friends'));
+                        return const Center(child: Text('Start add friends'));
                       }
-                      return ListView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        itemCount: friends.length,
-                        itemBuilder: (context, index) {
-                          return FriendUserCallCard(
-                            userFriend: friends[index],
-                            onTap: () {},
-                          );
-                        },
+                      return Column(
+                        children: [
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: friends.length,
+                            itemBuilder: (context, index) {
+                              return FriendUserCallCard(
+                                userFriend: friends[index],
+                                onTap: () {},
+                              );
+                            },
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              showBottomSheet(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    height: 200.h,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      color: AppColor.main,
+                                      borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(20.r),
+                                        topRight: Radius.circular(20.r),
+                                      ),
+                                    ),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        ElevatedButton(
+                                          onPressed: () {},
+                                          child: Text('Create Meeting'),
+                                        ),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                            child: Text('Meeting'),
+                          ),
+                        ],
                       );
                     }
                     if (state is FriendsLoading) {
-                      return Center(child: CircularProgressIndicator());
+                      return const Center(child: CircularProgressIndicator());
                     }
-                    return Center(child: Text('Error'));
+                    return const Center(child: Text('Error'));
                   },
                 ),
               ),
@@ -121,7 +158,7 @@ class FriendsScreen extends StatelessWidget {
               }
             },
             builder: (context, state) {
-              return AddFriend();
+              return const AddFriend();
             },
           ),
     );

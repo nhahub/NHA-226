@@ -13,7 +13,6 @@ plugins {
 android {
     compileSdk = 34
     ndkVersion = "27.0.12077973"
-
     namespace = "com.example.lingo_sign"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
