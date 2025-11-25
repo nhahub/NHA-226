@@ -8,3 +8,4 @@ String resetPasswordStringMessage =
 String verifyAccountStringMessage =
     'A link to verify your account has been sent to your email.';
 String notVerifiedAccountStringMessage = 'Account not verified';
+String appId = "af731e89861e43d49b2339823b880d08";
