@@ -12,12 +12,6 @@ class RecordingVideoCubit extends Cubit<RecordingVideoState> {
   Future<void> init() async {
     emit(RecordingVideoLoading());
     await repository.init();
-
-    // IMPORTANT: اتأكد إن الكاميرا اتجاهزت فعلًا
-  if (!repository.controller.value.isInitialized) {
-    await Future.delayed(Duration(milliseconds: 200));
-  }
-  
     emit(RecordingVideoReady());
   }
 
