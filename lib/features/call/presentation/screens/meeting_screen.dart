@@ -60,7 +60,7 @@ class _VideoMeetingScreenState extends State<VideoMeetingScreen> {
                   crossAxisCount: crossAxis,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12,
-                  childAspectRatio: 1.2,
+                  childAspectRatio: 1.1,
                 ),
                 itemCount: participants.length,
                 itemBuilder: (context, index) => VideoTile(

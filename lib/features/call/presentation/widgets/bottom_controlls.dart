@@ -29,26 +29,18 @@ class BottomControls extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          ControlButton(icon: Icons.mic_off, label: 'Mute', isActive: false),
+          ControlButton(icon: Icons.mic_off, isActive: false),
           ControlButton(
             icon: Icons.videocam_off,
-            label: 'Stop Video',
             isActive: false,
           ),
           ControlButton(
-            icon: Icons.screen_share,
-            label: 'Share',
-            isActive: true,
-          ),
-          ControlButton(
-            icon: Icons.people,
-            label: 'Participants',
+            icon: Icons.flip_camera_ios_rounded,
             isActive: false,
           ),
           ControlButton(
             onTap: () async => await endCall(),
             icon: Icons.call_end,
-            label: 'Leave',
             isActive: false,
             isCancel: true,
           ),
