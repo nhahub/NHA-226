@@ -5,6 +5,7 @@ class ControlButton extends StatelessWidget {
   final String label;
   final bool isActive;
   final bool? isCancel;
+  final void Function()? onTap;
 
   const ControlButton({
     super.key,
@@ -12,6 +13,7 @@ class ControlButton extends StatelessWidget {
     required this.label,
     required this.isActive,
     this.isCancel,
+    this.onTap,
   });
 
   double _r(double w, double mobile, double desktop) {
@@ -22,27 +24,20 @@ class ControlButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: isCancel != null
-                ? Colors.red
-                : isActive
-                ? Colors.blue
-                : Colors.grey[600],
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: Colors.white, size: _r(width, 18, 22)),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: isCancel != null
+              ? Colors.red
+              : isActive
+              ? Colors.blue
+              : Colors.grey[600],
+          shape: BoxShape.circle,
         ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(color: Colors.white, fontSize: _r(width, 10, 12)),
-        ),
-      ],
+        child: Icon(icon, color: Colors.white, size: _r(width, 18, 22)),
+      ),
     );
   }
 }

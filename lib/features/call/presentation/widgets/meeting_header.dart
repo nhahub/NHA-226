@@ -18,7 +18,7 @@ class MeetingHeader extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            'STAND UP MEETING',
+            'Video Call',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,

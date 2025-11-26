@@ -1,15 +1,15 @@
 class Participants {
   final String name;
-  final bool isSpeaking;
+  final int uid;
   final bool isYou;
-  final String? uid;
-  final String? meetingId;
+  final bool isSpeaking;
+  final bool isMuted;
 
   Participants({
     required this.name,
-    required this.isSpeaking,
-    required this.isYou,
-    this.uid,
-    this.meetingId,
+    required this.uid,
+    this.isYou = false,
+    this.isSpeaking = false,
+    this.isMuted = false,
   });
 }

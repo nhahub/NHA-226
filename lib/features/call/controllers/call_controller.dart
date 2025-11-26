@@ -1,48 +1,79 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/string.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-class CallController {
-  late RtcEngine engine;
+class CallController extends ChangeNotifier {
+  RtcEngine? engine;
   final String channelName = 'Test';
-  final int uid = 0;
+  final List<int> users = [0]; // local user
 
-  List<int> remoteUsers = [];
+  bool isInitialized = false;
 
   Future<void> initEngine() async {
-    engine = createAgoraRtcEngine();
-    await engine.initialize(RtcEngineContext(appId: appId));
+    // request permissions
+    await [Permission.camera, Permission.microphone].request();
 
-    engine.registerEventHandler(
+    engine = createAgoraRtcEngine();
+    await engine!.initialize(RtcEngineContext(appId: appId));
+
+    engine!.registerEventHandler(
       RtcEngineEventHandler(
-        onUserJoined: (connection, remoteUid, elapsed) {
-          remoteUsers.add(remoteUid);
+        onJoinChannelSuccess: (RtcConnection conn, int uid) {
+          isInitialized = true;
+          notifyListeners();
         },
-        onUserOffline: (connection, remoteUid, reason) {
-          remoteUsers.remove(remoteUid);
+        onUserJoined: (RtcConnection conn, int uid, int elapsed) {
+          if (!users.contains(uid)) users.add(uid);
+          notifyListeners();
         },
+        onUserOffline: (RtcConnection conn, int uid, UserOfflineReasonType reason) {
+          users.remove(uid);
+          notifyListeners();
+        },
+      ),
+    );
+
+    await engine!.enableVideo();
+    await engine!.startPreview();
+
+    await joinChannel();
+  }
+
+  Future<void> joinChannel() async {
+    if (engine == null) return;
+
+    await engine!.joinChannel(
+      token: '',
+      channelId: channelName,
+      uid: 0,
+      options: const ChannelMediaOptions(
+        publishCameraTrack: true,
+        publishMicrophoneTrack: true,
+        autoSubscribeVideo: true,
+        autoSubscribeAudio: true,
       ),
     );
   }
 
-  Future<void> joinChannel() async {
-    await engine.joinChannel(
-      token: '',
-      channelId: channelName,
-      uid: uid,
-      options: const ChannelMediaOptions(),
-    );
-  }
-
   Future<void> leaveChannel() async {
-    await engine.leaveChannel();
-    remoteUsers.clear();
+    if (engine == null) return;
+
+    await engine!.leaveChannel();
+    await engine!.release();
+    engine = null;
+    users.clear();
+    isInitialized = false;
+    notifyListeners();
   }
 
   Future<void> toggleMic(bool enabled) async {
-    await engine.muteLocalAudioStream(!enabled);
+    if (engine == null) return;
+    await engine!.muteLocalAudioStream(!enabled);
   }
 
   Future<void> toggleCamera(bool enabled) async {
-    await engine.enableLocalVideo(enabled);
+    if (engine == null) return;
+    await engine!.enableLocalVideo(enabled);
   }
 }
