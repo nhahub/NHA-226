@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/domain/models/Participants.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/video_tile.dart';
+import 'package:lingo_sign/features/call/domain/participants.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/video_tile.dart';
 
 class LayoutMobile extends StatelessWidget {
   final List<Participants> participants;
@@ -11,10 +11,10 @@ class LayoutMobile extends StatelessWidget {
     return GridView.builder(
       padding: const EdgeInsets.all(16),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
+        crossAxisCount: 1,
         crossAxisSpacing: 16,
         mainAxisSpacing: 16,
-        childAspectRatio: 0.8,
+        childAspectRatio: 1.2,
       ),
       itemCount: participants.length,
       itemBuilder: (context, index) {

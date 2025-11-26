@@ -4,12 +4,14 @@ class ControlButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool isActive;
+  final bool? isCancel;
 
   const ControlButton({
     super.key,
     required this.icon,
     required this.label,
     required this.isActive,
+    this.isCancel,
   });
 
   double _r(double w, double mobile, double desktop) {
@@ -26,7 +28,11 @@ class ControlButton extends StatelessWidget {
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: isActive ? Colors.blue : Colors.grey[600],
+            color: isCancel != null
+                ? Colors.red
+                : isActive
+                ? Colors.blue
+                : Colors.grey[600],
             shape: BoxShape.circle,
           ),
           child: Icon(icon, color: Colors.white, size: _r(width, 18, 22)),

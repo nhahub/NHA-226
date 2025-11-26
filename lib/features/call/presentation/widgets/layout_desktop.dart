@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/domain/models/Participants.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/video_tile.dart';
+import 'package:lingo_sign/features/call/domain/participants.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/video_tile.dart';
 
 class LayoutDesktop extends StatelessWidget {
 final List<Participants> participants;

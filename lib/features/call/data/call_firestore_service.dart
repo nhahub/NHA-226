@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class MeetingFirestoreService {
+class CallFirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<void> createMeeting(

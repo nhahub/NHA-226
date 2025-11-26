@@ -1,8 +1,8 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:lingo_sign/core/const/string.dart';
 
-class MeetingController {
+class CallController {
   late RtcEngine engine;
-  final String appId = 'f44d864260b5421c9281f6833bfe7db7';
   final String channelName = 'Test';
   final int uid = 0;
 
@@ -26,7 +26,7 @@ class MeetingController {
 
   Future<void> joinChannel() async {
     await engine.joinChannel(
-      token: 'TempToken',
+      token: '',
       channelId: channelName,
       uid: uid,
       options: const ChannelMediaOptions(),

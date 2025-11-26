@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/domain/models/Participants.dart';
+import 'package:lingo_sign/features/call/domain/participants.dart';
 
 class VideoTile extends StatelessWidget {
   final Participants participants;

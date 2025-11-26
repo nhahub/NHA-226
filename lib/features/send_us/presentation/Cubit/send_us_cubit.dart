@@ -1,7 +1,5 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
-
 import '../../data/send_us_service.dart';
 
 part 'send_us_state.dart';

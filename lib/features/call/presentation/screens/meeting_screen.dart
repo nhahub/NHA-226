@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/domain/models/Participants.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/bottom_controlls.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/layout_desktop.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/layout_mobile.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/meeting_header.dart';
-
+import 'package:lingo_sign/features/call/domain/participants.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/bottom_controlls.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/layout_desktop.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/layout_mobile.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/meeting_header.dart';
 
 class VideoMeetingScreen extends StatefulWidget {
   const VideoMeetingScreen({super.key});
@@ -17,10 +16,6 @@ class _VideoMeetingScreenState extends State<VideoMeetingScreen> {
   final List<Participants> participants = [
     Participants(name: 'Maryna', isSpeaking: true, isYou: false),
     Participants(name: 'You', isSpeaking: false, isYou: true),
-    Participants(name: 'Alex', isSpeaking: false, isYou: false),
-    Participants(name: 'Sarah', isSpeaking: false, isYou: false),
-    Participants(name: 'Mike', isSpeaking: false, isYou: false),
-    Participants(name: 'Emma', isSpeaking: false, isYou: false),
   ];
 
   @override

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/conrtol_button.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/conrtol_button.dart';
 
 class BottomControls extends StatelessWidget {
   const BottomControls({super.key});
@@ -47,6 +47,7 @@ class BottomControls extends StatelessWidget {
             icon: Icons.call_end,
             label: 'Leave',
             isActive: false,
+            isCancel: true,
           ),
         ],
       ),

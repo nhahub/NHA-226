@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/send_us/data/send_us_service.dart';
-
 import '../../../../core/const/app_color.dart';
 import '../../../../core/screen/loading_screen.dart';
 import '../../../../core/widget/custom_app_bar.dart';
 import '../../../../core/widget/message.dart';
 import '../Cubit/send_us_cubit.dart';
 
-class Send_us_screen extends StatefulWidget {
-  const Send_us_screen({super.key});
+class SendUsScreen extends StatefulWidget {
+  const SendUsScreen({super.key});
 
   @override
-  State<Send_us_screen> createState() => _Send_us_screenState();
+  State<SendUsScreen> createState() => _SendUsScreenState();
 }
 
-class _Send_us_screenState extends State<Send_us_screen> {
+class _SendUsScreenState extends State<SendUsScreen> {
   final emailService = SendEmailService();
   final formKey = GlobalKey<FormState>();
   final TextEditingController controller = TextEditingController();
@@ -107,6 +106,7 @@ class _Send_us_screenState extends State<Send_us_screen> {
                 // Loading overlay
                 if (state is SendUsLoading)
                   Container(
+                    // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.5),
                     child: const Center(
                       child: LoadingScreen(),

@@ -1,13 +1,13 @@
-import 'package:lingo_sign/features/meeting_call/domain/models/Participants.dart';
+import 'package:lingo_sign/features/call/domain/participants.dart';
 
-class MeetingData {
+class CallData {
   final List<Participants> participants;
   final bool isMicOn;
   final bool isCameraOn;
   final String? meetingId;
   final String? uid;
 
-  const MeetingData({
+  const CallData({
     this.participants = const [],
     this.isMicOn = true,
     this.isCameraOn = true,
@@ -15,14 +15,14 @@ class MeetingData {
     this.uid,
   });
 
-  MeetingData copyWith({
+  CallData copyWith({
     List<Participants>? participants,
     bool? isMicOn,
     bool? isCameraOn,
     String? meetingId,
     String? uid,
   }) {
-    return MeetingData(
+    return CallData(
       participants: participants ?? this.participants,
       isMicOn: isMicOn ?? this.isMicOn,
       isCameraOn: isCameraOn ?? this.isCameraOn,
