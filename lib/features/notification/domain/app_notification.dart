@@ -1,4 +1,4 @@
-enum NotificationType { missedCall, request }
+enum NotificationType { request, accepted, rejected, missedCall }
 
 class AppNotification {
   final String title;
@@ -6,6 +6,7 @@ class AppNotification {
   final DateTime createdAt;
   final bool isRead;
   final String id;
+  final String fromUserId;
 
   AppNotification({
     required this.id,
@@ -13,5 +14,6 @@ class AppNotification {
     required this.type,
     required this.createdAt,
     required this.isRead,
+    required this.fromUserId,
   });
 }

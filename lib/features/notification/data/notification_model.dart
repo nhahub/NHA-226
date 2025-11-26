@@ -7,6 +7,7 @@ class NotificationModel {
   final String type;
   final DateTime createdAt;
   final bool isRead;
+  final String fromUserId;
 
   NotificationModel({
     required this.id,
@@ -14,6 +15,7 @@ class NotificationModel {
     required this.type,
     required this.createdAt,
     required this.isRead,
+    required this.fromUserId,
   });
 
   factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
@@ -26,6 +28,7 @@ class NotificationModel {
           ? (data['created_at'] as Timestamp).toDate()
           : DateTime.parse(data['created_at']),
       isRead: data['is_read'] ?? false,
+      fromUserId: data['from_user_id'] ?? '',
     );
   }
 
@@ -42,11 +45,23 @@ class NotificationModel {
     return AppNotification(
       id: id,
       title: title,
-      type: type == 'request'
-          ? NotificationType.request
-          : NotificationType.missedCall,
+      type: _mapType(type),
       createdAt: createdAt,
       isRead: isRead,
+      fromUserId: fromUserId,
     );
+  }
+
+  NotificationType _mapType(String type) {
+    switch (type) {
+      case 'request':
+        return NotificationType.request;
+      case 'accepted':
+        return NotificationType.accepted;
+      case 'rejected':
+        return NotificationType.rejected;
+      default:
+        return NotificationType.missedCall;
+    }
   }
 }

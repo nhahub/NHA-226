@@ -11,44 +11,99 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   Future<List<AppNotification>> getallNotification() async {
     final user = firebaseAuth.currentUser!;
-
-    try {
-      final notificationRef = firebaseFirestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('notifications');
-
-      final notificationSnapshot = await notificationRef.get();
-
-      final validDocs = notificationSnapshot.docs.where(
-        (doc) => doc.id != "_init",
-      );
-
-      List<AppNotification> notifications = validDocs
-          .map(
-            (doc) => NotificationModel.fromFirestore(doc).toAppNotification(),
-          )
-          .toList();
-
-      return notifications;
-    } catch (e) {
-      throw Exception("Error loading notifications: $e");
-    }
+    final snapshot = await firebaseFirestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('notifications')
+        .orderBy('created_at', descending: true)
+        .get();
+    final validDocs = snapshot.docs.where((doc) => doc.id != "_init");
+    return validDocs
+        .map((doc) => NotificationModel.fromFirestore(doc).toAppNotification())
+        .toList();
   }
 
   @override
   Future<void> markAsRead(String notifId) async {
     final user = firebaseAuth.currentUser!;
+    await firebaseFirestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('notifications')
+        .doc(notifId)
+        .update({'is_read': true});
+  }
 
-    try {
-      await firebaseFirestore
-          .collection('users')
-          .doc(user.uid)
-          .collection('notifications')
-          .doc(notifId)
-          .update({'is_read': true});
-    } catch (e) {
-      throw Exception("Failed to mark notification as read: $e");
-    }
+  @override
+  Future<void> sendAcceptNotification({
+    required String requestNotifId,
+    required String senderId,
+  }) async {
+    final currentUser = firebaseAuth.currentUser!;
+    final currentUserDoc = await firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .get();
+    final currentUserName = currentUserDoc.data()?['name'] ?? 'Someone';
+    final batch = firebaseFirestore.batch();
+
+    final myFriendRef = firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('friends')
+        .doc(senderId);
+    final senderFriendRef = firebaseFirestore
+        .collection('users')
+        .doc(senderId)
+        .collection('friends')
+        .doc(currentUser.uid);
+
+    batch.set(myFriendRef, {
+      'friendId': senderId,
+      'created_at': DateTime.now(),
+    });
+    batch.set(senderFriendRef, {
+      'friendId': currentUser.uid,
+      'created_at': DateTime.now(),
+    });
+
+    final myNotifRef = firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('notifications')
+        .doc(requestNotifId);
+    batch.update(myNotifRef, {'is_read': true});
+
+    final acceptNotifRef = firebaseFirestore
+        .collection('users')
+        .doc(senderId)
+        .collection('notifications')
+        .doc();
+    batch.set(acceptNotifRef, {
+      'title': '$currentUserName accepted your request',
+      'type': 'accepted',
+      'from_user_id': currentUser.uid,
+      'from_user_name': currentUserName,
+      'created_at': DateTime.now(),
+      'is_read': false,
+    });
+
+    await batch.commit();
+  }
+
+  @override
+  Future<void> ignoreNotification({required String requestNotifId}) async {
+    final currentUser = firebaseAuth.currentUser!;
+    final notifRef = firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('notifications')
+        .doc(requestNotifId);
+    await notifRef.update({'is_read': true});
+  }
+
+  @override
+  Future<void> sendFriendRequest(String toUserId) async {
+    throw UnimplementedError();
   }
 }
