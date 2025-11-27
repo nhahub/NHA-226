@@ -48,7 +48,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
     final batch = firebaseFirestore.batch();
 
-    // Add friends
     final myFriendRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -69,7 +68,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
       'created_at': DateTime.now(),
     });
 
-    // Update my notification to accepted
     final myNotifRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -93,7 +91,6 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .collection('notifications')
         .doc(requestNotifId);
 
-    // Delete the notification completely
     await notifRef.delete();
   }
 
