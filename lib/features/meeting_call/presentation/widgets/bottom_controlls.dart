@@ -43,11 +43,7 @@ class BottomControls extends StatelessWidget {
             label: 'Participants',
             isActive: false,
           ),
-          ControlButton(
-            icon: Icons.call_end,
-            label: 'Leave',
-            isActive: false,
-          ),
+          ControlButton(icon: Icons.call_end, label: 'Leave', isActive: false),
         ],
       ),
     );

@@ -4,7 +4,6 @@ class ControlButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final bool isActive;
-
   const ControlButton({
     super.key,
     required this.icon,
