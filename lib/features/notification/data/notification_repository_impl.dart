@@ -45,8 +45,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .doc(currentUser.uid)
         .get();
     final currentUserName = currentUserDoc.data()?['name'] ?? 'Someone';
+
     final batch = firebaseFirestore.batch();
 
+    // Add friends
     final myFriendRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -67,25 +69,16 @@ class NotificationRepositoryImpl implements NotificationRepository {
       'created_at': DateTime.now(),
     });
 
+    // Update my notification to accepted
     final myNotifRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-    batch.update(myNotifRef, {'is_read': true});
-
-    final acceptNotifRef = firebaseFirestore
-        .collection('users')
-        .doc(senderId)
-        .collection('notifications')
-        .doc();
-    batch.set(acceptNotifRef, {
-      'title': '$currentUserName accepted your request',
+    batch.update(myNotifRef, {
+      'title': '$currentUserName accepted this request',
       'type': 'accepted',
-      'from_user_id': currentUser.uid,
-      'from_user_name': currentUserName,
-      'created_at': DateTime.now(),
-      'is_read': false,
+      'is_read': true,
     });
 
     await batch.commit();
@@ -100,7 +93,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .collection('notifications')
         .doc(requestNotifId);
 
-    await notifRef.update({'is_ignored': true});
+    // Delete the notification completely
+    await notifRef.delete();
   }
 
   @override

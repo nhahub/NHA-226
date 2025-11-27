@@ -42,9 +42,7 @@ class AppRouter {
               if (!snapshot.hasData) return const CircularProgressIndicator();
               final prefs = snapshot.data!;
               return BlocProvider(
-                create: (_) => SearchBloc(
-                  SearchRepository(prefs),
-                ),
+                create: (_) => SearchBloc(SearchRepository(prefs)),
                 child: const SearchScreen(),
               );
             },
