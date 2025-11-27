@@ -58,9 +58,20 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     final currentState = state;
     if (currentState is NotificationsLoaded) {
-      final updatedNotifications = currentState.notifications
-          .where((notif) => notif.id != requestNotifId)
-          .toList();
+      final updatedNotifications = currentState.notifications.map((notif) {
+        if (notif.id == requestNotifId) {
+          return AppNotification(
+            id: notif.id,
+            title: notif.title,
+            type: NotificationType.accepted,
+            createdAt: notif.createdAt,
+            isRead: true,
+            fromUserId: notif.fromUserId,
+          );
+        }
+        return notif;
+      }).toList();
+
       emit(NotificationsLoaded(notifications: updatedNotifications));
     }
 
@@ -75,9 +86,13 @@ class NotificationsCubit extends Cubit<NotificationsState> {
 
     final currentState = state;
     if (currentState is NotificationsLoaded) {
-      final updatedNotifications = currentState.notifications
-          .where((notif) => notif.id != requestNotifId)
-          .toList();
+      final updatedNotifications = currentState.notifications.map((notif) {
+        if (notif.id == requestNotifId) {
+          return notif.copyWith(isIgnored: true);
+        }
+        return notif;
+      }).toList();
+
       emit(NotificationsLoaded(notifications: updatedNotifications));
     }
 

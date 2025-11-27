@@ -99,7 +99,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-    await notifRef.update({'is_read': true});
+
+    await notifRef.update({'is_ignored': true});
   }
 
   @override

@@ -8,6 +8,7 @@ class NotificationModel {
   final DateTime createdAt;
   final bool isRead;
   final String fromUserId;
+  final bool isIgnored; // ← أضفنا
 
   NotificationModel({
     required this.id,
@@ -16,6 +17,7 @@ class NotificationModel {
     required this.createdAt,
     required this.isRead,
     required this.fromUserId,
+    this.isIgnored = false,
   });
 
   factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
@@ -29,6 +31,7 @@ class NotificationModel {
           : DateTime.parse(data['created_at']),
       isRead: data['is_read'] ?? false,
       fromUserId: data['from_user_id'] ?? '',
+      isIgnored: data['is_ignored'] ?? false, // ← جلب من Firestore
     );
   }
 
@@ -38,6 +41,7 @@ class NotificationModel {
       'type': type,
       'created_at': createdAt,
       'is_read': isRead,
+      'is_ignored': isIgnored, // ← حفظ في Firestore
     };
   }
 
@@ -49,19 +53,22 @@ class NotificationModel {
       createdAt: createdAt,
       isRead: isRead,
       fromUserId: fromUserId,
+      isIgnored: isIgnored,
     );
   }
+}
 
-  NotificationType _mapType(String type) {
-    switch (type) {
-      case 'request':
-        return NotificationType.request;
-      case 'accepted':
-        return NotificationType.accepted;
-      case 'rejected':
-        return NotificationType.rejected;
-      default:
-        return NotificationType.missedCall;
-    }
+NotificationType _mapType(String type) {
+  switch (type) {
+    case 'request':
+      return NotificationType.request;
+    case 'accepted':
+      return NotificationType.accepted;
+    case 'rejected':
+      return NotificationType.rejected;
+    case 'missedCall':
+      return NotificationType.missedCall;
+    default:
+      return NotificationType.request;
   }
 }

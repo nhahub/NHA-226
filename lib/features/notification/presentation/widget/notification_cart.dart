@@ -80,10 +80,11 @@ class NotificationCard extends StatelessWidget {
                       ),
                   ],
                 ),
-
                 const SizedBox(height: 8),
 
-                if (notification.type == NotificationType.request) ...[
+                // عرض الأزرار أو الحالة حسب الحالة
+                if (notification.type == NotificationType.request &&
+                    !notification.isIgnored) ...[
                   Row(
                     children: [
                       Expanded(
@@ -120,6 +121,15 @@ class NotificationCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                ] else if (notification.isIgnored) ...[
+                  const Text(
+                    'You ignored this request',
+                    style: TextStyle(
+                      color: Colors.grey,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ] else if (notification.type == NotificationType.accepted) ...[
                   const Text(
                     'You accepted this request',
@@ -150,18 +160,22 @@ class NotificationCard extends StatelessWidget {
   Widget _buildIcon() {
     IconData icon;
 
-    switch (notification.type) {
-      case NotificationType.request:
-        icon = Icons.person_add_alt_1;
-        break;
-      case NotificationType.accepted:
-        icon = Icons.check_circle;
-        break;
-      case NotificationType.rejected:
-        icon = Icons.cancel;
-        break;
-      default:
-        icon = Icons.call_missed;
+    if (notification.isIgnored) {
+      icon = Icons.remove_circle_outline; // أيقونة مختلفة للـ ignore
+    } else {
+      switch (notification.type) {
+        case NotificationType.request:
+          icon = Icons.person_add_alt_1;
+          break;
+        case NotificationType.accepted:
+          icon = Icons.check_circle;
+          break;
+        case NotificationType.rejected:
+          icon = Icons.cancel;
+          break;
+        default:
+          icon = Icons.call_missed;
+      }
     }
 
     return Container(
