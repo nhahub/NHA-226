@@ -82,7 +82,6 @@ class NotificationCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
 
-                // عرض الأزرار أو الحالة حسب الحالة
                 if (notification.type == NotificationType.request &&
                     !notification.isIgnored) ...[
                   Row(
