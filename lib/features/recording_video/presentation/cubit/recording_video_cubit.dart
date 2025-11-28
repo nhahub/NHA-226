@@ -12,7 +12,7 @@ class RecordingVideoCubit extends Cubit<RecordingVideoState> {
   Future<void> init() async {
     emit(RecordingVideoLoading());
     await repository.init();
-    emit(RecordingVideoReady());
+    emit(RecordingVideoLoaded());
   }
 
   Future<void> start() async {

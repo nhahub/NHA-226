@@ -1,0 +1,19 @@
+part of 'translation_cubit.dart';
+
+sealed class TranslationState extends Equatable {
+  const TranslationState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class TranslationInitial extends TranslationState {}
+final class TranslationLoading extends TranslationState {}
+final class TranslationLoaded extends TranslationState {
+  final String name;
+  const TranslationLoaded(this.name);
+}
+final class TranslationError extends TranslationState {
+  String? message;
+  TranslationError(this.message);
+}

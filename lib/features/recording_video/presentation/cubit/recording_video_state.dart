@@ -11,13 +11,13 @@ final class RecordingVideoInitial extends RecordingVideoState {}
 
 final class RecordingVideoLoading extends RecordingVideoState {}
 
-final class RecordingVideoReady extends RecordingVideoState {}
+final class RecordingVideoLoaded extends RecordingVideoState {}
 
 final class RecordingVideoRecording extends RecordingVideoState {}
 
 final class RecordingVideoStopped extends RecordingVideoState {
   final String path;
-  RecordingVideoStopped(this.path);
+  const RecordingVideoStopped(this.path);
 }
 
 final class RecordingVideoError extends RecordingVideoState {

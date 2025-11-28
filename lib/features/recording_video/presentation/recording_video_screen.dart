@@ -1,6 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
 
 class RecordingVideoScreen extends StatefulWidget {
@@ -11,8 +12,7 @@ class RecordingVideoScreen extends StatefulWidget {
 }
 
 class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
-
-@override
+  @override
   void initState() {
     super.initState();
     context.read<RecordingVideoCubit>().init();
@@ -23,38 +23,60 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
     return BlocBuilder<RecordingVideoCubit, RecordingVideoState>(
       builder: (context, state) {
         final cubit = context.read<RecordingVideoCubit>();
-        if (!cubit.repository.controller.value.isInitialized) {
+        if (state is RecordingVideoLoading || state is RecordingVideoInitial) {
           return Center(child: CircularProgressIndicator());
         }
 
-        return Scaffold(
-          body: Stack(
-            children: [
-              CameraPreview(cubit.repository.controller),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: GestureDetector(
-                  onTap: () {
-                    if (state is RecordingVideoRecording) {
-                      cubit.stop();
-                    } else {
-                      cubit.start();
-                    }
-                  },
+        if (state is RecordingVideoError) {
+          return Scaffold(
+            body: Center(child: Text("Error: ${state.message}")),
+          );
+        }
+
+        else {
+          return Scaffold(
+            body: Stack(
+              children: [
+                CameraPreview(cubit.repository.controller),
+                Align(
+                  alignment: Alignment.bottomCenter,
                   child: Container(
-                    width: 70,
-                    height: 70,
-                    margin: EdgeInsets.only(bottom: 40),
+                    width: double.infinity,
+                    height: 170,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: state is RecordingVideoRecording ? Colors.red : Colors.white,
+                      color: AppColor.black
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        );
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: GestureDetector(
+                    onTap: () {
+                      if (state is RecordingVideoRecording) {
+                        cubit.stop();
+                      } else {
+                        cubit.start();
+                      }
+                    },
+                    child: Container(
+                      width: 70,
+                      height: 70,
+                      margin: EdgeInsets.only(bottom: 40),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: state is RecordingVideoRecording
+                            ? Colors.red
+                            : Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        
+
       },
     );
   }

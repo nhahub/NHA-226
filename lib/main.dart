@@ -13,6 +13,9 @@ import 'package:lingo_sign/features/recording_video/data/recording_video_reposit
 import 'package:lingo_sign/features/recording_video/data/video_service.dart';
 import 'package:lingo_sign/features/recording_video/domain/recording_video_repository.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
+import 'package:lingo_sign/features/transelation/data/translation_repository_impl.dart';
+import 'package:lingo_sign/features/transelation/domain/translation_repository.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
 import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
@@ -96,8 +99,13 @@ class MyApp extends StatelessWidget {
               AgoraService(),
             ),
           ),
+          //Recording Video
           BlocProvider(
             create: (_) => RecordingVideoCubit(RecordingVideoRepositoryImpl(VideoService()))
+          ),
+          //Translation
+          BlocProvider(
+            create: (_) => TranslationCubit(TranslationRepositoryImpl())
           )
         ],
         child: MaterialApp(

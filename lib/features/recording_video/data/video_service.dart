@@ -17,5 +17,4 @@ class VideoService {
   Future<XFile> stopRecording() async {
     return await controller.stopVideoRecording();
   }
-
 }
