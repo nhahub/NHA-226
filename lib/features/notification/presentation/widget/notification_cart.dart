@@ -18,7 +18,6 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isRequest = notification.type == NotificationType.request;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -81,8 +80,10 @@ class NotificationCard extends StatelessWidget {
                       ),
                   ],
                 ),
-                if (isRequest) ...[
-                  const SizedBox(height: 8),
+
+                const SizedBox(height: 8),
+
+                if (notification.type == NotificationType.request) ...[
                   Row(
                     children: [
                       Expanded(
@@ -119,6 +120,24 @@ class NotificationCard extends StatelessWidget {
                       ),
                     ],
                   ),
+                ] else if (notification.type == NotificationType.accepted) ...[
+                  const Text(
+                    'You accepted this request',
+                    style: TextStyle(
+                      color: AppColor.main,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ] else if (notification.type == NotificationType.rejected) ...[
+                  const Text(
+                    'You rejected this request',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                 ],
               ],
             ),
@@ -129,9 +148,21 @@ class NotificationCard extends StatelessWidget {
   }
 
   Widget _buildIcon() {
-    IconData icon = notification.type == NotificationType.missedCall
-        ? Icons.call_missed
-        : Icons.person_add_alt_1;
+    IconData icon;
+
+    switch (notification.type) {
+      case NotificationType.request:
+        icon = Icons.person_add_alt_1;
+        break;
+      case NotificationType.accepted:
+        icon = Icons.check_circle;
+        break;
+      case NotificationType.rejected:
+        icon = Icons.cancel;
+        break;
+      default:
+        icon = Icons.call_missed;
+    }
 
     return Container(
       padding: const EdgeInsets.all(10),

@@ -15,6 +15,7 @@ final class NotificationsLoaded extends NotificationsState {
   final List<AppNotification> notifications;
 
   const NotificationsLoaded({required this.notifications});
+  List<Object> get props => [notifications];
 }
 
 final class NotificationsError extends NotificationsState {

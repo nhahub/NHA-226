@@ -29,7 +29,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       top: false,
       child: Scaffold(
         backgroundColor: AppColor.white,
-        appBar: CustomAppBar(title: 'Notification'),
+        appBar: const CustomAppBar(title: 'Notification'),
         body: BlocBuilder<NotificationsCubit, NotificationsState>(
           builder: (context, state) {
             if (state is NotificationsLoading) {
@@ -38,6 +38,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 itemBuilder: (context, index) => NotificationShimmerCart(),
               );
             }
+
             if (state is NotificationsLoaded) {
               if (state.notifications.isEmpty) {
                 return Center(
@@ -53,6 +54,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                 );
               }
+
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -60,17 +62,30 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
                 itemCount: state.notifications.length,
                 itemBuilder: (context, index) {
+                  final notif = state.notifications[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: NotificationCard(
-                      notification: state.notifications[index],
-                      onAccept: () {},
-                      onIgnore: () {},
+                      notification: notif,
+                      onAccept: () async {
+                        final cubit = context.read<NotificationsCubit>();
+                        await cubit.acceptNotification(
+                          requestNotifId: notif.id,
+                          senderId: notif.fromUserId,
+                        );
+                      },
+                      onIgnore: () async {
+                        final cubit = context.read<NotificationsCubit>();
+                        await cubit.ignoreNotification(
+                          requestNotifId: notif.id,
+                        );
+                      },
                     ),
                   );
                 },
               );
             }
+
             if (state is NotificationsError) {
               return Center(
                 child: Text(
@@ -79,6 +94,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
               );
             }
+
             return Container();
           },
         ),
