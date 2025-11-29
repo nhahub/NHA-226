@@ -2,7 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
+import 'package:lingo_sign/core/config/zego_config.dart';
+import 'package:lingo_sign/core/get_it/get_it.dart';
+import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/incoming_call_dialog.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
@@ -29,6 +32,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
+  await setupServiceLocator();
+  await ZegoConfig.init();
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -77,6 +82,8 @@ class MyApp extends StatelessWidget {
             create: (_) =>
                 RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
+          // Call
+          BlocProvider<CallBloc>(create: (_) => sl<CallBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -94,7 +101,7 @@ class MyApp extends StatelessWidget {
                     if (state is Authenticated) {
                       return MainScreen();
                     }
-                    if (state is AuthLoading) {
+                    if (state is AuthLoading || state is AuthInitial) {
                       return LoadingScreen();
                     }
                     return LogInScreen();
@@ -103,8 +110,29 @@ class MyApp extends StatelessWidget {
               }
             },
           ),
+          builder: (context, child) => Stack(
+            children: [
+              child!,
+              BlocListener<CallBloc, CallState>(
+                listener: (context, state) {
+                  if (state is CallIncoming) {
+                    _showIncomingCallDialog(context, state);
+                  }
+                },
+                child: const SizedBox.expand(),
+              ),
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  void _showIncomingCallDialog(BuildContext context, CallIncoming state) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => IncomingCallDialog(callData: state.callData),
     );
   }
 }
