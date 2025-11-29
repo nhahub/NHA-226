@@ -19,8 +19,11 @@ final class RecordingVideoStopped extends RecordingVideoState {
   final String path;
   const RecordingVideoStopped(this.path);
 }
-
 final class RecordingVideoError extends RecordingVideoState {
    String? message;
   RecordingVideoError(this.message);
 }
+
+
+
+

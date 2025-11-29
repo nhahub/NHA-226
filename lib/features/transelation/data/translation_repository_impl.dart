@@ -1,18 +1,34 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 
 class TranslationRepositoryImpl {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  Future<String> getUserName() async {
-    final id = auth.currentUser!.uid;
+
+  Future<String> getTranslation(String path) async {
+    final url = Uri.parse(
+      "https://khalood619-signbridge-api.hf.space/sign/predict",
+    );
+
+    var request = http.MultipartRequest('POST', url);
+
+    request.files.add(await http.MultipartFile.fromPath('file', path));
+
+    var response = await request.send();
+
     try {
-      final user = await firestore.collection('users').doc(id).get();
-      final name = user['name'];
-      return name;
+      print(response);
+      final body = await response.stream.bytesToString();
+
+      final Map<String, dynamic> data = jsonDecode(body);
+
+      final text = data["gloss"];
+
+      return text;
     } catch (e) {
-      throw Exception(e);
+      print("Error: ${response.statusCode}");
+      return "";
     }
   }
+
+  
 }

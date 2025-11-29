@@ -4,38 +4,42 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
 
 class TranslationScreen extends StatefulWidget {
-  const TranslationScreen({super.key});
+  TranslationScreen({super.key, this.path});
+
+  String? path;
 
   @override
   State<TranslationScreen> createState() => _TranslationScreenState();
 }
 
 class _TranslationScreenState extends State<TranslationScreen> {
-
   final TextEditingController translationController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    context.read<TranslationCubit>().getUserName();
+    context.read<UserInfoCubit>().getUserInfo();
   }
-
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TranslationCubit, TranslationState>(
+    return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        if (state is TranslationInitial || state is TranslationLoading) {
+        final cubit = context.read<TranslationCubit>();
+        final text = cubit.getTranslation(widget.path!);
+        translationController.value = text;
+        if (state is UserInfoInitial || state is UserInfoLoading) {
           return Center(child: CircularProgressIndicator());
         }
 
-        if (state is TranslationError) {
+        if (state is UserInfoError) {
           return Scaffold(body: Center(child: Text("Error: ${state.message}")));
         }
-        if (state is TranslationLoaded) {
+        if (state is UserInfoLoaded) {
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
@@ -46,7 +50,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                     SizedBox(height: 88),
 
                     Text(
-                      "Hi ${state.name},",
+                      "Hi ${state.user.name},",
                       style: TextStyle(
                         fontFamily: 'Gloock',
                         fontWeight: FontWeight.bold,
@@ -99,15 +103,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                   onPressed: () {
                                     Clipboard.setData(
                                       ClipboardData(
-                                        text: translationController.text
-                                      )
+                                        text: translationController.text,
+                                      ),
                                     );
-                                    ScaffoldMessenger.of(context)
-                                    .showSnackBar(
+                                    ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                         content: Text('Copy Done Sucessfully'),
                                         backgroundColor: Colors.green,
-                                      )
+                                      ),
                                     );
                                   },
                                   icon: Icon(

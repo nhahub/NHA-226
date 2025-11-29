@@ -1,3 +1,4 @@
 abstract class TranslationRepository {
-  Future<String> getUserName();
+  Future<String> getTranslation(String path);
+  
 }

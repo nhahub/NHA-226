@@ -8,11 +8,14 @@ sealed class TranslationState extends Equatable {
 }
 
 final class TranslationInitial extends TranslationState {}
+
 final class TranslationLoading extends TranslationState {}
+
 final class TranslationLoaded extends TranslationState {
-  final String name;
-  const TranslationLoaded(this.name);
+  final String translation;
+  const TranslationLoaded(this.translation);
 }
+
 final class TranslationError extends TranslationState {
   String? message;
   TranslationError(this.message);

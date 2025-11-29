@@ -24,12 +24,17 @@ class RecordingVideoCubit extends Cubit<RecordingVideoState> {
     }
   }
 
-  Future<void> stop() async {
+  Future<String> stop() async {
     try {
       final path = await repository.stopRecording();
       emit(RecordingVideoStopped(path));
+      return path;
     } catch (e) {
       emit(RecordingVideoError(e.toString()));
+      return '';
     }
   }
+
+
+  
 }

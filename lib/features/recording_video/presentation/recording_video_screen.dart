@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
 
 class RecordingVideoScreen extends StatefulWidget {
   const RecordingVideoScreen({super.key});
@@ -23,17 +24,14 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
     return BlocBuilder<RecordingVideoCubit, RecordingVideoState>(
       builder: (context, state) {
         final cubit = context.read<RecordingVideoCubit>();
+        String path = "";
         if (state is RecordingVideoLoading || state is RecordingVideoInitial) {
           return Center(child: CircularProgressIndicator());
         }
 
         if (state is RecordingVideoError) {
-          return Scaffold(
-            body: Center(child: Text("Error: ${state.message}")),
-          );
-        }
-
-        else {
+          return Scaffold(body: Center(child: Text("Error: ${state.message}")));
+        } else {
           return Scaffold(
             body: Stack(
               children: [
@@ -43,18 +41,24 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
                   child: Container(
                     width: double.infinity,
                     height: 170,
-                    decoration: BoxDecoration(
-                      color: AppColor.black
-                    ),
+                    decoration: BoxDecoration(color: AppColor.black),
                   ),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: GestureDetector(
-                    onTap: () {
+                    onTap: () async {
                       if (state is RecordingVideoRecording) {
-                        cubit.stop();
-                      } else {
+                        final path =await cubit.stop();
+                        Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => TranslationScreen(
+                                  path : path
+                                ),
+                              ),
+                            );  
+                      }else{
                         cubit.start();
                       }
                     },
@@ -75,8 +79,6 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
             ),
           );
         }
-        
-
       },
     );
   }
