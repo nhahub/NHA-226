@@ -8,9 +8,9 @@ import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_c
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
 
 class TranslationScreen extends StatefulWidget {
-  TranslationScreen({super.key, this.path});
+  const TranslationScreen({super.key, this.path});
 
-  String? path;
+  final String? path;
 
   @override
   State<TranslationScreen> createState() => _TranslationScreenState();
@@ -22,20 +22,21 @@ class _TranslationScreenState extends State<TranslationScreen> {
   @override
   void initState() {
     super.initState();
+
     context.read<UserInfoCubit>().getUserInfo();
+
+    if (widget.path != null) {
+      context.read<TranslationCubit>().getTranslation(widget.path!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        final cubit = context.read<TranslationCubit>();
-        final text = cubit.getTranslation(widget.path!);
-        translationController.value = text;
         if (state is UserInfoInitial || state is UserInfoLoading) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
-
         if (state is UserInfoError) {
           return Scaffold(body: Center(child: Text("Error: ${state.message}")));
         }
@@ -47,98 +48,103 @@ class _TranslationScreenState extends State<TranslationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 88),
-
+                    const SizedBox(height: 88),
                     Text(
                       "Hi ${state.user.name},",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: 'Gloock',
                         fontWeight: FontWeight.bold,
                         fontSize: 20,
                         color: AppColor.black,
                       ),
                     ),
-
-                    SizedBox(height: 8),
-
-                    Text(
+                    const SizedBox(height: 8),
+                    const Text(
                       "Let's understand each other better",
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
-                    SizedBox(height: 32),
-
-                    Container(
-                      width: double.infinity,
-                      height: 214,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: AppColor.second,
-                      ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: translationController,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText:
-                                    'Use the camera below to capture or record your sign language gestures',
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColor.darkGray,
-                                ),
-                              ),
-                            ),
-
-                            SizedBox(height: 70),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                    const SizedBox(height: 32),
+                    BlocConsumer<TranslationCubit, TranslationState>(
+                      listener: (context, state) {
+                        if (state is TranslationLoaded) {
+                          translationController.text = state.translation;
+                        }
+                      },
+                      builder: (context, state) {
+                        return Container(
+                          width: double.infinity,
+                          height: 214,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColor.second,
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(
-                                        text: translationController.text,
+                                Expanded(
+                                  child: state is TranslationLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : TextField(
+                                          controller: translationController,
+                                          maxLines: null,
+                                          decoration: const InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText:
+                                                'Use the camera below to capture or record your sign language gestures',
+                                            hintStyle: TextStyle(
+                                              fontSize: 16,
+                                              color: AppColor.darkGray,
+                                            ),
+                                          ),
+                                        ),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: translationController.text,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Copy Done Successfully',
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      },
+                                      icon: const Icon(
+                                        Icons.copy,
+                                        color: AppColor.darkGray,
                                       ),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Copy Done Sucessfully'),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.copy,
-                                    color: AppColor.darkGray,
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
-
-                    SizedBox(height: 32),
-
-                    Text(
+                    const SizedBox(height: 32),
+                    const Text(
                       '• Hold your hand clearly in front of the camera',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
-                    Text(
+                    const Text(
                       '• Ensure good lighting',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
-                    SizedBox(height: 197),
-
+                    const SizedBox(height: 197),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -147,7 +153,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                             Navigator.pushNamed(context, recordingVideoScreen);
                           },
                           style: ElevatedButton.styleFrom(
-                            shape: CircleBorder(),
+                            shape: const CircleBorder(),
                           ),
                           child: Container(
                             width: 65,
@@ -158,9 +164,9 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                 colors: [AppColor.main, AppColor.second],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                stops: [0.41, 1.0],
+                                stops: const [0.41, 1.0],
                               ),
-                              boxShadow: [
+                              boxShadow: const [
                                 BoxShadow(
                                   color: Colors.black26,
                                   blurRadius: 4,
@@ -169,10 +175,8 @@ class _TranslationScreenState extends State<TranslationScreen> {
                               ],
                             ),
                             child: Center(
-                              child: SizedBox(
-                                child: SvgPicture.asset(
-                                  'assets/images/mdi_camera.svg',
-                                ),
+                              child: SvgPicture.asset(
+                                'assets/images/mdi_camera.svg',
                               ),
                             ),
                           ),
@@ -185,7 +189,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
             ),
           );
         }
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }
