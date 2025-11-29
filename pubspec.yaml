@@ -55,6 +55,10 @@ dependencies:
   agora_rtc_engine: ^6.3.2
   permission_handler: ^11.4.0
   meta: ^1.16.0
+  dartz: ^0.10.1
+  get_it: ^9.1.1
+  zego_uikit_prebuilt_call: ^4.8.0
+  zego_uikit_signaling_plugin: ^0.1.0
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
