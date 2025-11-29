@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/core/widget/custom_app_bar.dart';
 import 'package:lingo_sign/features/notification/presentation/cubit/notifications_cubit.dart';
 import 'package:lingo_sign/features/notification/presentation/widget/notification_cart.dart';
+import 'package:lingo_sign/features/notification/presentation/widget/notification_shimmer_cart.dart';
 
 class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
@@ -13,7 +17,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  
   @override
   void initState() {
     super.initState();
@@ -26,21 +29,32 @@ class _NotificationScreenState extends State<NotificationScreen> {
       top: false,
       child: Scaffold(
         backgroundColor: AppColor.white,
-        appBar: CustomAppBar(title: 'Notification'),
+        appBar: const CustomAppBar(title: 'Notification'),
         body: BlocBuilder<NotificationsCubit, NotificationsState>(
           builder: (context, state) {
             if (state is NotificationsLoading) {
-              return Center(child: CircularProgressIndicator());
+              return ListView.builder(
+                itemCount: 10,
+                itemBuilder: (context, index) => NotificationShimmerCart(),
+              );
             }
+
             if (state is NotificationsLoaded) {
               if (state.notifications.isEmpty) {
                 return Center(
-                  child: Text(
-                    'There are no notification yet!',
-                    style: TextStyle(color: AppColor.black),
+                  child: Column(
+                    children: [
+                      SizedBox(height: context.width / 2),
+                      SvgPicture.asset('assets/images/empty_notification.svg'),
+                      Text(
+                        'No notifications right now!',
+                        style: TextStyle(color: AppColor.main, fontSize: 20.sp),
+                      ),
+                    ],
                   ),
                 );
               }
+
               return ListView.builder(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
@@ -48,25 +62,39 @@ class _NotificationScreenState extends State<NotificationScreen> {
                 ),
                 itemCount: state.notifications.length,
                 itemBuilder: (context, index) {
+                  final notif = state.notifications[index];
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 4),
                     child: NotificationCard(
-                      notification: state.notifications[index],
-                      onAccept: () {},
-                      onIgnore: () {},
+                      notification: notif,
+                      onAccept: () async {
+                        final cubit = context.read<NotificationsCubit>();
+                        await cubit.acceptNotification(
+                          requestNotifId: notif.id,
+                          senderId: notif.fromUserId,
+                        );
+                      },
+                      onIgnore: () async {
+                        final cubit = context.read<NotificationsCubit>();
+                        await cubit.ignoreNotification(
+                          requestNotifId: notif.id,
+                        );
+                      },
                     ),
                   );
                 },
               );
             }
+
             if (state is NotificationsError) {
               return Center(
                 child: Text(
                   'Error: ${state.message}',
-                  style: TextStyle(color: AppColor.black),
+                  style: TextStyle(color: AppColor.main, fontSize: 18),
                 ),
               );
             }
+
             return Container();
           },
         ),

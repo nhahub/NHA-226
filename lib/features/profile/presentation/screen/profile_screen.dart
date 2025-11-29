@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:lingo_sign/features/account_info_page/data/account_repository.dart';
+import 'package:lingo_sign/features/account_info_page/presentation/bloc/edit_account_info_bloc.dart';
+import 'package:lingo_sign/features/account_info_page/presentation/screens/account_info_screen.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_state.dart';
 import 'package:lingo_sign/features/settings/settings_screen.dart';
 import 'package:lingo_sign/features/profile/presentation/widgets/profile_menu_item.dart';
-import 'package:lingo_sign/features/profile/view/helpUs.dart';
-import 'package:lingo_sign/features/profile/view/account_info_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -134,26 +135,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   const SizedBox(height: 25),
 
-                  ProfileMenuItem(
-                    icon: Icons.person_outline,
-                    text: "Profile info",
-                    onTap: () => Navigator.push(
-                      context,
-                    MaterialPageRoute(
-                        builder: (_) => const AccountInfoScreen(),
-                      ),
-                    ),
-                  ),
+                     
+                    ProfileMenuItem(
+                     icon: Icons.person_outline,
+                     text: "Profile info",
+                     onTap: () => Navigator.push(
+                        context,
+                     MaterialPageRoute(
+                  builder: (_) => MultiBlocProvider(
+                    providers: [
+                  BlocProvider(
+              create: (context) => EditAccountInfoBloc(AccountRepository()),
+          ),
+         
+        ],
+        child: const AccountInfoScreen(),
+             ),
+              ),
+            ),
+          ),
+
+
 
                   ProfileMenuItem(
                     icon: Icons.help_outline,
                     text: "Help / Send us",
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => const HelpUs(),
-                      ),
-                    ),
+                    onTap: () { 
+                    },
                   ),
 
 

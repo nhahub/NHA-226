@@ -26,52 +26,84 @@ class ProfileRepository {
     }
   }
 
-  Future<String?> uploadProfileImage() async {
-    try {
-      final statuses = await [Permission.photos, Permission.storage].request();
 
-      if (statuses[Permission.photos] != PermissionStatus.granted &&
-          statuses[Permission.storage] != PermissionStatus.granted) {
-        throw Exception("Storage permission denied");
-      }
-
-      final XFile? image = await picker.pickImage(
-        source: ImageSource.gallery,
-        maxWidth: 512,
-        maxHeight: 512,
-        imageQuality: 80,
-      );
-
-      if (image == null) return null;
-
-      final File file = File(image.path);
-      final user = _auth.currentUser;
-      if (user == null) return null;
-
-      final fileName = "${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
-
-      await supabase.storage.from('images').upload(
-            fileName,
-            file,
-            fileOptions: FileOptions(
-              upsert: true,
-              contentType: 'image/jpeg',
-            ),
-          );
-
-      final publicUrl = supabase.storage.from('images').getPublicUrl(fileName);
-      final finalUrl = "$publicUrl?t=${DateTime.now().millisecondsSinceEpoch}";
-
-      await _firestore.collection('users').doc(user.uid).update({
-        "image_url": finalUrl,
-        "updatedAt": FieldValue.serverTimestamp(),
-      });
-
-      return finalUrl;
-    } catch (e) {
-      throw Exception("Failed to upload image: $e");
+Future<String?> uploadProfileImage() async {
+  try {
+    final statuses = await [Permission.photos, Permission.storage].request();
+    if (statuses[Permission.photos] != PermissionStatus.granted && 
+        statuses[Permission.storage] != PermissionStatus.granted) {
+      throw Exception("Storage permission denied");
     }
+
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      maxWidth: 512,
+      maxHeight: 512,
+      imageQuality: 80,
+    );
+    
+    if (image == null) return null;
+    
+    final File file = File(image.path);
+    final user = _auth.currentUser;
+    if (user == null) return null;
+
+    await _deleteOldUserImages();
+
+    final fileName = "${user.uid}_${DateTime.now().millisecondsSinceEpoch}.jpg";
+    
+    await supabase.storage.from('images').upload(
+      fileName,
+      file,
+      fileOptions: FileOptions(
+        upsert: true,
+        contentType: 'image/jpeg',
+      ),
+    );
+
+    final publicUrl = supabase.storage.from('images').getPublicUrl(fileName);
+    final finalUrl = "$publicUrl?t=${DateTime.now().millisecondsSinceEpoch}";
+
+    await _firestore.collection('users').doc(user.uid).update({
+      "image_url": finalUrl,
+      "updatedAt": FieldValue.serverTimestamp(),
+    });
+
+    return finalUrl;
+  } catch (e) {
+    throw Exception("Failed to upload image: $e");
   }
+}
+
+Future<void> _deleteOldUserImages() async {
+  try {
+    final user = _auth.currentUser;
+    if (user == null) return;
+
+    print("Looking for old images for user: ${user.uid}");
+    
+   
+    final files = await supabase.storage.from('images').list();
+    print("All files in bucket: ${files.map((f) => f.name).toList()}");
+    
+    
+    final userFiles = files.where((file) => file.name.startsWith('${user.uid}_')).toList();
+    print("User's files: ${userFiles.map((f) => f.name).toList()}");
+    
+    if (userFiles.isNotEmpty) {
+      final fileNames = userFiles.map((file) => file.name).toList();
+      print("Deleting user files: $fileNames");
+      await supabase.storage.from('images').remove(fileNames);
+      print("Deleted ${fileNames.length} old user images");
+    } else {
+      print("No old user images found");
+    }
+  } catch (e) {
+    print("Error deleting old user images: $e");
+  }
+}
+  
+
 
   Future<void> logout() async {
     try {
