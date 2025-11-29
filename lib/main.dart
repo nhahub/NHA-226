@@ -77,8 +77,6 @@ class MyApp extends StatelessWidget {
             create: (_) =>
                 RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
-
-          // Calls
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

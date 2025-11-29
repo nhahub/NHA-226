@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
+import 'package:lingo_sign/features/call/presentation/screens/meeting_screen.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 // ignore: must_be_immutable
 class FriendUserCallCard extends StatelessWidget {
   FriendUserCallCard({super.key, required this.userFriend, this.onTap});
-  
+
   FirebaseAuth auth = FirebaseAuth.instance;
   final Friend userFriend;
   final void Function()? onTap;
@@ -61,7 +62,16 @@ class FriendUserCallCard extends StatelessWidget {
                 ],
               ),
               InkWell(
-                onTap: () async {},
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return VideoMeetingScreen();
+                      },
+                    ),
+                  );
+                },
                 child: Container(
                   width: 36,
                   height: 36,

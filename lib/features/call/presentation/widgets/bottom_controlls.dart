@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:lingo_sign/features/meeting_call/presentation/widgets/conrtol_button.dart';
+import 'package:lingo_sign/features/call/presentation/widgets/conrtol_button.dart';
 
 class BottomControls extends StatelessWidget {
-  const BottomControls({super.key});
+  const BottomControls({super.key, required this.endCall});
+
+  final Future<void> Function() endCall;
 
   double _r(double w, double mobile, double desktop) {
     return w < 600 ? mobile : desktop;
@@ -26,23 +28,10 @@ class BottomControls extends StatelessWidget {
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: const [
-          ControlButton(icon: Icons.mic_off, label: 'Mute', isActive: false),
-          ControlButton(
-            icon: Icons.videocam_off,
-            label: 'Stop Video',
-            isActive: false,
-          ),
-          ControlButton(
-            icon: Icons.screen_share,
-            label: 'Share',
-            isActive: true,
-          ),
-          ControlButton(
-            icon: Icons.people,
-            label: 'Participants',
-            isActive: false,
-          ),
+        children: [
+          ControlButton(icon: Icons.mic_off, isActive: false),
+          ControlButton(icon: Icons.videocam_off, isActive: false),
+          ControlButton(icon: Icons.flip_camera_ios_rounded, isActive: false),
           ControlButton(icon: Icons.call_end, label: 'Leave', isActive: false),
         ],
       ),
