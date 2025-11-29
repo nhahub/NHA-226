@@ -94,7 +94,7 @@ class MyApp extends StatelessWidget {
                     if (state is Authenticated) {
                       return MainScreen();
                     }
-                    if (state is AuthLoading) {
+                    if (state is AuthLoading || state is AuthInitial) {
                       return LoadingScreen();
                     }
                     return LogInScreen();

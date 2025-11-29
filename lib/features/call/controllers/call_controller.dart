@@ -6,12 +6,11 @@ import 'package:permission_handler/permission_handler.dart';
 class CallController extends ChangeNotifier {
   RtcEngine? engine;
   final String channelName = 'Test';
-  final List<int> users = [0]; // local user
+  final List<int> users = [0];
 
   bool isInitialized = false;
 
   Future<void> initEngine() async {
-    // request permissions
     await [Permission.camera, Permission.microphone].request();
 
     engine = createAgoraRtcEngine();
