@@ -9,9 +9,11 @@ plugins {
 }
 
 android {
+    compileSdk = 33
+    ndkVersion = "27.0.12077973"
     namespace = "com.example.lingo_sign"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11

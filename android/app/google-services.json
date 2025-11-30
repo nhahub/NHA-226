@@ -12,7 +12,22 @@
           "package_name": "com.example.lingo_sign"
         }
       },
-      "oauth_client": [],
+
+      "oauth_client": [
+        {
+          "client_id": "671655381307-d7elnegikjb2nif33q0o3pnk1p832dr0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.lingo_sign",
+            "certificate_hash": "07dc358b37b5a77440b3ce732ff03e1e44ebeb02"
+          }
+        },
+        {
+          "client_id": "671655381307-qsg8ogo7hj8u55skj4kg19tm0fshcndm.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+
       "api_key": [
         {
           "current_key": "AIzaSyC9A3iqBQV9U19r2xqX2h8LAJT14pquYpk"
@@ -20,7 +35,21 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671655381307-qsg8ogo7hj8u55skj4kg19tm0fshcndm.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "671655381307-2sv66omrnm8on7aneoaltilb9fr1hjc8.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.lingoSign"
+              }
+            }
+          ]
+
         }
       }
     }
