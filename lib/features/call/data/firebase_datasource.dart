@@ -1,4 +1,3 @@
-// lib/data/datasources/firebase_datasource.dart
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingo_sign/features/call/data/call_model.dart';
 
@@ -7,6 +6,7 @@ class FirebaseDataSource {
 
   Future<CallModel> makeCall({
     required String receiverId,
+    required String receiverName,
     required String callerId,
     required String callerName,
     required bool isVideoCall,
@@ -17,7 +17,7 @@ class FirebaseDataSource {
       callerId: callerId,
       callerName: callerName,
       receiverId: receiverId,
-      receiverName: 'User $receiverId',
+      receiverName: receiverName,
       startTime: DateTime.now(),
       status: 'pending',
       duration: 0,

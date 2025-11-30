@@ -1,8 +1,8 @@
-// lib/presentation/widgets/incoming_call_dialog.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/call/domain/call_entity.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
+import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 
 class IncomingCallDialog extends StatelessWidget {
   final CallEntity callData;
@@ -41,9 +41,7 @@ class IncomingCallDialog extends StatelessWidget {
                   },
                   icon: const Icon(Icons.call_end),
                   label: const Text('Decline'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                  ),
+                  style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
@@ -51,6 +49,15 @@ class IncomingCallDialog extends StatelessWidget {
                       AcceptCallEvent(callId: callData.callId),
                     );
                     Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => VideoCallScreen(
+                          callID: callData.callId,
+                          isVideoCall: callData.isVideoCall,
+                        ),
+                      ),
+                    );
                   },
                   icon: const Icon(Icons.call),
                   label: const Text('Accept'),

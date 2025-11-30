@@ -1,4 +1,3 @@
-// lib/data/models/call_model.dart
 import 'package:lingo_sign/features/call/domain/call_entity.dart';
 
 class CallModel extends CallEntity {

@@ -31,6 +31,11 @@ class CallIncoming extends CallState {
   List<Object> get props => [callData];
 }
 
+class IncomingCallReceived extends CallEvent {
+  final CallEntity call;
+  const IncomingCallReceived(this.call);
+}
+
 class CallHistory extends CallState {
   final List<CallEntity> calls;
   const CallHistory({required this.calls});

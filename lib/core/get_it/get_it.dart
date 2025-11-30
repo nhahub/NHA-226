@@ -6,7 +6,6 @@ import 'package:lingo_sign/features/call/domain/usecases/get_call_history_usecas
 import 'package:lingo_sign/features/call/domain/usecases/make_call_usecase.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 
-
 final sl = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
@@ -25,8 +24,9 @@ Future<void> setupServiceLocator() async {
     CallBloc(
       makeCallUseCase: sl<MakeCallUseCase>(),
       getCallHistoryUseCase: sl<GetCallHistoryUseCase>(),
+      callRepository: sl<CallRepository>(),
     ),
   );
 
-  // 
+  //
 }

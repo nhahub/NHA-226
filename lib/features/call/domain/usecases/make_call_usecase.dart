@@ -8,10 +8,12 @@ class MakeCallUseCase {
 
   Future<Either<Exception, CallEntity>> call({
     required String receiverId,
+    required String receiverName,
     required bool isVideoCall,
   }) async {
     return await repository.makeCall(
       receiverId: receiverId,
+      receiverName: receiverName,
       isVideoCall: isVideoCall,
     );
   }

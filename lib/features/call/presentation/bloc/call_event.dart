@@ -9,11 +9,16 @@ sealed class CallEvent extends Equatable {
 
 class MakeCallEvent extends CallEvent {
   final String receiverId;
+  final String receiverName;
   final bool isVideoCall;
-  const MakeCallEvent({required this.receiverId, required this.isVideoCall});
+  const MakeCallEvent({
+    required this.receiverId,
+    required this.isVideoCall,
+    required this.receiverName,
+  });
 
   @override
-  List<Object> get props => [receiverId, isVideoCall];
+  List<Object> get props => [receiverId, receiverName, isVideoCall];
 }
 
 class GetCallHistoryEvent extends CallEvent {

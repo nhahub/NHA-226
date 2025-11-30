@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
@@ -7,11 +6,9 @@ import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-// ignore: must_be_immutable
 class FriendUserCallCard extends StatelessWidget {
-  FriendUserCallCard({super.key, required this.userFriend, this.onTap});
+  const FriendUserCallCard({super.key, required this.userFriend, this.onTap});
 
-  FirebaseAuth auth = FirebaseAuth.instance;
   final Friend userFriend;
   final void Function()? onTap;
 
@@ -67,6 +64,7 @@ class FriendUserCallCard extends StatelessWidget {
                   context.read<CallBloc>().add(
                     MakeCallEvent(
                       receiverId: userFriend.uid,
+                      receiverName: userFriend.name,
                       isVideoCall: true,
                     ),
                   );

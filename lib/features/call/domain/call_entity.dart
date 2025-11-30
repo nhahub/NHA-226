@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 
+// enum CallEntityType { pending, accepted, declined, completed }
+
 class CallEntity extends Equatable {
   final String callId;
   final String callerId;
