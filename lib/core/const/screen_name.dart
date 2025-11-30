@@ -9,3 +9,4 @@ const String notificationScreen = '/notification';
 const String sendUsScreen = '/send_us';
 const String accountInfoScreen = '/account_info';
 const String friendAccountScreen = '/friend_account';
+const String recordingVideoScreen = '/recording_video';

@@ -63,6 +63,8 @@ dependencies:
   zego_callkit: ^1.0.0+5
   zego_zpns: ^2.8.0
   flutter_callkit_incoming: ^2.5.8
+  camera: ^0.11.2+1
+  http: ^1.6.0
 dev_dependencies:
   flutter_lints: ^5.0.0
   flutter_test:
