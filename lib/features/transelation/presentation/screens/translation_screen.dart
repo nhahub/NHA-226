@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
-import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/widgets/options_video.dart';
+
 
 class TranslationScreen extends StatefulWidget {
   TranslationScreen({super.key, this.path});
@@ -175,34 +175,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                             showDialog(
                               context: context,
                               builder: (dialogContext) {
-                                return AlertDialog(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-                                  backgroundColor: AppColor.white,
-                                  content: Row(
-                                    children: [
-                                      ElevatedButton(
-                                        onPressed: () {
-                                        
-                                        },
-                                       
-                                        child: Text('Upload'),
-                                      ),
-                                      SizedBox(width: 24),
-
-                                      ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                            context,
-                                            recordingVideoScreen,
-                                          );
-                                        },
-                                        child: Text('Record'),
-                                      ),
-                                    ],
-                                  ),
-                                );
+                                return OptionsVideo();
                               },
                             );
                           },

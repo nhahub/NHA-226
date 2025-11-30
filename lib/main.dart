@@ -11,12 +11,10 @@ import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
 import 'package:lingo_sign/features/recording_video/data/video_service.dart';
-import 'package:lingo_sign/features/recording_video/domain/recording_video_repository.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
 import 'package:lingo_sign/features/transelation/data/translation_repository_impl.dart';
-import 'package:lingo_sign/features/transelation/domain/translation_repository.dart';
-import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
-import 'package:lingo_sign/features/transelation/presentation/translation_screen.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/upload/upload_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -106,6 +104,10 @@ class MyApp extends StatelessWidget {
           //Translation
           BlocProvider(
             create: (_) => TranslationCubit(TranslationRepositoryImpl())
+          ),
+          
+          BlocProvider(
+            create: (_) => UploadCubit(TranslationRepositoryImpl())
           )
         ],
         child: MaterialApp(
