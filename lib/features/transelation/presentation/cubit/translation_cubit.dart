@@ -19,4 +19,8 @@ class TranslationCubit extends Cubit<TranslationState> {
       return "";
     }
   }
+
+  Future<String> uploadVideo() async{
+    
+  }
 }

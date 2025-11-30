@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
@@ -23,15 +24,16 @@ class _TranslationScreenState extends State<TranslationScreen> {
   void initState() {
     super.initState();
     context.read<UserInfoCubit>().getUserInfo();
+
+    if (widget.path != null) {
+      context.read<TranslationCubit>().getTranslation(widget.path!);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        final cubit = context.read<TranslationCubit>();
-        final text = cubit.getTranslation(widget.path!);
-        translationController.value = text;
         if (state is UserInfoInitial || state is UserInfoLoading) {
           return Center(child: CircularProgressIndicator());
         }
@@ -68,61 +70,87 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
                     SizedBox(height: 32),
 
-                    Container(
-                      width: double.infinity,
-                      height: 214,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(20),
-                        color: AppColor.second,
-                      ),
-
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          children: [
-                            TextField(
-                              controller: translationController,
-                              maxLines: null,
-                              decoration: InputDecoration(
-                                border: InputBorder.none,
-                                hintText:
-                                    'Use the camera below to capture or record your sign language gestures',
-                                hintStyle: TextStyle(
-                                  fontSize: 16,
-                                  color: AppColor.darkGray,
-                                ),
-                              ),
+                    BlocConsumer<TranslationCubit, TranslationState>(
+                      listener: (context, state) {
+                        if (state is TranslationLoaded) {
+                          translationController.text = state.translation;
+                        }
+                      },
+                      builder: (context, state) {
+                        if (state is TranslationError) {
+                          return Scaffold(
+                            body: Center(
+                              child: Text("Error: ${state.message}"),
                             ),
+                          );
+                        }
+                        return Container(
+                          width: double.infinity,
+                          height: 214,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: AppColor.second,
+                          ),
 
-                            SizedBox(height: 70),
-
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
                               children: [
-                                IconButton(
-                                  onPressed: () {
-                                    Clipboard.setData(
-                                      ClipboardData(
-                                        text: translationController.text,
+                                Expanded(
+                                  child: state is TranslationLoading
+                                      ? const Center(
+                                          child: CircularProgressIndicator(),
+                                        )
+                                      : TextField(
+                                          controller: translationController,
+                                          maxLines: null,
+                                          decoration: InputDecoration(
+                                            border: InputBorder.none,
+                                            hintText:
+                                                'Use the camera below to capture or record your sign language gestures',
+                                            hintStyle: TextStyle(
+                                              fontSize: 16,
+                                              color: AppColor.darkGray,
+                                            ),
+                                          ),
+                                        ),
+                                ),
+
+                                SizedBox(height: 70),
+
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    IconButton(
+                                      onPressed: () {
+                                        Clipboard.setData(
+                                          ClipboardData(
+                                            text: translationController.text,
+                                          ),
+                                        );
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              'Copy Done Sucessfully',
+                                            ),
+                                            backgroundColor: Colors.green,
+                                          ),
+                                        );
+                                      },
+                                      icon: Icon(
+                                        Icons.copy,
+                                        color: AppColor.darkGray,
                                       ),
-                                    );
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text('Copy Done Sucessfully'),
-                                        backgroundColor: Colors.green,
-                                      ),
-                                    );
-                                  },
-                                  icon: Icon(
-                                    Icons.copy,
-                                    color: AppColor.darkGray,
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
 
                     SizedBox(height: 32),
@@ -144,7 +172,39 @@ class _TranslationScreenState extends State<TranslationScreen> {
                       children: [
                         ElevatedButton(
                           onPressed: () {
-                            Navigator.pushNamed(context, recordingVideoScreen);
+                            showDialog(
+                              context: context,
+                              builder: (dialogContext) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  backgroundColor: AppColor.white,
+                                  content: Row(
+                                    children: [
+                                      ElevatedButton(
+                                        onPressed: () {
+                                        
+                                        },
+                                       
+                                        child: Text('Upload'),
+                                      ),
+                                      SizedBox(width: 24),
+
+                                      ElevatedButton(
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                            context,
+                                            recordingVideoScreen,
+                                          );
+                                        },
+                                        child: Text('Record'),
+                                      ),
+                                    ],
+                                  ),
+                                );
+                              },
+                            );
                           },
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
