@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
-import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
+import 'package:lingo_sign/features/notification/presentation/cubit/notifications_cubit.dart';
+import 'package:lingo_sign/features/notification/presentation/cubit/notifications_state.dart';
 import 'package:shimmer/shimmer.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -23,7 +24,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
       backgroundColor: AppColor.white,
       backgroundImage: imageUrl.isNotEmpty
           ? NetworkImage(imageUrl)
-          : const AssetImage('assets/images/placeholder_user.jpg'),
+          : const AssetImage('assets/images/placeholder_user.jpg')
+                as ImageProvider,
     );
   }
 
@@ -55,6 +57,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
         bool isLoading = state is UserInfoLoading;
+
         return AppBar(
           backgroundColor: AppColor.white,
           elevation: 0,
@@ -98,13 +101,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               onPressed: () => Navigator.pushNamed(context, searchScreen),
               icon: Icon(Icons.search, color: AppColor.darkGray),
             ),
-            FutureBuilder<int>(
-              future: NotificationRepositoryImpl().getallNotification().then(
-                (notifications) =>
-                    notifications.where((notif) => !notif.isRead).length,
-              ),
-              builder: (context, snapshot) {
-                int unreadCount = snapshot.data ?? 0;
+
+            BlocBuilder<NotificationsCubit, NotificationsState>(
+              builder: (context, notifState) {
+                int unreadCount = 0;
+                if (notifState is NotificationsLoaded) {
+                  unreadCount = notifState.notifications
+                      .where((n) => !n.isRead)
+                      .length;
+                }
+
                 return Stack(
                   clipBehavior: Clip.none,
                   children: [

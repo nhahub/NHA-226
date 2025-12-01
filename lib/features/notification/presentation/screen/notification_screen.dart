@@ -6,6 +6,7 @@ import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/core/widget/custom_app_bar.dart';
 import 'package:lingo_sign/features/notification/presentation/cubit/notifications_cubit.dart';
+import 'package:lingo_sign/features/notification/presentation/cubit/notifications_state.dart';
 import 'package:lingo_sign/features/notification/presentation/widget/notification_cart.dart';
 import 'package:lingo_sign/features/notification/presentation/widget/notification_shimmer_cart.dart';
 
@@ -17,12 +18,6 @@ class NotificationScreen extends StatefulWidget {
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<NotificationsCubit>().getallNotification();
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -73,11 +68,29 @@ class _NotificationScreenState extends State<NotificationScreen> {
                           requestNotifId: notif.id,
                           senderId: notif.fromUserId,
                         );
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('You accepted the request')),
+                        );
                       },
                       onIgnore: () async {
                         final cubit = context.read<NotificationsCubit>();
                         await cubit.ignoreNotification(
                           requestNotifId: notif.id,
+                        );
+                        // ignore: use_build_context_synchronously
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Notification ignored'),
+                            action: SnackBarAction(
+                              label: 'Undo',
+                              onPressed: () async {
+                                await cubit.markAsRead(
+                                  notif.id,
+                                ); // undo mark as read
+                              },
+                            ),
+                          ),
                         );
                       },
                     ),

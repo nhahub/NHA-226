@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/core/utils/helper.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
 class NotificationCard extends StatelessWidget {
@@ -18,172 +17,74 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: AppColor.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: AppColor.black.withAlpha(10),
-            blurRadius: 4,
-            offset: const Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildIcon(),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Card(
+      color: notification.isRead ? Colors.grey[100] : Colors.white,
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: const EdgeInsets.all(12.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              notification.title,
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.bold,
+                color: AppColor.black,
+              ),
+            ),
+            SizedBox(height: 8.h),
+            Text(
+              _formatDate(notification.createdAt),
+              style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
+            ),
+            if (notification.type == NotificationType.request)
+              Padding(
+                padding: EdgeInsets.only(top: 8.h),
+                child: Row(
                   children: [
-                    SizedBox(
-                      width: context.width / 1.5,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            notification.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: onAccept,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColor.main,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
                           ),
-                          const SizedBox(height: 4),
-                          Text(
-                            timeago.format(notification.createdAt),
-                            style: TextStyle(
-                              color: AppColor.gray,
-                              fontSize: 13,
-                            ),
-                          ),
-                        ],
+                        ),
+                        child: const Text('Accept'),
                       ),
                     ),
-                    if (!notification.isRead)
-                      Container(
-                        width: 10,
-                        height: 10,
-                        margin: const EdgeInsets.only(left: 8, top: 4),
-                        decoration: const BoxDecoration(
-                          color: AppColor.main,
-                          shape: BoxShape.circle,
+                    SizedBox(width: 8.w),
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: onIgnore,
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          side: BorderSide(color: AppColor.main),
                         ),
+                        child: const Text('Ignore'),
                       ),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 8),
-
-                if (notification.type == NotificationType.request &&
-                    !notification.isIgnored) ...[
-                  Row(
-                    children: [
-                      Expanded(
-                        child: OutlinedButton(
-                          onPressed: onIgnore,
-                          style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Ignore',
-                            style: TextStyle(color: AppColor.main),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: onAccept,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColor.main,
-                            padding: const EdgeInsets.symmetric(vertical: 10),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: const Text(
-                            'Accept',
-                            style: TextStyle(color: AppColor.white),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ] else if (notification.isIgnored) ...[
-                  const Text(
-                    'You ignored this request',
-                    style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ] else if (notification.type == NotificationType.accepted) ...[
-                  const Text(
-                    'You accepted this request',
-                    style: TextStyle(
-                      color: AppColor.main,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ] else if (notification.type == NotificationType.rejected) ...[
-                  const Text(
-                    'You rejected this request',
-                    style: TextStyle(
-                      color: Colors.red,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ),
-        ],
+              ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildIcon() {
-    IconData icon;
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final diff = now.difference(date);
 
-    if (notification.isIgnored) {
-      icon = Icons.remove_circle_outline; // أيقونة مختلفة للـ ignore
-    } else {
-      switch (notification.type) {
-        case NotificationType.request:
-          icon = Icons.person_add_alt_1;
-          break;
-        case NotificationType.accepted:
-          icon = Icons.check_circle;
-          break;
-        case NotificationType.rejected:
-          icon = Icons.cancel;
-          break;
-        default:
-          icon = Icons.call_missed;
-      }
-    }
-
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFFE8E9F8),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Icon(icon, color: AppColor.main),
-    );
+    if (diff.inMinutes < 1) return 'Just now';
+    if (diff.inMinutes < 60) return '${diff.inMinutes} min ago';
+    if (diff.inHours < 24) return '${diff.inHours} hrs ago';
+    return '${date.day}/${date.month}/${date.year}';
   }
 }

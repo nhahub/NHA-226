@@ -9,18 +9,23 @@ class NotificationRepositoryImpl implements NotificationRepository {
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
 
   @override
-  Future<List<AppNotification>> getallNotification() async {
+  Stream<List<AppNotification>> getallNotificationStream() {
     final user = firebaseAuth.currentUser!;
-    final snapshot = await firebaseFirestore
+    return firebaseFirestore
         .collection('users')
         .doc(user.uid)
         .collection('notifications')
         .orderBy('created_at', descending: true)
-        .get();
-    final validDocs = snapshot.docs.where((doc) => doc.id != "_init");
-    return validDocs
-        .map((doc) => NotificationModel.fromFirestore(doc).toAppNotification())
-        .toList();
+        .snapshots()
+        .map((snapshot) {
+          final validDocs = snapshot.docs.where((doc) => doc.id != "_init");
+          return validDocs
+              .map(
+                (doc) =>
+                    NotificationModel.fromFirestore(doc).toAppNotification(),
+              )
+              .toList();
+        });
   }
 
   @override
@@ -48,6 +53,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
     final batch = firebaseFirestore.batch();
 
+    // Add friends
     final myFriendRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -68,15 +74,27 @@ class NotificationRepositoryImpl implements NotificationRepository {
       'created_at': DateTime.now(),
     });
 
+    // Update my notification
     final myNotifRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-    batch.update(myNotifRef, {
-      'title': '$currentUserName accepted this request',
+    batch.update(myNotifRef, {'is_read': true});
+
+    // Send accept notification to sender
+    final acceptNotifRef = firebaseFirestore
+        .collection('users')
+        .doc(senderId)
+        .collection('notifications')
+        .doc();
+    batch.set(acceptNotifRef, {
+      'title': '$currentUserName accepted your request',
       'type': 'accepted',
-      'is_read': true,
+      'from_user_id': currentUser.uid,
+      'from_user_name': currentUserName,
+      'created_at': DateTime.now(),
+      'is_read': false,
     });
 
     await batch.commit();
@@ -90,8 +108,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-
-    await notifRef.delete();
+    await notifRef.update({'is_read': true});
   }
 
   @override
