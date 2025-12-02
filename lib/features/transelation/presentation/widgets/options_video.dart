@@ -18,6 +18,7 @@ class _TestState extends State<OptionsVideo> {
     super.initState();
     context.read<UploadCubit>();
   }
+
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
@@ -25,30 +26,33 @@ class _TestState extends State<OptionsVideo> {
       backgroundColor: AppColor.white,
       content: Row(
         children: [
-          BlocBuilder<UploadCubit, UploadState>(
-            builder: (context, state) {
-              final cubit = context.read<UploadCubit>();
-              if (state is UploadLoading || state is UploadInitial) {
-                return Center(child: CircularProgressIndicator());
-              }
+          BlocConsumer<UploadCubit, UploadState>(
+            listener: (context, state) {
               if (state is UploadErorr) {
-                return Center(child: Text("Error: ${state.message}"));
-              }
-              if (state is UploadLoaded) {
-                return ElevatedButton(
-                  onPressed: () async {
-                    await cubit.uploadVideo();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => TranslationScreen(path: state.path),
-                      ),
-                    );
-                  },
-                  child: Text('Upload'),
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(state.message ?? "Error")),
                 );
               }
-              return CircularProgressIndicator();
+              if (state is UploadSelected) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => TranslationScreen(path: state.path),
+                  ),
+                );
+              }
+              if (state is UploadUnSelected) {
+                Navigator.pop(context);
+              }
+            },
+            builder: (context, state) {
+              final cubit = context.read<UploadCubit>();
+              return ElevatedButton(
+                onPressed: () {
+                  cubit.uploadVideo();
+                },
+                child: Text('Upload'),
+              );
             },
           ),
           SizedBox(width: 24),

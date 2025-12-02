@@ -1,12 +1,7 @@
-import 'package:camera/camera.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
-import 'package:lingo_sign/features/call/data/call_repository.dart';
-import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
-import 'package:lingo_sign/features/call/services/agora_service.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
@@ -90,13 +85,6 @@ class MyApp extends StatelessWidget {
             create: (_) =>
                 RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
-          // Calls
-          BlocProvider(
-            create: (_) => CallBloc(
-              CallRepository(CallFirestoreService()),
-              AgoraService(),
-            ),
-          ),
           //Recording Video
           BlocProvider(
             create: (_) => RecordingVideoCubit(RecordingVideoRepositoryImpl(VideoService()))
@@ -105,7 +93,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => TranslationCubit(TranslationRepositoryImpl())
           ),
-          
+          //upload Video
           BlocProvider(
             create: (_) => UploadCubit(TranslationRepositoryImpl())
           )
