@@ -8,6 +8,7 @@ import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/services/agora_service.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
+import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -27,6 +28,7 @@ import 'package:lingo_sign/features/onboarding/presentation/screen/onboarding_sc
 import 'package:lingo_sign/firebase_options.dart';
 import 'package:lingo_sign/main_screen.dart';
 import 'app_router.dart';
+import 'features/notification/presentation/cubit/notifications_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -61,6 +63,10 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+
+          BlocProvider(
+            create: (_) => NotificationsCubit(NotificationRepositoryImpl()),
+          ),
           // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
@@ -86,6 +92,10 @@ class MyApp extends StatelessWidget {
               CallRepository(CallFirestoreService()),
               AgoraService(),
             ),
+          ),
+
+          BlocProvider(
+            create: (_) => NotificationsCubit(NotificationRepositoryImpl()),
           ),
         ],
         child: MaterialApp(
