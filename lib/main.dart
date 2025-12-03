@@ -64,9 +64,6 @@ class MyApp extends StatelessWidget {
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
 
-          BlocProvider(
-            create: (_) => NotificationsCubit(NotificationRepositoryImpl()),
-          ),
           // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
@@ -95,7 +92,11 @@ class MyApp extends StatelessWidget {
           ),
 
           BlocProvider(
-            create: (_) => NotificationsCubit(NotificationRepositoryImpl()),
+            create: (_) {
+              final cubit = NotificationsCubit(NotificationRepositoryImpl());
+              cubit.listenToNotificationsRealTime();
+              return cubit;
+            },
           ),
         ],
         child: MaterialApp(

@@ -8,6 +8,8 @@ class NotificationModel {
   final DateTime createdAt;
   final bool isRead;
   final String fromUserId;
+  final String toUserId;
+  final bool isIgnored;
 
   NotificationModel({
     required this.id,
@@ -16,19 +18,37 @@ class NotificationModel {
     required this.createdAt,
     required this.isRead,
     required this.fromUserId,
+    required this.toUserId,
+    this.isIgnored = false,
   });
 
   factory NotificationModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+
+    DateTime createdAtValue = DateTime.now();
+    try {
+      final createdAtData = data['created_at'];
+      if (createdAtData is Timestamp) {
+        createdAtValue = createdAtData.toDate();
+      } else if (createdAtData is String) {
+        createdAtValue = DateTime.parse(createdAtData);
+      } else if (createdAtData is DateTime) {
+        createdAtValue = createdAtData;
+      }
+    } catch (e) {
+      print('Error parsing created_at: $e');
+      createdAtValue = DateTime.now();
+    }
+
     return NotificationModel(
       id: doc.id,
       title: data['title'] ?? '',
       type: data['type'] ?? '',
-      createdAt: (data['created_at'] is Timestamp)
-          ? (data['created_at'] as Timestamp).toDate()
-          : DateTime.parse(data['created_at']),
+      createdAt: createdAtValue,
       isRead: data['is_read'] ?? false,
       fromUserId: data['from_user_id'] ?? '',
+      toUserId: data['to_user_id'] ?? '',
+      isIgnored: data['is_ignored'] ?? false,
     );
   }
 
@@ -36,9 +56,11 @@ class NotificationModel {
     return {
       'title': title,
       'type': type,
-      'created_at': createdAt,
+      'created_at': Timestamp.fromDate(createdAt),
       'is_read': isRead,
       'from_user_id': fromUserId,
+      'to_user_id': toUserId,
+      'is_ignored': isIgnored,
     };
   }
 
@@ -46,10 +68,12 @@ class NotificationModel {
     return AppNotification(
       id: id,
       title: title,
-      type: _mapType(type),
-      createdAt: createdAt,
-      isRead: isRead,
       fromUserId: fromUserId,
+      toUserId: toUserId,
+      createdAt: createdAt,
+      type: _mapType(type),
+      isRead: isRead,
+      isIgnored: isIgnored,
     );
   }
 
@@ -61,8 +85,10 @@ class NotificationModel {
         return NotificationType.accepted;
       case 'rejected':
         return NotificationType.rejected;
-      default:
+      case 'missedCall':
         return NotificationType.missedCall;
+      default:
+        return NotificationType.general;
     }
   }
 }

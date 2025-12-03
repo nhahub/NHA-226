@@ -10,7 +10,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Stream<List<AppNotification>> getallNotificationStream() {
-    final user = firebaseAuth.currentUser!;
+    final user = firebaseAuth.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
+
     return firebaseFirestore
         .collection('users')
         .doc(user.uid)
@@ -20,17 +24,111 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .map((snapshot) {
           final validDocs = snapshot.docs.where((doc) => doc.id != "_init");
           return validDocs
-              .map(
-                (doc) =>
-                    NotificationModel.fromFirestore(doc).toAppNotification(),
-              )
+              .map((doc) {
+                try {
+                  return NotificationModel.fromFirestore(
+                    doc,
+                  ).toAppNotification();
+                } catch (e) {
+                  print('Error parsing notification: $e');
+                  return null;
+                }
+              })
+              .whereType<AppNotification>()
               .toList();
         });
   }
 
   @override
+  Future<List<AppNotification>> getallNotification() async {
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user == null) {
+        throw Exception('No user logged in');
+      }
+
+      final snapshot = await firebaseFirestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('notifications')
+          .orderBy('created_at', descending: true)
+          .get();
+
+      final validDocs = snapshot.docs.where((doc) => doc.id != "_init");
+      final notifications = validDocs
+          .map((doc) {
+            try {
+              return NotificationModel.fromFirestore(doc).toAppNotification();
+            } catch (e) {
+              print('Error parsing notification: $e');
+              return null;
+            }
+          })
+          .whereType<AppNotification>()
+          .toList();
+
+      return notifications;
+    } catch (e) {
+      // ignore: avoid_print
+      print('Error fetching notifications: $e');
+      rethrow;
+    }
+  }
+
+  @override
+  void listenToNotificationsRealTime(Function(List<AppNotification>) onUpdate) {
+    final user = firebaseAuth.currentUser;
+    if (user == null) {
+      print('No user logged in');
+      return;
+    }
+
+    try {
+      firebaseFirestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('notifications')
+          .orderBy('created_at', descending: true)
+          .snapshots()
+          .listen(
+            (snapshot) {
+              try {
+                final validDocs = snapshot.docs.where(
+                  (doc) => doc.id != "_init",
+                );
+                final notifications = validDocs
+                    .map((doc) {
+                      try {
+                        return NotificationModel.fromFirestore(
+                          doc,
+                        ).toAppNotification();
+                      } catch (e) {
+                        print('Error parsing notification: $e');
+                        return null;
+                      }
+                    })
+                    .whereType<AppNotification>()
+                    .toList();
+                onUpdate(notifications);
+              } catch (e) {
+                print('Error in snapshot processing: $e');
+              }
+            },
+            onError: (error) {
+              print('Error listening to notifications: $error');
+            },
+          );
+    } catch (e) {
+      print('Error setting up listener: $e');
+    }
+  }
+
+  @override
   Future<void> markAsRead(String notifId) async {
-    final user = firebaseAuth.currentUser!;
+    final user = firebaseAuth.currentUser;
+    if (user == null) {
+      throw Exception('No user logged in');
+    }
     await firebaseFirestore
         .collection('users')
         .doc(user.uid)
@@ -44,7 +142,11 @@ class NotificationRepositoryImpl implements NotificationRepository {
     required String requestNotifId,
     required String senderId,
   }) async {
-    final currentUser = firebaseAuth.currentUser!;
+    final currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
     final currentUserDoc = await firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -53,7 +155,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
     final batch = firebaseFirestore.batch();
 
-    // Add friends
+    // Add both users as friends
     final myFriendRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
@@ -66,21 +168,34 @@ class NotificationRepositoryImpl implements NotificationRepository {
         .doc(currentUser.uid);
 
     batch.set(myFriendRef, {
-      'friendId': senderId,
-      'created_at': DateTime.now(),
+      'uid': senderId,
+      'is_favourite': false,
+      'created_at': Timestamp.now(),
     });
     batch.set(senderFriendRef, {
-      'friendId': currentUser.uid,
-      'created_at': DateTime.now(),
+      'uid': currentUser.uid,
+      'is_favourite': false,
+      'created_at': Timestamp.now(),
     });
 
-    // Update my notification
+    final requestsRef = await firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('requests')
+        .where('uid', isEqualTo: senderId)
+        .get();
+
+    if (requestsRef.docs.isNotEmpty) {
+      batch.delete(requestsRef.docs.first.reference);
+    }
+
+    // Update the notification to accepted
     final myNotifRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-    batch.update(myNotifRef, {'is_read': true});
+    batch.update(myNotifRef, {'type': 'accepted', 'is_read': true});
 
     // Send accept notification to sender
     final acceptNotifRef = firebaseFirestore
@@ -93,8 +208,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
       'type': 'accepted',
       'from_user_id': currentUser.uid,
       'from_user_name': currentUserName,
-      'created_at': DateTime.now(),
+      'created_at': Timestamp.now(),
       'is_read': false,
+      'is_ignored': false,
     });
 
     await batch.commit();
@@ -102,13 +218,34 @@ class NotificationRepositoryImpl implements NotificationRepository {
 
   @override
   Future<void> ignoreNotification({required String requestNotifId}) async {
-    final currentUser = firebaseAuth.currentUser!;
+    final currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
     final notifRef = firebaseFirestore
         .collection('users')
         .doc(currentUser.uid)
         .collection('notifications')
         .doc(requestNotifId);
-    await notifRef.update({'is_read': true});
+
+    await notifRef.update({'is_ignored': true});
+  }
+
+  @override
+  Future<void> undoIgnoreNotification({required String requestNotifId}) async {
+    final currentUser = firebaseAuth.currentUser;
+    if (currentUser == null) {
+      throw Exception('No user logged in');
+    }
+
+    final notifRef = firebaseFirestore
+        .collection('users')
+        .doc(currentUser.uid)
+        .collection('notifications')
+        .doc(requestNotifId);
+
+    await notifRef.update({'is_ignored': false});
   }
 
   @override

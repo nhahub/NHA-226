@@ -1,99 +1,81 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'dart:async';
+import 'package:bloc/bloc.dart';
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 import 'package:lingo_sign/features/notification/domain/notification_repository.dart';
-import 'package:lingo_sign/features/notification/presentation/cubit/notifications_state.dart';
+import 'notifications_state.dart';
 
 class NotificationsCubit extends Cubit<NotificationsState> {
-  final NotificationRepository notificationRepository;
-  Stream<List<AppNotification>>? _notifStreamSubscription;
+  final NotificationRepository repository;
+  StreamSubscription<List<AppNotification>>? _realtimeSub;
 
-  NotificationsCubit(this.notificationRepository)
-    : super(NotificationsInitial()) {
-    getallNotification();
-  }
+  NotificationsCubit(this.repository) : super(NotificationsInitial());
 
-  void getallNotification() {
+  Future<void> getAllNotifications() async {
     emit(NotificationsLoading());
-    _notifStreamSubscription = notificationRepository
-        .getallNotificationStream();
-    _notifStreamSubscription!.listen(
-      (notifications) {
-        emit(NotificationsLoaded(notifications: notifications));
-      },
-      onError: (error) {
-        emit(NotificationsError(message: error.toString()));
-      },
-    );
+    try {
+      final notifications = await repository.getallNotification();
+      emit(NotificationsLoaded(notifications: notifications));
+    } catch (e) {
+      emit(NotificationsError(message: e.toString()));
+    }
   }
 
-  Future<void> markAsRead(String? notifId) async {
-    if (notifId == null || notifId.isEmpty) return;
-    final currentState = state;
-    if (currentState is NotificationsLoaded) {
-      final updatedNotifications = currentState.notifications.map((notif) {
-        if (notif.id == notifId) {
-          return AppNotification(
-            id: notif.id,
-            title: notif.title,
-            type: notif.type,
-            createdAt: notif.createdAt,
-            isRead: true,
-            fromUserId: notif.fromUserId,
-          );
-        }
-        return notif;
-      }).toList();
-      emit(NotificationsLoaded(notifications: updatedNotifications));
+  void listenToNotificationsRealTime() {
+    _realtimeSub?.cancel();
+    _realtimeSub = repository.getallNotificationStream().listen((
+      notifications,
+    ) {
+      emit(NotificationsLoaded(notifications: notifications));
+    }, onError: (e) => emit(NotificationsError(message: e.toString())));
+  }
+
+  Future<void> markAllNotificationsAsRead() async {
+    if (state is! NotificationsLoaded) return;
+    final notifications = (state as NotificationsLoaded).notifications;
+    for (final notif in notifications) {
+      if (!notif.isRead) {
+        await repository.markAsRead(notif.id);
+      }
     }
-    await notificationRepository.markAsRead(notifId);
+    getAllNotifications();
   }
 
   Future<void> acceptNotification({
-    required String? requestNotifId,
-    required String? senderId,
+    required String requestNotifId,
+    required String senderId,
   }) async {
-    if (requestNotifId == null ||
-        requestNotifId.isEmpty ||
-        senderId == null ||
-        senderId.isEmpty)
-      return;
-
-    final currentState = state;
-    if (currentState is NotificationsLoaded) {
-      final updatedNotifications = currentState.notifications
-          .where((notif) => notif.id != requestNotifId)
-          .toList();
-      emit(NotificationsLoaded(notifications: updatedNotifications));
+    try {
+      await repository.sendAcceptNotification(
+        requestNotifId: requestNotifId,
+        senderId: senderId,
+      );
+      getAllNotifications();
+    } catch (e) {
+      emit(NotificationsError(message: e.toString()));
     }
-
-    await notificationRepository.sendAcceptNotification(
-      requestNotifId: requestNotifId,
-      senderId: senderId,
-    );
   }
 
-  Future<void> ignoreNotification({required String? requestNotifId}) async {
-    if (requestNotifId == null || requestNotifId.isEmpty) return;
-
-    final currentState = state;
-    if (currentState is NotificationsLoaded) {
-      final updatedNotifications = currentState.notifications
-          .where((notif) => notif.id != requestNotifId)
-          .toList();
-      emit(NotificationsLoaded(notifications: updatedNotifications));
+  Future<void> ignoreNotification({required String requestNotifId}) async {
+    try {
+      await repository.ignoreNotification(requestNotifId: requestNotifId);
+      getAllNotifications();
+    } catch (e) {
+      emit(NotificationsError(message: e.toString()));
     }
-
-    await notificationRepository.ignoreNotification(
-      requestNotifId: requestNotifId,
-    );
   }
 
-  int unseenCount() {
-    if (state is NotificationsLoaded) {
-      return (state as NotificationsLoaded).notifications
-          .where((notif) => !notif.isRead)
-          .length;
+  Future<void> undoIgnoreNotification({required String requestNotifId}) async {
+    try {
+      await repository.undoIgnoreNotification(requestNotifId: requestNotifId);
+      getAllNotifications();
+    } catch (e) {
+      emit(NotificationsError(message: e.toString()));
     }
-    return 0;
+  }
+
+  @override
+  Future<void> close() {
+    _realtimeSub?.cancel();
+    return super.close();
   }
 }

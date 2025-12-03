@@ -66,7 +66,9 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
           'title': '${currentUser.displayName} want to be your friend',
           'type': 'request',
           'is_read': false,
-          'created_at': DateTime.now(),
+          'from_user_id': currentUser.uid,
+          'is_ignored': false,
+          'created_at': Timestamp.now(),
         });
   }
 }
