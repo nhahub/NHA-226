@@ -49,16 +49,9 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
                   child: GestureDetector(
                     onTap: () async {
                       if (state is RecordingVideoRecording) {
-                        final path =await cubit.stop();
-                        Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => TranslationScreen(
-                                  path : path
-                                ),
-                              ),
-                            );  
-                      }else{
+                        final path = await cubit.stop();
+                        Navigator.pop(context, path);
+                      } else {
                         cubit.start();
                       }
                     },

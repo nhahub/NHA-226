@@ -34,12 +34,9 @@ class _TestState extends State<OptionsVideo> {
                 );
               }
               if (state is UploadSelected) {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => TranslationScreen(path: state.path),
-                  ),
-                );
+              if (state.path != "") {
+                Navigator.pop(context,state.path);
+              }
               }
               if (state is UploadUnSelected) {
                 Navigator.pop(context);
@@ -58,8 +55,14 @@ class _TestState extends State<OptionsVideo> {
           SizedBox(width: 24),
 
           ElevatedButton(
-            onPressed: () {
-              Navigator.pushNamed(context, recordingVideoScreen);
+            onPressed: () async {
+              final path = await Navigator.pushNamed(
+                context,
+                recordingVideoScreen,
+              );
+              if (path != "") {
+                Navigator.pop(context,path);
+              }
             },
             child: Text('Record'),
           ),

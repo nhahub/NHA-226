@@ -4,14 +4,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
+import 'package:lingo_sign/features/home/presentation/widget/text_shimmer.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
 import 'package:lingo_sign/features/transelation/presentation/widgets/options_video.dart';
 
-
 class TranslationScreen extends StatefulWidget {
-  TranslationScreen({super.key, this.path});
+  TranslationScreen({super.key});
 
   String? path;
+
+  void setPath(String path) {
+    this.path = path;
+  }
 
   @override
   State<TranslationScreen> createState() => _TranslationScreenState();
@@ -34,14 +38,9 @@ class _TranslationScreenState extends State<TranslationScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        if (state is UserInfoInitial || state is UserInfoLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
-
         if (state is UserInfoError) {
           return Scaffold(body: Center(child: Text("Error: ${state.message}")));
-        }
-        if (state is UserInfoLoaded) {
+        } else if (state is UserInfoLoaded) {
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
@@ -98,9 +97,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                               children: [
                                 Expanded(
                                   child: state is TranslationLoading
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
-                                        )
+                                      ? Row(children: [TextShimmer()])
                                       : TextField(
                                           controller: translationController,
                                           maxLines: null,
@@ -171,13 +168,15 @@ class _TranslationScreenState extends State<TranslationScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            showDialog(
+                          onPressed: () async {
+                            final path = await showDialog<String>(
                               context: context,
-                              builder: (dialogContext) {
-                                return OptionsVideo();
-                              },
+                              builder: (dialogContext) => OptionsVideo(),
                             );
+                            if (path != '') {   
+                              widget.setPath(path!);
+                              context.read<TranslationCubit>().getTranslation(path!);
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
@@ -217,8 +216,9 @@ class _TranslationScreenState extends State<TranslationScreen> {
               ),
             ),
           );
+        } else {
+          return Center(child: CircularProgressIndicator());
         }
-        return Center(child: CircularProgressIndicator());
       },
     );
   }
