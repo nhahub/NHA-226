@@ -11,7 +11,7 @@ import 'package:timeago/timeago.dart' as timeago;
 // ignore: must_be_immutable
 class FriendUserCallCard extends StatelessWidget {
   FriendUserCallCard({super.key, required this.userFriend, this.onTap});
-  
+
   FirebaseAuth auth = FirebaseAuth.instance;
   final Friend userFriend;
   final void Function()? onTap;
@@ -21,6 +21,7 @@ class FriendUserCallCard extends StatelessWidget {
     IncomingHandler(myUserId: auth.currentUser!.uid);
     return GestureDetector(
       onTap: () {
+        if (onTap != null) onTap!();
         showDialog(
           context: context,
           barrierColor: Colors.transparent,
