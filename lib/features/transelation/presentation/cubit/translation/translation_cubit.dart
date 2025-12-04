@@ -19,4 +19,5 @@ class TranslationCubit extends Cubit<TranslationState> {
       return "";
     }
   }
+
 }
