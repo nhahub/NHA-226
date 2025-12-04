@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation_cubit.dart';
 
@@ -44,11 +45,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
           return Scaffold(
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.width * 0.05,
+                  vertical: context.height * 0.015,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const SizedBox(height: 88),
+                    SizedBox(height: context.height * 0.1),
                     Text(
                       "Hi ${state.user.name},",
                       style: const TextStyle(
@@ -63,7 +67,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                       "Let's understand each other better",
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: context.height * 0.05),
                     BlocConsumer<TranslationCubit, TranslationState>(
                       listener: (context, state) {
                         if (state is TranslationLoaded) {
@@ -73,13 +77,16 @@ class _TranslationScreenState extends State<TranslationScreen> {
                       builder: (context, state) {
                         return Container(
                           width: double.infinity,
-                          height: 214,
+                          height: context.height * 0.3,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: AppColor.second,
                           ),
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.width * 0.05,
+                              vertical: context.height * 0.015,
+                            ),
                             child: Column(
                               children: [
                                 Expanded(
@@ -135,7 +142,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         );
                       },
                     ),
-                    const SizedBox(height: 32),
+                    SizedBox(height: context.height * 0.05),
                     const Text(
                       '• Hold your hand clearly in front of the camera',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
@@ -144,7 +151,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                       '• Ensure good lighting',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-                    const SizedBox(height: 197),
+                    SizedBox(height: context.height * 0.02),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
