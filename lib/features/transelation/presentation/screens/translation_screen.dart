@@ -11,11 +11,9 @@ import 'package:lingo_sign/features/transelation/presentation/widgets/options_vi
 class TranslationScreen extends StatefulWidget {
   TranslationScreen({super.key});
 
-  String? path;
+   
 
-  void setPath(String path) {
-    this.path = path;
-  }
+ 
 
   @override
   State<TranslationScreen> createState() => _TranslationScreenState();
@@ -23,14 +21,19 @@ class TranslationScreen extends StatefulWidget {
 
 class _TranslationScreenState extends State<TranslationScreen> {
   final TextEditingController translationController = TextEditingController();
+  String? path;
+
+   void setPath(String path) {
+    this.path = path;
+  }
 
   @override
   void initState() {
     super.initState();
     context.read<UserInfoCubit>().getUserInfo();
 
-    if (widget.path != null) {
-      context.read<TranslationCubit>().getTranslation(widget.path!);
+    if (path != null && path != '') {
+      context.read<TranslationCubit>().getTranslation(path!);
     }
   }
 
@@ -173,9 +176,9 @@ class _TranslationScreenState extends State<TranslationScreen> {
                               context: context,
                               builder: (dialogContext) => OptionsVideo(),
                             );
-                            if (path != '') {   
-                              widget.setPath(path!);
-                              context.read<TranslationCubit>().getTranslation(path!);
+                            if (path != '' && path != null) {   
+                              setPath(path);
+                              context.read<TranslationCubit>().getTranslation(path);
                             }
                           },
                           style: ElevatedButton.styleFrom(

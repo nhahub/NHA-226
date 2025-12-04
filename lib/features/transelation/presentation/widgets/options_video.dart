@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/upload/upload_cubit.dart';
-import 'package:lingo_sign/features/transelation/presentation/screens/translation_screen.dart';
+
 
 class OptionsVideo extends StatefulWidget {
   const OptionsVideo({super.key});
@@ -24,49 +24,99 @@ class _TestState extends State<OptionsVideo> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       backgroundColor: AppColor.white,
-      content: Row(
-        children: [
-          BlocConsumer<UploadCubit, UploadState>(
-            listener: (context, state) {
-              if (state is UploadErorr) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(state.message ?? "Error")),
-                );
-              }
-              if (state is UploadSelected) {
-              if (state.path != "") {
-                Navigator.pop(context,state.path);
-              }
-              }
-              if (state is UploadUnSelected) {
-                Navigator.pop(context);
-              }
-            },
-            builder: (context, state) {
-              final cubit = context.read<UploadCubit>();
-              return ElevatedButton(
-                onPressed: () {
-                  cubit.uploadVideo();
-                },
-                child: Text('Upload'),
-              );
-            },
-          ),
-          SizedBox(width: 24),
-
-          ElevatedButton(
-            onPressed: () async {
-              final path = await Navigator.pushNamed(
-                context,
-                recordingVideoScreen,
-              );
-              if (path != "") {
-                Navigator.pop(context,path);
-              }
-            },
-            child: Text('Record'),
-          ),
-        ],
+      
+      content: SizedBox(
+        width: 400,
+        height: 120,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Let your hand speak, we will turn them into words', 
+              style: TextStyle(
+                fontSize: 16
+              ),
+            ),
+            SizedBox(height: 24),
+            Row(
+              children: [
+                BlocConsumer<UploadCubit, UploadState>(
+                  listener: (context, state) {
+                    if (state is UploadErorr) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(state.message ?? "Error")),
+                      );
+                    }
+                    if (state is UploadSelected) {
+                      if (state.path != "") {
+                        Navigator.pop(context, state.path);
+                      }
+                    }
+                    if (state is UploadUnSelected) {
+                      Navigator.pop(context);
+                    }
+                  },
+                  builder: (context, state) {
+                    final cubit = context.read<UploadCubit>();
+                    return ElevatedButton(
+                      onPressed: () {
+                        cubit.uploadVideo();
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: AppColor.white,
+                        fixedSize: const Size(133, 40),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        side: BorderSide(
+                          strokeAlign: BorderSide.strokeAlignCenter,
+                          color: AppColor.main
+                          )
+                      ),
+                      child: Text(
+                        'Upload',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                          color: AppColor.black,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                
+                SizedBox(width: 16),
+                ElevatedButton(
+                  onPressed: () async {
+                    final path = await Navigator.pushNamed(
+                      context,
+                      recordingVideoScreen,
+                    );
+                    if (path != "") {
+                      Navigator.pop(context, path);
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColor.main,
+                    fixedSize: const Size(133, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  child: Text(
+                    'Record',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: AppColor.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
