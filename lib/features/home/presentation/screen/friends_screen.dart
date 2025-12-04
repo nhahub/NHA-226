@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/add_friend/presentation/cubit/friend_request_cubit.dart';
@@ -114,7 +115,25 @@ class FriendsScreen extends StatelessWidget {
                   ],
                 );
               }
-              return Center(child: Text('No friends found.'));
+              return Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      child: SvgPicture.asset('assets/images/rafiki.svg'),
+                    ),
+                    SizedBox(height: 24),
+                    Text(
+                      'No friend requests',
+                      style: TextStyle(
+                        fontSize: 24,
+                        color: AppColor.main,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              );
             },
           ),
         ),

@@ -91,7 +91,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         children: [
                           SizedBox(height: context.width / 3),
                           SvgPicture.asset(
-                            'assets/images/empty_search_history.svg',
+                            'assets/images/searchEmpty.svg',
                           ),
                           SizedBox(height: 16.h),
                           Text(
