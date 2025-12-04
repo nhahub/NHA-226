@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/features/account_info_page/data/account_repository.dart';
 import 'package:lingo_sign/features/account_info_page/presentation/bloc/edit_account_info_bloc.dart';
 import 'package:lingo_sign/features/account_info_page/presentation/screens/account_info_screen.dart';
+import 'package:lingo_sign/features/auth/presentation/bloc/auth_bloc.dart';
+import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_event.dart';
 import 'package:lingo_sign/features/profile/presentation/bloc/profile_state.dart';
@@ -21,6 +23,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
    void initState() {
     super.initState();
+    context.read<UserInfoCubit>().getUserInfo();
     context.read<ProfileBloc>().add(LoadUserProfile());
   }
 
@@ -45,7 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
     
      
-      body: BlocBuilder<ProfileBloc, ProfileState>(
+      body: BlocBuilder<ProfileBloc, ProfileState >(
         builder: (context, state) {
           if (state is ProfileLoading) {
             return const Center(child: CircularProgressIndicator());
@@ -64,6 +67,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 20),
+
+
+
+             BlocBuilder<UserInfoCubit, UserInfoState>(
+              builder: (context, userState) {
+                if (userState is UserInfoLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                if (userState is UserInfoError) {
+                  return Text(userState.message);
+                }
+
+                if (userState is UserInfoLoaded) {
+                  final info = userState.user;
+
+                  
+                }
+
+                return const SizedBox();
+              },
+            ),
+
+            
+
+
 
                   
                   Row(
@@ -193,7 +222,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
 
                       if (shouldLogout == true) {
-                        context.read<ProfileBloc>().add(LogoutUser(context));
+                      context.read<ProfileBloc>().add(LogoutUser(context));
+
+
                     }
                     },
                   ),
@@ -201,6 +232,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             );
           }
+
 
           return const SizedBox();
         },
