@@ -35,8 +35,7 @@ void main() async {
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
   WidgetsFlutterBinding.ensureInitialized();
-  
-  
+
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -87,16 +86,16 @@ class MyApp extends StatelessWidget {
           ),
           //Recording Video
           BlocProvider(
-            create: (_) => RecordingVideoCubit(RecordingVideoRepositoryImpl(VideoService()))
+            create: (_) => RecordingVideoCubit(
+              RecordingVideoRepositoryImpl(VideoService()),
+            ),
           ),
           //Translation
           BlocProvider(
-            create: (_) => TranslationCubit(TranslationRepositoryImpl())
+            create: (_) => TranslationCubit(TranslationRepositoryImpl()),
           ),
           //upload Video
-          BlocProvider(
-            create: (_) => UploadCubit(TranslationRepositoryImpl())
-          )
+          BlocProvider(create: (_) => UploadCubit(TranslationRepositoryImpl())),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart';
@@ -34,7 +35,9 @@ class LastCallScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(left: 16),
+                            padding: EdgeInsets.only(
+                              left: context.width * 0.04,
+                            ),
                             child: const Text(
                               "Favourites",
                               style: TextStyle(
@@ -43,7 +46,7 @@ class LastCallScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          const SizedBox(height: 8),
+                          SizedBox(height: context.height * 0.02),
                           SizedBox(
                             height: 90.h,
                             child: ListView.builder(
@@ -57,7 +60,7 @@ class LastCallScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(height: 16),
+                          SizedBox(height: context.height * 0.02),
                         ],
                       );
                     }
@@ -70,13 +73,13 @@ class LastCallScreen extends StatelessWidget {
                 },
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 16),
+                padding: EdgeInsets.only(left: context.width * 0.04),
                 child: const Text(
                   "Last Call",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                 ),
               ),
-              const SizedBox(height: 12),
+              SizedBox(height: context.height * 0.02),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: BlocBuilder<LastCallsBloc, LastCallsState>(
@@ -84,25 +87,28 @@ class LastCallScreen extends StatelessWidget {
                     if (state is LastCallsLoaded) {
                       final lastCalls = state.lastCalls;
                       if (lastCalls.isEmpty) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              SizedBox(
-                                child: SvgPicture.asset(
-                                  'assets/images/pana.svg',
+                        return Padding(
+                          padding: EdgeInsets.only(top: context.height * 0.11),
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  child: SvgPicture.asset(
+                                    'assets/images/pana.svg',
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 24),
-                              Text(
-                                'No calls yet',
-                                style: TextStyle(
-                                  fontSize: 24,
-                                  color: AppColor.main,
-                                  fontWeight: FontWeight.w500,
+                                SizedBox(height: context.height * 0.03),
+                                Text(
+                                  'No calls yet',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: AppColor.main,
+                                    fontWeight: FontWeight.w500,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/add_friend/presentation/cubit/friend_request_cubit.dart';
 import 'package:lingo_sign/features/add_friend/presentation/widget/add_friend.dart';
@@ -36,7 +37,7 @@ class FriendsScreen extends StatelessWidget {
                   children: [
                     if (favourites.isNotEmpty) ...[
                       Padding(
-                        padding: const EdgeInsets.only(left: 16),
+                        padding: EdgeInsets.only(left: 16.w),
                         child: const Text(
                           "Favourites",
                           style: TextStyle(
@@ -61,7 +62,7 @@ class FriendsScreen extends StatelessWidget {
                       ),
                     ],
                     Padding(
-                      padding: const EdgeInsets.only(left: 16),
+                      padding:  EdgeInsets.only(left: 16.w),
                       child: const Text(
                         "Friends",
                         style: TextStyle(
@@ -71,7 +72,7 @@ class FriendsScreen extends StatelessWidget {
                       ),
                     ),
                     if (friends.isNotEmpty) ...[
-                      const SizedBox(height: 12),
+                       SizedBox(height: context.height * 0.02),
                       ListView.builder(
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
@@ -82,6 +83,31 @@ class FriendsScreen extends StatelessWidget {
                             onTap: () {},
                           );
                         },
+                      ),
+                    ] else ...[
+                      Padding(
+                        padding: EdgeInsets.only(top: context.height * 0.11),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                child: SvgPicture.asset(
+                                  'assets/images/rafiki.svg',
+                                ),
+                              ),
+                              SizedBox(height: context.height * 0.03),
+                              Text(
+                                'No Friends Found',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: AppColor.main,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ],
                   ],
@@ -115,25 +141,7 @@ class FriendsScreen extends StatelessWidget {
                   ],
                 );
               }
-              return Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    SizedBox(
-                      child: SvgPicture.asset('assets/images/rafiki.svg'),
-                    ),
-                    SizedBox(height: 24),
-                    Text(
-                      'No friend requests',
-                      style: TextStyle(
-                        fontSize: 24,
-                        color: AppColor.main,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              );
+              return Container();
             },
           ),
         ),

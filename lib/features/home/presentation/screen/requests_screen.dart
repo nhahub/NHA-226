@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend_shimmer.dart';
@@ -24,7 +25,7 @@ class RequestsScreen extends StatelessWidget {
                   "Requests",
                   style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                 ),
-                const SizedBox(height: 16),
+                 SizedBox(height: context.height * 0.02),
                 BlocBuilder<RequestsBloc, RequestsState>(
                   builder: (context, state) {
                     if (state is RequestsLoaded) {
@@ -37,19 +38,19 @@ class RequestsScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return RequestFriend(
                               request: requests[index],
-                              onIgnore: () =>
-                                  context.read<RequestsBloc>().add(
-                                    RejectRequestEvent(requests[index].uid),
-                                  ),
-                              onAccept: () =>
-                                  context.read<RequestsBloc>().add(
-                                    AcceptRequestEvent(requests[index].uid),
-                                  ),
+                              onIgnore: () => context.read<RequestsBloc>().add(
+                                RejectRequestEvent(requests[index].uid),
+                              ),
+                              onAccept: () => context.read<RequestsBloc>().add(
+                                AcceptRequestEvent(requests[index].uid),
+                              ),
                             );
                           },
                         );
                       }
-                      return Center(
+                      return Padding(
+                        padding: EdgeInsets.only(top: context.height * 0.11),
+                        child: Center(
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             children: [
@@ -58,7 +59,7 @@ class RequestsScreen extends StatelessWidget {
                                   'assets/images/rafiki.svg',
                                 ),
                               ),
-                              SizedBox(height: 24),
+                              SizedBox(height: context.height * 0.03),
                               Text(
                                 'No friend requests',
                                 style: TextStyle(
@@ -69,7 +70,8 @@ class RequestsScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        );
+                        ),
+                      );
                     }
                     if (state is RequestsLoading) {
                       return ListView.builder(
