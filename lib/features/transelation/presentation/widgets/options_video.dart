@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/upload/upload_cubit.dart';
-
 
 class OptionsVideo extends StatefulWidget {
   const OptionsVideo({super.key});
@@ -24,21 +24,18 @@ class _TestState extends State<OptionsVideo> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       backgroundColor: AppColor.white,
-      
+
       content: SizedBox(
-        width: 400,
-        height: 120,
+        width: context.width,
+        height: context.height * 0.2,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Let your hand speak, we will turn them into words', 
-              style: TextStyle(
-                fontSize: 16
-              ),
+              'Let your hand speak, we will turn them into words',
+              style: TextStyle(fontSize: 16),
             ),
-            SizedBox(height: 24),
+            SizedBox(height: context.height * 0.05),
             Row(
               children: [
                 BlocConsumer<UploadCubit, UploadState>(
@@ -51,6 +48,7 @@ class _TestState extends State<OptionsVideo> {
                     if (state is UploadSelected) {
                       if (state.path != "") {
                         Navigator.pop(context, state.path);
+                        context.read<UploadCubit>().reset();
                       }
                     }
                     if (state is UploadUnSelected) {
@@ -59,20 +57,24 @@ class _TestState extends State<OptionsVideo> {
                   },
                   builder: (context, state) {
                     final cubit = context.read<UploadCubit>();
+                    
                     return ElevatedButton(
                       onPressed: () {
                         cubit.uploadVideo();
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColor.white,
-                        fixedSize: const Size(133, 40),
+                        fixedSize: Size(
+                          context.width * 0.3,
+                          context.height * 0.04,
+                        ),
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(12),
                         ),
                         side: BorderSide(
                           strokeAlign: BorderSide.strokeAlignCenter,
-                          color: AppColor.main
-                          )
+                          color: AppColor.main,
+                        ),
                       ),
                       child: Text(
                         'Upload',
@@ -85,8 +87,8 @@ class _TestState extends State<OptionsVideo> {
                     );
                   },
                 ),
-                
-                SizedBox(width: 16),
+
+                SizedBox(width: context.width * 0.05),
                 ElevatedButton(
                   onPressed: () async {
                     final path = await Navigator.pushNamed(
@@ -99,7 +101,7 @@ class _TestState extends State<OptionsVideo> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.main,
-                    fixedSize: const Size(133, 40),
+                    fixedSize: Size(context.width * 0.31, context.height * 0.04),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

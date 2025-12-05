@@ -19,4 +19,8 @@ class UploadCubit extends Cubit<UploadState> {
       emit(UploadErorr(e.toString()));
     }
   }
+
+  void reset() {
+    emit(UploadInitial());
+  }
 }

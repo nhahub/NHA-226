@@ -51,7 +51,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: context.height * 0.05),
+                    SizedBox(height: context.height * 0.09 ),
 
                     Text(
                       "Hi ${state.user.name},",
@@ -96,14 +96,17 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
                           child: Padding(
                             padding: EdgeInsets.symmetric(
-                              horizontal: context.width * 0.05,
-                              vertical: context.height * 0.015,
+                              horizontal: context.width * 0.04,
+                              vertical: context.height * 0.02,
                             ),
                             child: Column(
                               children: [
                                 Expanded(
                                   child: state is TranslationLoading
-                                      ? Row(children: [TextShimmer()])
+                                      ? Align(
+                                        alignment: Alignment.topLeft,
+                                        child: TextShimmer()
+                                        )
                                       : TextField(
                                           controller: translationController,
                                           maxLines: null,
