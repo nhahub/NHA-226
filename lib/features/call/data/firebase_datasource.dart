@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:lingo_sign/features/call/data/call_model.dart';
+import 'package:lingo_sign/features/call/domain/call_entity.dart';
 
 class FirebaseDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -19,7 +20,7 @@ class FirebaseDataSource {
       receiverId: receiverId,
       receiverName: receiverName,
       startTime: DateTime.now(),
-      status: 'pending',
+      type: CallEntityType.pending,
       duration: 0,
       isVideoCall: isVideoCall,
     );
@@ -35,16 +36,28 @@ class FirebaseDataSource {
         .orderBy('startTime', descending: true)
         .get();
 
-    return snapshot.docs
-        .map((doc) => CallModel.fromJson(doc.data()))
-        .toList();
+    return snapshot.docs.map((doc) => CallModel.fromJson(doc.data())).toList();
   }
 
   Future<void> updateCallStatus(String callId, String status) async {
-    await _firestore.collection('calls').doc(callId).update({
-      'status': status,
-      'endTime': DateTime.now().toIso8601String(),
-    });
+    try {
+      // ignore: avoid_print
+      print(
+        '[FirebaseDataSource] Updating call status: callId=$callId, status=$status',
+      );
+
+      await _firestore.collection('calls').doc(callId).update({
+        'status': status,
+        'endTime': status == 'ended' ? DateTime.now().toIso8601String() : null,
+      });
+
+      // ignore: avoid_print
+      print('[FirebaseDataSource] Call status updated successfully');
+    } catch (e) {
+      // ignore: avoid_print
+      print('[FirebaseDataSource] Error updating call status: $e');
+      rethrow;
+    }
   }
 
   Stream<CallModel> listenToIncomingCalls(String userId) {
@@ -53,6 +66,17 @@ class FirebaseDataSource {
         .where('receiverId', isEqualTo: userId)
         .where('status', isEqualTo: 'pending')
         .snapshots()
-        .map((snapshot) => CallModel.fromJson(snapshot.docs.last.data()));
+        .map((snapshot) {
+          if (snapshot.docs.isNotEmpty) {
+            return CallModel.fromJson(snapshot.docs.first.data());
+          }
+          // Return empty/default pending call instead of throwing error
+          throw Exception('No incoming calls');
+        })
+        .handleError((error) {
+          print('Error listening to incoming calls: $error');
+          // Continue stream on error instead of breaking it
+          throw error;
+        });
   }
 }

@@ -33,7 +33,11 @@ class CallRepositoryImpl implements CallRepository {
   @override
   Future<Either<Exception, List<CallEntity>>> getCallHistory() async {
     try {
-      final result = await firebaseDataSource.getCallHistory('current_user_id');
+      final userId = firebaseAuth.currentUser?.uid;
+      if (userId == null) {
+        return Left(Exception('User not authenticated'));
+      }
+      final result = await firebaseDataSource.getCallHistory(userId);
       return Right(result);
     } catch (e) {
       return Left(Exception(e.toString()));

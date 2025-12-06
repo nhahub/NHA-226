@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lingo_sign/features/call/domain/call_entity.dart';
@@ -15,7 +14,6 @@ class CallBloc extends Bloc<CallEvent, CallState> {
   final MakeCallUseCase makeCallUseCase;
   final GetCallHistoryUseCase getCallHistoryUseCase;
   final CallRepository callRepository;
-  late final StreamSubscription<CallEntity> _incomingCallSub;
 
   CallBloc({
     required this.makeCallUseCase,
@@ -26,31 +24,18 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     on<GetCallHistoryEvent>(_onGetCallHistory);
     on<AcceptCallEvent>(_onAcceptCall);
     on<DeclineCallEvent>(_onDeclineCall);
-    on<IncomingCallReceived>(_onIncomingCallReceived);
-    _listenToIncomingCalls();
+    on<ListenToIncomingCallsEvent>(_onListenToIncomingCalls);
   }
 
-  void _listenToIncomingCalls() {
-    _incomingCallSub = callRepository
-        .listenToIncomingCalls(FirebaseAuth.instance.currentUser?.uid ?? '')
-        .listen((call) {
-          if (call.status == 'pending') {
-            add(IncomingCallReceived(call));
-          }
-        });
-  }
-
-  Future<void> _onIncomingCallReceived(
-    IncomingCallReceived event,
+  Future<void> _onListenToIncomingCalls(
+    ListenToIncomingCallsEvent event,
     Emitter<CallState> emit,
   ) async {
-    emit(CallIncoming(callData: event.call));
-  }
-
-  @override
-  Future<void> close() {
-    _incomingCallSub.cancel();
-    return super.close();
+    await emit.forEach<CallEntity>(
+      callRepository.listenToIncomingCalls(event.userId),
+      onData: (call) => CallIncoming(callData: call),
+      onError: (e, _) => CallError(message: e.toString()),
+    );
   }
 
   Future<void> _onMakeCall(MakeCallEvent event, Emitter<CallState> emit) async {
@@ -82,13 +67,79 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     AcceptCallEvent event,
     Emitter<CallState> emit,
   ) async {
-    // Handle accept logic
+    try {
+      // ignore: avoid_print
+      print('[CallBloc] _onAcceptCall called with callId: ${event.callId}');
+
+      // ignore: avoid_print
+      print('[CallBloc] Updating Firestore call status to accepted');
+      final result = await callRepository.updateCallStatus(
+        callId: event.callId,
+        status: 'accepted',
+      );
+
+      // Handle the Either result properly
+      result.fold(
+        (failure) {
+          // ignore: avoid_print
+          print('[CallBloc] Firestore update failed: ${failure.toString()}');
+          emit(
+            CallError(message: 'Failed to accept call: ${failure.toString()}'),
+          );
+        },
+        (_) {
+          // ignore: avoid_print
+          print(
+            '[CallBloc] Firestore update successful, emitting CallAccepted state',
+          );
+
+          // Emit CallAccepted state to signal navigation to video call
+          // Navigator will use this to go to VideoCallScreen
+          emit(CallAccepted(callId: event.callId, isVideoCall: true));
+
+          // ignore: avoid_print
+          print('[CallBloc] CallAccepted state emitted successfully');
+        },
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print('[CallBloc] Error in _onAcceptCall: $e');
+      emit(CallError(message: e.toString()));
+    }
   }
 
   Future<void> _onDeclineCall(
     DeclineCallEvent event,
     Emitter<CallState> emit,
   ) async {
-    // Handle decline logic
+    try {
+      // ignore: avoid_print
+      print('[CallBloc] _onDeclineCall called with callId: ${event.callId}');
+
+      final result = await callRepository.updateCallStatus(
+        callId: event.callId,
+        status: 'declined',
+      );
+
+      result.fold(
+        (failure) {
+          // ignore: avoid_print
+          print(
+            '[CallBloc] Firestore decline update failed: ${failure.toString()}',
+          );
+          emit(
+            CallError(message: 'Failed to decline call: ${failure.toString()}'),
+          );
+        },
+        (_) {
+          // ignore: avoid_print
+          print('[CallBloc] Call declined successfully');
+        },
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print('[CallBloc] Error in _onDeclineCall: $e');
+      emit(CallError(message: e.toString()));
+    }
   }
 }
