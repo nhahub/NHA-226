@@ -71,9 +71,24 @@ class FirebaseDataSource {
             return CallModel.fromJson(snapshot.docs.first.data());
           }
           // Return empty/default pending call instead of throwing error
+          /*
+            return CallModel(
+              callId: '',
+              callerId: '',
+              callerName: '',
+              receiverId: '',
+              receiverName: '',
+              startTime: DateTime.now(),
+              type: CallEntityType.pending,
+              duration: 0,
+              isVideoCall: false,
+            );
+          */
           throw Exception('No incoming calls');
+          
         })
         .handleError((error) {
+          // ignore: avoid_print
           print('Error listening to incoming calls: $error');
           // Continue stream on error instead of breaking it
           throw error;

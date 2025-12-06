@@ -21,7 +21,7 @@ class VideoCallScreen extends StatelessWidget {
         appID: appId,
         appSign: appSign,
         userID: user!.uid,
-        userName: user.displayName ?? 'User',
+        userName: user.displayName ?? 'UserName',
         callID: callID,
         config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
       ),

@@ -236,13 +236,11 @@ class MyApp extends StatelessWidget {
                             print(
                               '[BLocListener] State changed: ${state.runtimeType}',
                             );
-
                             if (state is CallMade) {
                               // ignore: avoid_print
                               print(
                                 '[BLocListener] CallMade state - navigating to video call',
                               );
-
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -253,17 +251,15 @@ class MyApp extends StatelessWidget {
                                 ),
                               );
                             } else if (state is CallAccepted) {
-                              // Navigate to video call screen after accepting
                               // ignore: avoid_print
                               print(
                                 '[BLocListener] CallAccepted state - navigating to video call',
                               );
+
+                              // Add a post frame callback to ensure safe navigation
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 if (!context.mounted) return;
-                                // ignore: avoid_print
-                                print(
-                                  '[BLocListener] CallAccepted callback - attempting navigation',
-                                );
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
@@ -288,12 +284,12 @@ class MyApp extends StatelessWidget {
                               print(
                                 '[BLocListener] CallError state: ${state.message}',
                               );
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.message)),
-                                );
-                              });
+                              // WidgetsBinding.instance.addPostFrameCallback((_) {
+                              //   if (!context.mounted) return;
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(content: Text(state.message)),
+                              //   );
+                              // });
                             }
                           },
                           child: MainScreen(),
@@ -381,7 +377,6 @@ class _CallActionListenerState extends State<CallActionListener> {
       print('[CallActionListener._handleAccept] Context not mounted, aborting');
       return;
     }
-
     // ignore: avoid_print
     print(
       '[CallActionListener._handleAccept] Context mounted, attempting to read CallBloc',
@@ -392,20 +387,30 @@ class _CallActionListenerState extends State<CallActionListener> {
       // ignore: avoid_print
       print('[CallActionListener._handleAccept] CallBloc read successfully');
 
-      // Update CallBloc to accept call (Firestore update happens here)
-      // The BLocListener in MyApp will handle navigation after state update
+      // Just update the call status - let BlocListener handle navigation
       callBloc.add(AcceptCallEvent(callId: action.callId));
-
       // ignore: avoid_print
       print(
         '[CallActionListener._handleAccept] AcceptCallEvent added to CallBloc',
       );
     } catch (e) {
       // ignore: avoid_print
-      print(
-        '[CallActionListener._handleAccept] Error reading CallBloc or adding event: $e',
-      );
+      print('[CallActionListener._handleAccept] Error: $e');
     }
+  }
+
+  void _handleEnd(CallAction action) {
+    // ignore: avoid_print
+    print('Handling end for call: ${action.callId}');
+    if (!context.mounted) return;
+
+    // Only pop if we can pop
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+
+    // Optionally notify CallBloc about the ended call
+    context.read<CallBloc>().add(DeclineCallEvent(callId: action.callId));
   }
 
   void _handleDecline(CallAction action) {
@@ -413,14 +418,6 @@ class _CallActionListenerState extends State<CallActionListener> {
     print('Handling decline for call: ${action.callId}');
     if (!context.mounted) return;
     context.read<CallBloc>().add(DeclineCallEvent(callId: action.callId));
-  }
-
-  void _handleEnd(CallAction action) {
-    // ignore: avoid_print
-    print('Handling end for call: ${action.callId}');
-    if (!context.mounted) return;
-    // Close video call screen if open
-    Navigator.of(context, rootNavigator: true).pop();
   }
 
   @override
