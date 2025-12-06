@@ -41,9 +41,7 @@ import 'app_router.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-// Stream controller to handle call actions
-final callActionController = StreamController<CallAction>.broadcast();
-
+// Define CallAction and CallActionType for handling call events
 class CallAction {
   final String callId;
   final CallActionType type;
@@ -57,6 +55,8 @@ class CallAction {
 }
 
 enum CallActionType { accept, decline, end }
+
+final callActionController = StreamController<CallAction>.broadcast();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -76,6 +76,7 @@ void main() async {
         _handleCallEnded(event.body);
         break;
       case Event.actionDidUpdateDevicePushTokenVoip:
+        _handleVoipTokenUpdate(event.body);
         break;
       default:
     }
@@ -83,7 +84,17 @@ void main() async {
   runApp(MyApp(appRouter: AppRouter()));
 }
 
-void _handleCallAccept(Map<String, dynamic>? body) async {
+void _handleVoipTokenUpdate(Map<String, dynamic>? body) {
+  if (body == null) return;
+  final token = body['token'] as String?;
+  if (token != null) {
+    // ignore: avoid_print
+    print('VOIP Token updated: $token');
+    // Send this token to your backend for push notifications
+  }
+}
+
+void _handleCallAccept(Map<String, dynamic>? body) {
   if (body == null) return;
 
   final callId = body['id'] as String?;
@@ -91,6 +102,7 @@ void _handleCallAccept(Map<String, dynamic>? body) async {
   final isVideoCall = extra?['isVideoCall'] as bool? ?? true;
 
   if (callId != null) {
+    // ignore: avoid_print
     print('Call accepted with ID: $callId');
     callActionController.add(
       CallAction(
@@ -108,13 +120,18 @@ void _handleCallDecline(Map<String, dynamic>? body) async {
   final callId = body['id'] as String?;
 
   if (callId != null) {
+    // ignore: avoid_print
     print('Call declined with ID: $callId');
     callActionController.add(
       CallAction(callId: callId, type: CallActionType.decline),
     );
   }
 
-  await FlutterCallkitIncoming.endAllCalls();
+  try {
+    await FlutterCallkitIncoming.endAllCalls();
+  } catch (e) {
+    print('Error ending calls: $e');
+  }
 }
 
 void _handleCallEnded(Map<String, dynamic>? body) async {
@@ -123,13 +140,18 @@ void _handleCallEnded(Map<String, dynamic>? body) async {
   final callId = body['id'] as String?;
 
   if (callId != null) {
+    // ignore: avoid_print
     print('Call ended with ID: $callId');
     callActionController.add(
       CallAction(callId: callId, type: CallActionType.end),
     );
   }
 
-  await FlutterCallkitIncoming.endAllCalls();
+  try {
+    await FlutterCallkitIncoming.endAllCalls();
+  } catch (e) {
+    print('Error ending calls: $e');
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -210,31 +232,64 @@ class MyApp extends StatelessWidget {
                       return CallActionListener(
                         child: BlocListener<CallBloc, CallState>(
                           listener: (context, state) {
+                            // ignore: avoid_print
+                            print(
+                              '[BLocListener] State changed: ${state.runtimeType}',
+                            );
                             if (state is CallMade) {
+                              // ignore: avoid_print
+                              print(
+                                '[BLocListener] CallMade state - navigating to video call',
+                              );
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => VideoCallScreen(
+                                    callID: state.call.callId,
+                                    isVideoCall: state.call.isVideoCall,
+                                  ),
+                                ),
+                              );
+                            } else if (state is CallAccepted) {
+                              // ignore: avoid_print
+                              print(
+                                '[BLocListener] CallAccepted state - navigating to video call',
+                              );
+
+                              // Add a post frame callback to ensure safe navigation
                               WidgetsBinding.instance.addPostFrameCallback((_) {
                                 if (!context.mounted) return;
+
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (_) => VideoCallScreen(
-                                      callID: state.call.callId,
-                                      isVideoCall: state.call.isVideoCall,
+                                      callID: state.callId,
+                                      isVideoCall: state.isVideoCall,
                                     ),
                                   ),
                                 );
                               });
                             } else if (state is CallIncoming) {
+                              // ignore: avoid_print
+                              print(
+                                '[BLocListener] CallIncoming state - showing incoming call',
+                              );
                               showIncomingCall(
                                 state.callData.callId,
                                 state.callData.callerName,
                               );
                             } else if (state is CallError) {
-                              WidgetsBinding.instance.addPostFrameCallback((_) {
-                                if (!context.mounted) return;
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(state.message)),
-                                );
-                              });
+                              // ignore: avoid_print
+                              print(
+                                '[BLocListener] CallError state: ${state.message}',
+                              );
+                              // WidgetsBinding.instance.addPostFrameCallback((_) {
+                              //   if (!context.mounted) return;
+                              //   ScaffoldMessenger.of(context).showSnackBar(
+                              //     SnackBar(content: Text(state.message)),
+                              //   );
+                              // });
                             }
                           },
                           child: MainScreen(),
@@ -312,32 +367,57 @@ class _CallActionListenerState extends State<CallActionListener> {
   }
 
   void _handleAccept(CallAction action) {
-    print('Handling accept for call: ${action.callId}');
-
-    // Add event to CallBloc
-    context.read<CallBloc>().add(AcceptCallEvent(callId: action.callId));
-
-    // Navigate to video call screen
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => VideoCallScreen(
-          callID: action.callId,
-          isVideoCall: action.isVideoCall,
-        ),
-      ),
+    // ignore: avoid_print
+    print(
+      '[CallActionListener._handleAccept] Handling accept for call: ${action.callId}',
     );
-  }
 
-  void _handleDecline(CallAction action) {
-    print('Handling decline for call: ${action.callId}');
-    context.read<CallBloc>().add(DeclineCallEvent(callId: action.callId));
+    if (!context.mounted) {
+      // ignore: avoid_print
+      print('[CallActionListener._handleAccept] Context not mounted, aborting');
+      return;
+    }
+    // ignore: avoid_print
+    print(
+      '[CallActionListener._handleAccept] Context mounted, attempting to read CallBloc',
+    );
+
+    try {
+      final callBloc = context.read<CallBloc>();
+      // ignore: avoid_print
+      print('[CallActionListener._handleAccept] CallBloc read successfully');
+
+      // Just update the call status - let BlocListener handle navigation
+      callBloc.add(AcceptCallEvent(callId: action.callId));
+      // ignore: avoid_print
+      print(
+        '[CallActionListener._handleAccept] AcceptCallEvent added to CallBloc',
+      );
+    } catch (e) {
+      // ignore: avoid_print
+      print('[CallActionListener._handleAccept] Error: $e');
+    }
   }
 
   void _handleEnd(CallAction action) {
+    // ignore: avoid_print
     print('Handling end for call: ${action.callId}');
-    // You can add an EndCallEvent here if needed
-    // context.read<CallBloc>().add(EndCallEvent(callId: action.callId));
+    if (!context.mounted) return;
+
+    // Only pop if we can pop
+    if (Navigator.of(context, rootNavigator: true).canPop()) {
+      Navigator.of(context, rootNavigator: true).pop();
+    }
+
+    // Optionally notify CallBloc about the ended call
+    context.read<CallBloc>().add(DeclineCallEvent(callId: action.callId));
+  }
+
+  void _handleDecline(CallAction action) {
+    // ignore: avoid_print
+    print('Handling decline for call: ${action.callId}');
+    if (!context.mounted) return;
+    context.read<CallBloc>().add(DeclineCallEvent(callId: action.callId));
   }
 
   @override

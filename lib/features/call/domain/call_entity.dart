@@ -1,6 +1,15 @@
 import 'package:equatable/equatable.dart';
 
-// enum CallEntityType { pending, accepted, declined, completed }
+enum CallEntityType { pending, accepted, declined, completed }
+
+CallEntityType callEntityTypeFromJson(dynamic value) {
+  if (value == null) return CallEntityType.pending;
+
+  return CallEntityType.values.firstWhere(
+    (e) => e.name.toLowerCase() == value.toString().toLowerCase(),
+    orElse: () => CallEntityType.pending,
+  );
+}
 
 class CallEntity extends Equatable {
   final String callId;
@@ -10,7 +19,7 @@ class CallEntity extends Equatable {
   final String receiverName;
   final DateTime startTime;
   final DateTime? endTime;
-  final String status; // pending, accepted, declined, completed
+  final CallEntityType type; // pending, accepted, declined, completed
   final int duration;
   final bool isVideoCall;
 
@@ -22,7 +31,7 @@ class CallEntity extends Equatable {
     required this.receiverName,
     required this.startTime,
     this.endTime,
-    required this.status,
+    required this.type,
     required this.duration,
     required this.isVideoCall,
   });
@@ -36,7 +45,7 @@ class CallEntity extends Equatable {
     receiverName,
     startTime,
     endTime,
-    status,
+    type,
     duration,
     isVideoCall,
   ];

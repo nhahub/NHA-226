@@ -9,9 +9,9 @@ class CallModel extends CallEntity {
     required super.receiverName,
     required super.startTime,
     super.endTime,
-    required super.status,
+    required super.type,
     required super.duration,
-    required super.isVideoCall,
+    required super.isVideoCall
   });
 
   factory CallModel.fromJson(Map<String, dynamic> json) {
@@ -22,8 +22,10 @@ class CallModel extends CallEntity {
       receiverId: json['receiverId'] ?? '',
       receiverName: json['receiverName'] ?? '',
       startTime: DateTime.parse(json['startTime']),
-      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
-      status: json['status'] ?? 'pending',
+      endTime: json['endTime'] != null
+          ? DateTime.parse(json['endTime'])
+          : null,
+      type: callEntityTypeFromJson(json['status']),
       duration: json['duration'] ?? 0,
       isVideoCall: json['isVideoCall'] ?? false,
     );
@@ -38,7 +40,7 @@ class CallModel extends CallEntity {
       'receiverName': receiverName,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
-      'status': status,
+      'status': type.name,
       'duration': duration,
       'isVideoCall': isVideoCall,
     };

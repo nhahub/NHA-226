@@ -2,7 +2,6 @@ part of 'call_bloc.dart';
 
 sealed class CallState extends Equatable {
   const CallState();
-  
   @override
   List<Object> get props => [];
 }
@@ -31,9 +30,12 @@ class CallIncoming extends CallState {
   List<Object> get props => [callData];
 }
 
-class IncomingCallReceived extends CallEvent {
-  final CallEntity call;
-  const IncomingCallReceived(this.call);
+class CallAccepted extends CallState {
+  final String callId;
+  final bool isVideoCall;
+  const CallAccepted({required this.callId, this.isVideoCall = true});
+  @override
+  List<Object> get props => [callId, isVideoCall];
 }
 
 class CallHistory extends CallState {
