@@ -4,18 +4,19 @@ import 'package:zego_uikit_prebuilt_call/zego_uikit_prebuilt_call.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class VideoCallScreen extends StatelessWidget {
-  final String callID;
-  final bool isVideoCall;
+  const VideoCallScreen({super.key, required this.callID, this.isVideoCall});
 
-  const VideoCallScreen({
-    super.key,
-    required this.callID,
-    required this.isVideoCall,
-  });
+  final String callID;
+  final bool? isVideoCall;
 
   @override
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
+
+    final config = isVideoCall == true
+        ? ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall()
+        : ZegoUIKitPrebuiltCallConfig.oneOnOneVoiceCall();
+
     return Scaffold(
       body: ZegoUIKitPrebuiltCall(
         appID: appId,
@@ -23,7 +24,7 @@ class VideoCallScreen extends StatelessWidget {
         userID: user!.uid,
         userName: user.displayName ?? 'UserName',
         callID: callID,
-        config: ZegoUIKitPrebuiltCallConfig.oneOnOneVideoCall(),
+        config: config,
       ),
     );
   }

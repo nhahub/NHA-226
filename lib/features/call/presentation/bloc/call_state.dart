@@ -38,13 +38,6 @@ class CallAccepted extends CallState {
   List<Object> get props => [callId, isVideoCall];
 }
 
-class CallHistory extends CallState {
-  final List<CallEntity> calls;
-  const CallHistory({required this.calls});
-  @override
-  List<Object> get props => [calls];
-}
-
 class CallError extends CallState {
   final String message;
   const CallError({required this.message});

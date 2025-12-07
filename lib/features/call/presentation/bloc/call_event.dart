@@ -19,12 +19,6 @@ class MakeCallEvent extends CallEvent {
   List<Object> get props => [receiverId, receiverName, isVideoCall];
 }
 
-class GetCallHistoryEvent extends CallEvent {
-  const GetCallHistoryEvent();
-  @override
-  List<Object> get props => [];
-}
-
 class AcceptCallEvent extends CallEvent {
   final String callId;
   const AcceptCallEvent({required this.callId});

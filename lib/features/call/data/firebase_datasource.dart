@@ -29,16 +29,6 @@ class FirebaseDataSource {
     return callModel;
   }
 
-  Future<List<CallModel>> getCallHistory(String userId) async {
-    final snapshot = await _firestore
-        .collection('calls')
-        .where('receiverId', isEqualTo: userId)
-        .orderBy('startTime', descending: true)
-        .get();
-
-    return snapshot.docs.map((doc) => CallModel.fromJson(doc.data())).toList();
-  }
-
   Future<void> updateCallStatus(String callId, String status) async {
     try {
       // ignore: avoid_print

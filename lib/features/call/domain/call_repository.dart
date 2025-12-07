@@ -7,10 +7,11 @@ abstract class CallRepository {
     required String receiverName,
     required bool isVideoCall,
   });
-  Future<Either<Exception, List<CallEntity>>> getCallHistory();
+
   Future<Either<Exception, void>> updateCallStatus({
     required String callId,
     required String status,
   });
+  
   Stream<CallEntity> listenToIncomingCalls(String uid);
 }

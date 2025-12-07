@@ -7,7 +7,7 @@ import 'package:lingo_sign/features/call/domain/call_repository.dart';
 class CallRepositoryImpl implements CallRepository {
   final FirebaseDataSource firebaseDataSource;
   CallRepositoryImpl({required this.firebaseDataSource});
-
+  
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   @override
@@ -24,20 +24,6 @@ class CallRepositoryImpl implements CallRepository {
         callerName: firebaseAuth.currentUser?.displayName ?? 'UserName',
         isVideoCall: isVideoCall,
       );
-      return Right(result);
-    } catch (e) {
-      return Left(Exception(e.toString()));
-    }
-  }
-
-  @override
-  Future<Either<Exception, List<CallEntity>>> getCallHistory() async {
-    try {
-      final userId = firebaseAuth.currentUser?.uid;
-      if (userId == null) {
-        return Left(Exception('User not authenticated'));
-      }
-      final result = await firebaseDataSource.getCallHistory(userId);
       return Right(result);
     } catch (e) {
       return Left(Exception(e.toString()));

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
+import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -61,11 +60,22 @@ class FriendUserCallCard extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  context.read<CallBloc>().add(
-                    MakeCallEvent(
-                      receiverId: userFriend.uid,
-                      receiverName: userFriend.name,
-                      isVideoCall: true,
+                  // context.read<CallBloc>().add(
+                  //   MakeCallEvent(
+                  //     receiverId: userFriend.uid,
+                  //     receiverName: userFriend.name,
+                  //     isVideoCall: true,
+                  //   ),
+                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return VideoCallScreen(
+                          callID: 'test-call-9999',
+                          isVideoCall: true,
+                        );
+                      },
                     ),
                   );
                 },
