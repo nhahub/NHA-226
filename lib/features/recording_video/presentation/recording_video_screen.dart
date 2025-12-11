@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
-import 'package:lingo_sign/features/transelation/presentation/screens/translation_screen.dart';
 
 class RecordingVideoScreen extends StatefulWidget {
   const RecordingVideoScreen({super.key});
@@ -24,6 +23,8 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
     return BlocBuilder<RecordingVideoCubit, RecordingVideoState>(
       builder: (context, state) {
         final cubit = context.read<RecordingVideoCubit>();
+        // ignore: unused_local_variable
+        String path = "";
         if (state is RecordingVideoLoading || state is RecordingVideoInitial) {
           return Center(child: CircularProgressIndicator());
         }
@@ -49,13 +50,7 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
                     onTap: () async {
                       if (state is RecordingVideoRecording) {
                         final path = await cubit.stop();
-                        Navigator.pushReplacement(
-                          // ignore: use_build_context_synchronously
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => TranslationScreen(path: path),
-                          ),
-                        );
+                        Navigator.pop(context, path);
                       } else {
                         cubit.start();
                       }

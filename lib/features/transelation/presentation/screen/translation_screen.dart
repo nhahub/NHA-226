@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
+import 'package:lingo_sign/features/home/presentation/widget/text_shimmer.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
 import 'package:lingo_sign/features/transelation/presentation/widgets/options_video.dart';
 
 class TranslationScreen extends StatefulWidget {
-  const TranslationScreen({super.key, this.path});
-
-  final String? path;
+  const TranslationScreen({super.key});
 
   @override
   State<TranslationScreen> createState() => _TranslationScreenState();
@@ -17,13 +18,19 @@ class TranslationScreen extends StatefulWidget {
 
 class _TranslationScreenState extends State<TranslationScreen> {
   final TextEditingController translationController = TextEditingController();
+  String? path;
+
+  void setPath(String path) {
+    this.path = path;
+  }
 
   @override
   void initState() {
     super.initState();
     context.read<UserInfoCubit>().getUserInfo();
-    if (widget.path != null) {
-      context.read<TranslationCubit>().getTranslation(widget.path!);
+
+    if (path != null && path != '') {
+      context.read<TranslationCubit>().getTranslation(path!);
     }
   }
 
@@ -31,22 +38,21 @@ class _TranslationScreenState extends State<TranslationScreen> {
   Widget build(BuildContext context) {
     return BlocBuilder<UserInfoCubit, UserInfoState>(
       builder: (context, state) {
-        if (state is UserInfoInitial || state is UserInfoLoading) {
-          return Center(child: CircularProgressIndicator());
-        }
         if (state is UserInfoError) {
           return Scaffold(body: Center(child: Text("Error: ${state.message}")));
-        }
-        if (state is UserInfoLoaded) {
+        } else if (state is UserInfoLoaded) {
           return Scaffold(
-            backgroundColor: AppColor.white,
             body: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.all(16.0),
+                padding: EdgeInsets.symmetric(
+                  horizontal: context.width * 0.05,
+                  vertical: context.height * 0.015,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 50),
+                    SizedBox(height: context.height * 0.09 ),
+
                     Text(
                       "Hi ${state.user.name},",
                       style: TextStyle(
@@ -56,12 +62,16 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         color: AppColor.black,
                       ),
                     ),
-                    SizedBox(height: 8),
+
+                    SizedBox(height: context.height * 0.01),
+
                     Text(
                       "Let's understand each other better",
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-                    SizedBox(height: 32),
+
+                    SizedBox(height: context.height * 0.04),
+
                     BlocConsumer<TranslationCubit, TranslationState>(
                       listener: (context, state) {
                         if (state is TranslationLoaded) {
@@ -78,20 +88,24 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         }
                         return Container(
                           width: double.infinity,
-                          height: 214,
+                          height: context.height * 0.3,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
                             color: AppColor.second,
                           ),
 
                           child: Padding(
-                            padding: const EdgeInsets.all(16.0),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: context.width * 0.04,
+                              vertical: context.height * 0.02,
+                            ),
                             child: Column(
                               children: [
                                 Expanded(
                                   child: state is TranslationLoading
-                                      ? const Center(
-                                          child: CircularProgressIndicator(),
+                                      ? Align(
+                                        alignment: Alignment.topLeft,
+                                        child: TextShimmer()
                                         )
                                       : TextField(
                                           controller: translationController,
@@ -108,7 +122,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                         ),
                                 ),
 
-                                SizedBox(height: 70),
+                                SizedBox(height: context.height * 0.01),
 
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
@@ -144,37 +158,51 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         );
                       },
                     ),
-                    SizedBox(height: 32),
+
+                    SizedBox(height: context.height * 0.04),
+
                     Text(
                       '• Hold your hand clearly in front of the camera',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
+
                     Text(
                       '• Ensure good lighting',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-                    SizedBox(height: 180),
+
+                    SizedBox(height: context.height * 0.19),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         ElevatedButton(
-                          onPressed: () {
-                            showDialog(
+                          onPressed: () async {
+                            final path = await showDialog<String>(
                               context: context,
-                              builder: (dialogContext) {
-                                return OptionsVideo();
-                              },
+                              builder: (dialogContext) => OptionsVideo(),
                             );
+                            if (path != '' && path != null) {
+                              setPath(path);
+                              context.read<TranslationCubit>().getTranslation(
+                                path,
+                              );
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(),
                           ),
                           child: Container(
-                            width: 65,
-                            height: 65,
+                            width: context.width * 0.16,
+                            height: context.width * 0.16,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              color: AppColor.main,
+                              gradient: LinearGradient(
+                                colors: [AppColor.main, AppColor.second],
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                stops: [0.41, 1.0],
+                              ),
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black26,
@@ -184,10 +212,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
                               ],
                             ),
                             child: Center(
-                              child: Icon(
-                                Icons.camera_alt_outlined,
-                                color: AppColor.white,
-                                size: 28,
+                              child: SizedBox(
+                                child: SvgPicture.asset(
+                                  'assets/images/mdi_camera.svg',
+                                ),
                               ),
                             ),
                           ),
@@ -199,8 +227,9 @@ class _TranslationScreenState extends State<TranslationScreen> {
               ),
             ),
           );
+        } else {
+          return Center(child: CircularProgressIndicator());
         }
-        return Center(child: CircularProgressIndicator());
       },
     );
   }

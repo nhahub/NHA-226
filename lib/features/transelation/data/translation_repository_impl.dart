@@ -15,8 +15,12 @@ class TranslationRepositoryImpl {
     var response = await request.send();
     try {
       final body = await response.stream.bytesToString();
+
       final Map<String, dynamic> data = jsonDecode(body);
-      return data["gloss"];
+
+      final text = data["gloss"];
+
+      return text;
     } catch (e) {
       // ignore: avoid_print
       print("Error: ${response.statusCode}");
