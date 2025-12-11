@@ -8,4 +8,9 @@ String resetPasswordStringMessage =
 String verifyAccountStringMessage =
     'A link to verify your account has been sent to your email.';
 String notVerifiedAccountStringMessage = 'Account not verified';
-String appId = "af731e89861e43d49b2339823b880d08";
+// String appId = "af731e89861e43d49b2339823b880d08"; // Agora app Id
+
+// ZegoCloud
+int appId = 2097692774;
+String appSign =
+    'c99dcf0013cf0820f728443ba6573d70ab5b1946ccc8ad8cc1349c4de8c4554c';

@@ -68,6 +68,7 @@ class HomeRepositoryImpl implements HomeRepository {
                 email: userApp.email,
                 imageUrl: userApp.imageUrl,
                 lastSeen: userApp.lastSeen,
+                call: friend.call,
               ),
             ),
           ),

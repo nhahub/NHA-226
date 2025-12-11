@@ -1,27 +1,41 @@
-abstract class CallState {}
+part of 'call_bloc.dart';
 
-class CallInitial extends CallState {}
-
-class CallOutgoing extends CallState {
-  final String channel;
-  final String calleeId;
-  CallOutgoing({required this.channel, required this.calleeId});
+sealed class CallState extends Equatable {
+  const CallState();
+  @override
+  List<Object> get props => [];
 }
 
-class CallRinging extends CallState {
-  final String callerId;
-  final String channel;
-  final String token;
-  CallRinging({
-    required this.callerId,
-    required this.channel,
-    required this.token,
-  });
+class CallInitial extends CallState {
+  @override
+  List<Object> get props => [];
 }
 
-class CallInProgress extends CallState {
-  final String channel;
-  CallInProgress({required this.channel});
+class CallLoading extends CallState {
+  final String friendId;
+  const CallLoading({required this.friendId});
+  @override
+  List<Object> get props => [];
 }
 
-class CallEnded extends CallState {}
+class CallMade extends CallState {
+  final CallEntity call;
+  const CallMade({required this.call});
+  @override
+  List<Object> get props => [call];
+}
+
+class CallAccepted extends CallState {
+  final String callId;
+  final bool isVideoCall;
+  const CallAccepted({required this.callId, this.isVideoCall = true});
+  @override
+  List<Object> get props => [callId, isVideoCall];
+}
+
+class CallError extends CallState {
+  final String message;
+  const CallError({required this.message});
+  @override
+  List<Object> get props => [message];
+}

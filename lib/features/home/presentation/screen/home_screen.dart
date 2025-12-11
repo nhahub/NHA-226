@@ -1,10 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
-import 'package:lingo_sign/features/call/services/incoming_call_handler.dart';
-import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/home/presentation/screen/friends_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/last_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/screen/requests_screen.dart';
@@ -20,7 +16,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
-  List<Widget> sections = [FriendsScreen(), LastCallScreen(), RequestsScreen()];
+  List<Widget> sections = [FriendsScreen(), const LastCallScreen(), const RequestsScreen()];
 
   late TabController _tabController;
   FirebaseAuth auth = FirebaseAuth.instance;
@@ -29,21 +25,12 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
-    CallFirestoreService().onIncomingCall(auth.currentUser!.uid).listen((
-      callData,
-    ) {
-      if (callData != null) {
-        // ignore: use_build_context_synchronously
-        IncomingCallHandler().handleIncoming(callData, context);
-      }
-    });
-    context.read<UserInfoCubit>().getUserInfo();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: CustomAppBar(), 
+      appBar: const CustomAppBar(),
       backgroundColor: AppColor.white,
       body: Column(
         children: [

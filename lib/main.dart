@@ -2,13 +2,19 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lingo_sign/features/call/data/call_firestore_service.dart';
-import 'package:lingo_sign/features/call/data/call_repository.dart';
+import 'package:lingo_sign/core/config/zego_config.dart';
+import 'package:lingo_sign/core/get_it/get_it.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
-import 'package:lingo_sign/features/call/services/agora_service.dart';
+import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
+import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
+import 'package:lingo_sign/features/recording_video/data/video_service.dart';
+import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
+import 'package:lingo_sign/features/transelation/data/translation_repository_impl.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
+import 'package:lingo_sign/features/transelation/presentation/cubit/upload/upload_cubit.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' hide AuthState;
 import 'package:lingo_sign/core/const/string.dart';
 import 'package:lingo_sign/core/screen/loading_screen.dart';
@@ -34,6 +40,8 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Supabase.initialize(url: supabaseUrl, anonKey: anonKey);
+  await setupServiceLocator();
+  ZegoConfig.init();
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -83,11 +91,10 @@ class MyApp extends StatelessWidget {
             create: (_) =>
                 RequestsBloc(HomeRepositoryImpl())..add(GetAllRequestsEvent()),
           ),
-          // Calls
+          //Recording Video
           BlocProvider(
-            create: (_) => CallBloc(
-              CallRepository(CallFirestoreService()),
-              AgoraService(),
+            create: (_) => RecordingVideoCubit(
+              RecordingVideoRepositoryImpl(VideoService()),
             ),
           ),
 
@@ -98,6 +105,14 @@ class MyApp extends StatelessWidget {
               return cubit;
             },
           ),
+          //Translation
+          BlocProvider(
+            create: (_) => TranslationCubit(TranslationRepositoryImpl()),
+          ),
+          // Upload Video
+          BlocProvider(create: (_) => UploadCubit(TranslationRepositoryImpl())),
+          // Call
+          BlocProvider<CallBloc>(create: (_) => getIt<CallBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -113,9 +128,24 @@ class MyApp extends StatelessWidget {
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is Authenticated) {
-                      return MainScreen();
+                      return BlocListener<CallBloc, CallState>(
+                        listener: (_, state) {
+                          if (state is CallMade) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => VideoCallScreen(
+                                  callID: state.call.callId,
+                                  isVideoCall: state.call.isVideoCall,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: MainScreen(),
+                      );
                     }
-                    if (state is AuthLoading) {
+                    if (state is AuthLoading || state is AuthInitial) {
                       return LoadingScreen();
                     }
                     return LogInScreen();
