@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
@@ -24,7 +26,13 @@ class FriendUserCallCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
         child: Container(
-          color: Colors.transparent,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: userFriend.call != null
+                ? null // Border.all(color: AppColor.main, width: 2)
+                : null,
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -58,40 +66,56 @@ class FriendUserCallCard extends StatelessWidget {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () {
-                  // context.read<CallBloc>().add(
-                  //   MakeCallEvent(
-                  //     receiverId: userFriend.uid,
-                  //     receiverName: userFriend.name,
-                  //     isVideoCall: true,
-                  //   ),
-                  // );
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return VideoCallScreen(
-                          callID: 'test-call-9999',
-                          isVideoCall: true,
+              BlocBuilder<CallBloc, CallState>(
+                builder: (context, state) {
+                  bool isLoading =
+                      state is CallLoading && state.friendId == userFriend.uid;
+
+                  return InkWell(
+                    onTap: () {
+                      if (isLoading) return;
+
+                      if (userFriend.call != null) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => VideoCallScreen(
+                              callID: userFriend.call!.callId,
+                              isVideoCall: userFriend.call!.isVideoCall,
+                            ),
+                          ),
                         );
-                      },
+                      } else {
+                        context.read<CallBloc>().add(
+                          MakeCallEvent(receiverId: userFriend.uid),
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColor.main,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: isLoading
+                          ? Padding(
+                              padding: EdgeInsets.all(8),
+                              child: CircularProgressIndicator(
+                                color: AppColor.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Icon(
+                              userFriend.call != null
+                                  ? Icons.door_back_door_outlined
+                                  : Icons.call,
+                              color: AppColor.white,
+                              size: 20,
+                            ),
                     ),
                   );
                 },
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColor.main,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Icon(
-                    Icons.call,
-                    color: AppColor.white,
-                    size: 20,
-                  ),
-                ),
               ),
             ],
           ),

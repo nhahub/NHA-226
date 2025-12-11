@@ -13,16 +13,14 @@ class CallRepositoryImpl implements CallRepository {
   @override
   Future<Either<Exception, CallEntity>> makeCall({
     required String receiverId,
-    required String receiverName,
-    required bool isVideoCall,
+    bool? isVideoCall,
   }) async {
     try {
       final result = await firebaseDataSource.makeCall(
         receiverId: receiverId,
-        receiverName: receiverName,
         callerId: firebaseAuth.currentUser!.uid,
         callerName: firebaseAuth.currentUser?.displayName ?? 'UserName',
-        isVideoCall: isVideoCall,
+        isVideoCall: isVideoCall ?? true,
       );
       return Right(result);
     } catch (e) {
@@ -41,10 +39,5 @@ class CallRepositoryImpl implements CallRepository {
     } catch (e) {
       return Left(Exception(e.toString()));
     }
-  }
-
-  @override
-  Stream<CallEntity> listenToIncomingCalls(String uid) {
-    return firebaseDataSource.listenToIncomingCalls(uid);
   }
 }

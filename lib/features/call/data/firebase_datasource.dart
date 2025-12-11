@@ -1,31 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:lingo_sign/features/call/data/call_model.dart';
 import 'package:lingo_sign/features/call/domain/call_entity.dart';
 
 class FirebaseDataSource {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   Future<CallModel> makeCall({
     required String receiverId,
-    required String receiverName,
     required String callerId,
     required String callerName,
     required bool isVideoCall,
   }) async {
+    var user = _firebaseAuth.currentUser;
     final callId = DateTime.now().millisecondsSinceEpoch.toString();
     final callModel = CallModel(
       callId: callId,
       callerId: callerId,
       callerName: callerName,
       receiverId: receiverId,
-      receiverName: receiverName,
       startTime: DateTime.now(),
       type: CallEntityType.pending,
       duration: 0,
       isVideoCall: isVideoCall,
     );
 
-    await _firestore.collection('calls').doc(callId).set(callModel.toJson());
+    await _firestore
+        .collection('users')
+        .doc(receiverId)
+        .collection('friends')
+        .doc(user!.uid)
+        .set({'call': callModel.toJson()}, SetOptions(merge: true));
+
     return callModel;
   }
 
@@ -75,7 +82,6 @@ class FirebaseDataSource {
             );
           */
           throw Exception('No incoming calls');
-          
         })
         .handleError((error) {
           // ignore: avoid_print

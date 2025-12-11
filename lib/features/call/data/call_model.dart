@@ -6,7 +6,6 @@ class CallModel extends CallEntity {
     required super.callerId,
     required super.callerName,
     required super.receiverId,
-    required super.receiverName,
     required super.startTime,
     super.endTime,
     required super.type,
@@ -20,7 +19,6 @@ class CallModel extends CallEntity {
       callerId: json['callerId'] ?? '',
       callerName: json['callerName'] ?? '',
       receiverId: json['receiverId'] ?? '',
-      receiverName: json['receiverName'] ?? '',
       startTime: DateTime.parse(json['startTime']),
       endTime: json['endTime'] != null
           ? DateTime.parse(json['endTime'])
@@ -37,7 +35,6 @@ class CallModel extends CallEntity {
       'callerId': callerId,
       'callerName': callerName,
       'receiverId': receiverId,
-      'receiverName': receiverName,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
       'status': type.name,

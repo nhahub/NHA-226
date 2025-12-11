@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/config/zego_config.dart';
 import 'package:lingo_sign/core/get_it/get_it.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
+import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
@@ -100,7 +101,7 @@ class MyApp extends StatelessWidget {
           // Upload Video
           BlocProvider(create: (_) => UploadCubit(TranslationRepositoryImpl())),
           // Call
-          BlocProvider<CallBloc>(create: (_) => sl<CallBloc>()),
+          BlocProvider<CallBloc>(create: (_) => getIt<CallBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
@@ -116,7 +117,22 @@ class MyApp extends StatelessWidget {
                 return BlocBuilder<AuthBloc, AuthState>(
                   builder: (context, state) {
                     if (state is Authenticated) {
-                      return MainScreen();
+                      return BlocListener<CallBloc, CallState>(
+                        listener: (_, state) {
+                          if (state is CallMade) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => VideoCallScreen(
+                                  callID: state.call.callId,
+                                  isVideoCall: state.call.isVideoCall,
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: MainScreen(),
+                      );
                     }
                     if (state is AuthLoading || state is AuthInitial) {
                       return LoadingScreen();

@@ -2,26 +2,17 @@ import 'package:get_it/get_it.dart';
 import 'package:lingo_sign/features/call/data/call_repository_impl.dart';
 import 'package:lingo_sign/features/call/data/firebase_datasource.dart';
 import 'package:lingo_sign/features/call/domain/call_repository.dart';
-import 'package:lingo_sign/features/call/domain/make_call_usecase.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 
-final sl = GetIt.instance;
+final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
   // call
-  sl.registerSingleton<FirebaseDataSource>(FirebaseDataSource());
-  sl.registerSingleton<CallRepository>(
-    CallRepositoryImpl(firebaseDataSource: sl<FirebaseDataSource>()),
+  getIt.registerSingleton<FirebaseDataSource>(FirebaseDataSource());
+  getIt.registerSingleton<CallRepository>(
+    CallRepositoryImpl(firebaseDataSource: getIt<FirebaseDataSource>()),
   );
-  sl.registerSingleton<MakeCallUseCase>(
-    MakeCallUseCase(repository: sl<CallRepository>()),
+  getIt.registerSingleton<CallBloc>(
+    CallBloc(callRepository: getIt<CallRepository>()),
   );
-  sl.registerSingleton<CallBloc>(
-    CallBloc(
-      makeCallUseCase: sl<MakeCallUseCase>(),
-      callRepository: sl<CallRepository>(),
-    ),
-  );
-
-  //
 }

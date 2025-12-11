@@ -8,34 +8,22 @@ sealed class CallEvent extends Equatable {
 
 class MakeCallEvent extends CallEvent {
   final String receiverId;
-  final String receiverName;
-  final bool isVideoCall;
-  const MakeCallEvent({
-    required this.receiverId,
-    required this.isVideoCall,
-    required this.receiverName,
-  });
+  final bool? isVideoCall;
+  const MakeCallEvent({required this.receiverId, this.isVideoCall});
   @override
-  List<Object> get props => [receiverId, receiverName, isVideoCall];
+  List<Object> get props => [receiverId, isVideoCall ?? true];
 }
 
-class AcceptCallEvent extends CallEvent {
+class JoinCallEvent extends CallEvent {
   final String callId;
-  const AcceptCallEvent({required this.callId});
+  const JoinCallEvent({required this.callId});
   @override
   List<Object> get props => [callId];
 }
 
-class DeclineCallEvent extends CallEvent {
+class EndCallEvent extends CallEvent {
   final String callId;
-  const DeclineCallEvent({required this.callId});
+  const EndCallEvent({required this.callId});
   @override
   List<Object> get props => [callId];
-}
-
-class ListenToIncomingCallsEvent extends CallEvent {
-  final String userId;
-  const ListenToIncomingCallsEvent({required this.userId});
-  @override
-  List<Object> get props => [userId];
 }

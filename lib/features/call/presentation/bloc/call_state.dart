@@ -12,6 +12,8 @@ class CallInitial extends CallState {
 }
 
 class CallLoading extends CallState {
+  final String friendId;
+  const CallLoading({required this.friendId});
   @override
   List<Object> get props => [];
 }
@@ -21,13 +23,6 @@ class CallMade extends CallState {
   const CallMade({required this.call});
   @override
   List<Object> get props => [call];
-}
-
-class CallIncoming extends CallState {
-  final CallEntity callData;
-  const CallIncoming({required this.callData});
-  @override
-  List<Object> get props => [callData];
 }
 
 class CallAccepted extends CallState {

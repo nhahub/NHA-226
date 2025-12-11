@@ -25,6 +25,7 @@ class VideoCallScreen extends StatelessWidget {
         userName: user.displayName ?? 'UserName',
         callID: callID,
         config: config,
+        onDispose: () {},
       ),
     );
   }

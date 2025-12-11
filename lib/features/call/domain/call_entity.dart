@@ -16,10 +16,9 @@ class CallEntity extends Equatable {
   final String callerId;
   final String callerName;
   final String receiverId;
-  final String receiverName;
   final DateTime startTime;
   final DateTime? endTime;
-  final CallEntityType type; // pending, accepted, declined, completed
+  final CallEntityType type;
   final int duration;
   final bool isVideoCall;
 
@@ -28,7 +27,6 @@ class CallEntity extends Equatable {
     required this.callerId,
     required this.callerName,
     required this.receiverId,
-    required this.receiverName,
     required this.startTime,
     this.endTime,
     required this.type,
@@ -42,7 +40,6 @@ class CallEntity extends Equatable {
     callerId,
     callerName,
     receiverId,
-    receiverName,
     startTime,
     endTime,
     type,

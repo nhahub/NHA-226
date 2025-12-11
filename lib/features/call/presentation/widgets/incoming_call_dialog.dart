@@ -35,7 +35,7 @@ class IncomingCallDialog extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: () {
                     context.read<CallBloc>().add(
-                      DeclineCallEvent(callId: callData.callId),
+                      EndCallEvent(callId: callData.callId),
                     );
                     Navigator.pop(context);
                   },
@@ -46,7 +46,7 @@ class IncomingCallDialog extends StatelessWidget {
                 ElevatedButton.icon(
                   onPressed: () {
                     context.read<CallBloc>().add(
-                      AcceptCallEvent(callId: callData.callId),
+                      JoinCallEvent(callId: callData.callId),
                     );
                     Navigator.pop(context);
                     Navigator.push(
