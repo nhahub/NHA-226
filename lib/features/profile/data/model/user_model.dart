@@ -4,7 +4,7 @@ class UserModel {
   final String id;
   final String name;
   final String email;
-  final String? imageUrl; 
+  final String? imageUrl;
   final DateTime? createdAt;
 
   UserModel({
@@ -12,7 +12,7 @@ class UserModel {
     required this.name,
     required this.email,
     this.imageUrl,
-    this.createdAt, 
+    this.createdAt,
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map, String id) {
@@ -20,12 +20,11 @@ class UserModel {
       id: id,
       name: map['name'] ?? 'No name',
       email: map['email'] ?? 'No email',
-      imageUrl: map['image_url'], 
+      imageUrl: map['image_url'],
       createdAt: _parseDateTime(map['createdAt']),
     );
   }
 
- 
   static DateTime? _parseDateTime(dynamic date) {
     if (date == null) return null;
     if (date is DateTime) return date;
