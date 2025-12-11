@@ -8,11 +8,12 @@ class AppColor {
   static const Color black = Color(0xff121212);
   static const Color white = Color(0xffFAFAFA);
 
-
+  // ignore: prefer_typing_uninitialized_variables
   static var background;
 
+  // ignore: prefer_typing_uninitialized_variables
   static var danger;
 
+  // ignore: prefer_typing_uninitialized_variables
   static var text;
-
 }

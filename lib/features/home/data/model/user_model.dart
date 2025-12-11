@@ -47,4 +47,6 @@ class UserModel {
       lastSeen: lastSeen,
     );
   }
+
+  static fromFirestore(QueryDocumentSnapshot<Map<String, dynamic>> d) {}
 }
