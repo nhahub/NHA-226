@@ -15,6 +15,9 @@ abstract class HomeRepository {
 
   Future<List<Request>> getRequstes();
 
+  // Real-time stream of incoming requests for current user
+  Stream<List<Request>> getRequestsStream();
+
   Future<bool> acceptFriendRequest(String friendId);
 
   Future<bool> rejectFriendRequest(String friendId);

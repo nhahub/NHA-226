@@ -62,10 +62,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
 
       final shownList = showAllRecent ? friends : friends.take(4).toList();
 
-      emit(SearchLoadedState(
-        shownList,
-        showAll: showAllRecent,
-      ));
+      emit(SearchLoadedState(shownList, showAll: showAllRecent));
     } catch (error) {
       emit(SearchEmptyState('Error loading recent friends: $error'));
     }

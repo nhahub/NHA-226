@@ -17,6 +17,7 @@ class FriendUserCallCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (onTap != null) onTap!();
         showDialog(
           context: context,
           barrierColor: Colors.transparent,

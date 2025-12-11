@@ -8,6 +8,7 @@ import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
+import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
 import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
 import 'package:lingo_sign/features/recording_video/data/video_service.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
@@ -33,6 +34,7 @@ import 'package:lingo_sign/features/onboarding/presentation/screen/onboarding_sc
 import 'package:lingo_sign/firebase_options.dart';
 import 'package:lingo_sign/main_screen.dart';
 import 'app_router.dart';
+import 'features/notification/presentation/cubit/notifications_cubit.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -69,6 +71,7 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
+
           // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
@@ -93,6 +96,14 @@ class MyApp extends StatelessWidget {
             create: (_) => RecordingVideoCubit(
               RecordingVideoRepositoryImpl(VideoService()),
             ),
+          ),
+
+          BlocProvider(
+            create: (_) {
+              final cubit = NotificationsCubit(NotificationRepositoryImpl());
+              cubit.listenToNotificationsRealTime();
+              return cubit;
+            },
           ),
           //Translation
           BlocProvider(

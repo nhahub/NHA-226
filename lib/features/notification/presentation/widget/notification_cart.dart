@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
-import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
@@ -19,8 +18,10 @@ class NotificationCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isRequest = notification.type == NotificationType.request;
+
     return Container(
       padding: const EdgeInsets.all(12),
+      margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       decoration: BoxDecoration(
         color: AppColor.white,
         borderRadius: BorderRadius.circular(12),
@@ -44,15 +45,13 @@ class NotificationCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    SizedBox(
-                      width: context.width / 1.5,
+                    Flexible(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
+                            softWrap: true,
                             notification.title,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
                             style: const TextStyle(
                               fontSize: 15,
                               fontWeight: FontWeight.w500,
