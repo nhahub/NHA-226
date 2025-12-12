@@ -10,10 +10,23 @@ part 'requests_state.dart';
 
 class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
   HomeRepository homeRepository;
+  StreamSubscription<List<Request>>? _requestsSubscription;
+
   RequestsBloc(this.homeRepository) : super(RequestsInitial()) {
     on<GetAllRequestsEvent>(onGetAllRequests);
     on<AcceptRequestEvent>(onAcceptRequestEvent);
     on<RejectRequestEvent>(onRejectRequestEvent);
+
+    // Start listening to real-time requests stream
+    try {
+      _requestsSubscription = homeRepository.getRequestsStream().listen((
+        requests,
+      ) {
+        add(GetAllRequestsEvent());
+      });
+    } catch (e) {
+      // ignore stream errors here; GetAllRequestsEvent can be used to fetch once
+    }
   }
 
   FutureOr<void> onGetAllRequests(
@@ -57,5 +70,11 @@ class RequestsBloc extends Bloc<RequestsEvent, RequestsState> {
     } catch (e) {
       emit(RequestsError(e.toString()));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _requestsSubscription?.cancel();
+    return super.close();
   }
 }

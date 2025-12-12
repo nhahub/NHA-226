@@ -13,16 +13,14 @@ class CallRepositoryImpl implements CallRepository {
   @override
   Future<Either<Exception, CallEntity>> makeCall({
     required String receiverId,
-    required String receiverName,
-    required bool isVideoCall,
+    bool? isVideoCall,
   }) async {
     try {
       final result = await firebaseDataSource.makeCall(
         receiverId: receiverId,
-        receiverName: receiverName,
         callerId: firebaseAuth.currentUser!.uid,
         callerName: firebaseAuth.currentUser?.displayName ?? 'UserName',
-        isVideoCall: isVideoCall,
+        isVideoCall: isVideoCall ?? true,
       );
       return Right(result);
     } catch (e) {
@@ -31,9 +29,11 @@ class CallRepositoryImpl implements CallRepository {
   }
 
   @override
-  Future<Either<Exception, List<CallEntity>>> getCallHistory() async {
+  Future<Either<Exception, CallEntity>> joinToCall({
+    required String callerId,
+  }) async {
     try {
-      final result = await firebaseDataSource.getCallHistory('current_user_id');
+      final result = await firebaseDataSource.joinToCall(callerId: callerId);
       return Right(result);
     } catch (e) {
       return Left(Exception(e.toString()));
@@ -41,20 +41,18 @@ class CallRepositoryImpl implements CallRepository {
   }
 
   @override
-  Future<Either<Exception, void>> updateCallStatus({
-    required String callId,
-    required String status,
+  Future<Either<Exception, void>> endTheCall({
+    required String callerId,
+    required String receiverId,
   }) async {
     try {
-      await firebaseDataSource.updateCallStatus(callId, status);
+      await firebaseDataSource.endCall(
+        callerId: callerId,
+        receiverId: receiverId,
+      );
       return const Right(null);
     } catch (e) {
       return Left(Exception(e.toString()));
     }
-  }
-
-  @override
-  Stream<CallEntity> listenToIncomingCalls(String uid) {
-    return firebaseDataSource.listenToIncomingCalls(uid);
   }
 }

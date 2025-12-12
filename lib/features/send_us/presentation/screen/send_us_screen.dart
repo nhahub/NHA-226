@@ -36,7 +36,7 @@ class _SendUsScreenState extends State<SendUsScreen> {
             Message(
               message: "Message sent successfully",
               context: context,
-              color: Colors.green
+              color: Colors.green,
             );
             controller.clear();
           } else if (state is SendUsError) {
@@ -53,6 +53,7 @@ class _SendUsScreenState extends State<SendUsScreen> {
               children: [
                 Scaffold(
                   appBar: CustomAppBar(title: 'Send us'),
+                  backgroundColor: AppColor.white,
                   body: Center(
                     child: SizedBox(
                       width: 343,
@@ -79,7 +80,9 @@ class _SendUsScreenState extends State<SendUsScreen> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (formKey.currentState!.validate()) {
-                                    context.read<SendUsCubit>().sendMessage(controller.text);
+                                    context.read<SendUsCubit>().sendMessage(
+                                      controller.text,
+                                    );
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(
@@ -108,9 +111,7 @@ class _SendUsScreenState extends State<SendUsScreen> {
                   Container(
                     // ignore: deprecated_member_use
                     color: Colors.black.withOpacity(0.5),
-                    child: const Center(
-                      child: LoadingScreen(),
-                    ),
+                    child: const Center(child: LoadingScreen()),
                   ),
               ],
             );

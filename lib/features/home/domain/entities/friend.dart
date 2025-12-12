@@ -1,3 +1,5 @@
+import 'package:lingo_sign/features/call/domain/call_entity.dart';
+
 class Friend {
   final String uid;
   final String name;
@@ -5,6 +7,7 @@ class Friend {
   final String imageUrl;
   final DateTime lastSeen;
   final bool isFavourite;
+  final CallEntity? call;
 
   Friend({
     required this.uid,
@@ -13,5 +16,6 @@ class Friend {
     required this.imageUrl,
     required this.lastSeen,
     required this.isFavourite,
+    this.call,
   });
 }

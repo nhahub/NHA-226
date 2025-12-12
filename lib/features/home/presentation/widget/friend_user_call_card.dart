@@ -16,6 +16,7 @@ class FriendUserCallCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (onTap != null) onTap!();
         showDialog(
           context: context,
           barrierColor: Colors.transparent,
@@ -25,7 +26,13 @@ class FriendUserCallCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
         child: Container(
-          color: Colors.transparent,
+          decoration: BoxDecoration(
+            color: Colors.transparent,
+            border: userFriend.call != null
+                ? null // Border.all(color: AppColor.main, width: 2)
+                : null,
+            borderRadius: BorderRadius.circular(12),
+          ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -59,29 +66,50 @@ class FriendUserCallCard extends StatelessWidget {
                   ),
                 ],
               ),
-              InkWell(
-                onTap: () {
-                  context.read<CallBloc>().add(
-                    MakeCallEvent(
-                      receiverId: userFriend.uid,
-                      receiverName: userFriend.name,
-                      isVideoCall: true,
+              BlocBuilder<CallBloc, CallState>(
+                builder: (context, state) {
+                  bool isLoading =
+                      state is CallLoading && state.friendId == userFriend.uid;
+
+                  return InkWell(
+                    onTap: () {
+                      if (isLoading) return;
+
+                      if (userFriend.call != null) {
+                        context.read<CallBloc>().add(
+                          JoinCallEvent(callerId: userFriend.uid),
+                        );
+                      } else {
+                        context.read<CallBloc>().add(
+                          MakeCallEvent(receiverId: userFriend.uid),
+                        );
+                      }
+                    },
+                    child: Container(
+                      width: 36,
+                      height: 36,
+                      decoration: BoxDecoration(
+                        color: AppColor.main,
+                        borderRadius: BorderRadius.circular(50),
+                      ),
+                      child: isLoading
+                          ? Padding(
+                              padding: EdgeInsets.all(8),
+                              child: CircularProgressIndicator(
+                                color: AppColor.white,
+                                strokeWidth: 2,
+                              ),
+                            )
+                          : Icon(
+                              userFriend.call != null
+                                  ? Icons.door_back_door_outlined
+                                  : Icons.call,
+                              color: AppColor.white,
+                              size: 20,
+                            ),
                     ),
                   );
                 },
-                child: Container(
-                  width: 36,
-                  height: 36,
-                  decoration: BoxDecoration(
-                    color: AppColor.main,
-                    borderRadius: BorderRadius.circular(50),
-                  ),
-                  child: const Icon(
-                    Icons.call,
-                    color: AppColor.white,
-                    size: 20,
-                  ),
-                ),
               ),
             ],
           ),

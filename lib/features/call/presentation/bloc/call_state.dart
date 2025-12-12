@@ -2,7 +2,6 @@ part of 'call_bloc.dart';
 
 sealed class CallState extends Equatable {
   const CallState();
-  
   @override
   List<Object> get props => [];
 }
@@ -13,6 +12,8 @@ class CallInitial extends CallState {
 }
 
 class CallLoading extends CallState {
+  final String friendId;
+  const CallLoading({required this.friendId});
   @override
   List<Object> get props => [];
 }
@@ -24,23 +25,9 @@ class CallMade extends CallState {
   List<Object> get props => [call];
 }
 
-class CallIncoming extends CallState {
-  final CallEntity callData;
-  const CallIncoming({required this.callData});
+class CallEnded extends CallState {
   @override
-  List<Object> get props => [callData];
-}
-
-class IncomingCallReceived extends CallEvent {
-  final CallEntity call;
-  const IncomingCallReceived(this.call);
-}
-
-class CallHistory extends CallState {
-  final List<CallEntity> calls;
-  const CallHistory({required this.calls});
-  @override
-  List<Object> get props => [calls];
+  List<Object> get props => [];
 }
 
 class CallError extends CallState {

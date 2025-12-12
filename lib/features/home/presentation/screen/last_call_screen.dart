@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/friends/friends_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/favourite_user.dart';
@@ -83,7 +85,30 @@ class LastCallScreen extends StatelessWidget {
                     if (state is LastCallsLoaded) {
                       final lastCalls = state.lastCalls;
                       if (lastCalls.isEmpty) {
-                        return Center(child: Text('There are not last call'));
+                        return Padding(
+                          padding: EdgeInsets.only(top: context.height * 0.11),
+                          child: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                SizedBox(
+                                  child: SvgPicture.asset(
+                                    'assets/images/pana.svg',
+                                  ),
+                                ),
+                                SizedBox(height: context.height * 0.03),
+                                Text(
+                                  'No calls yet',
+                                  style: TextStyle(
+                                    fontSize: 24,
+                                    color: AppColor.main,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
                       }
                       return ListView.builder(
                         shrinkWrap: true,

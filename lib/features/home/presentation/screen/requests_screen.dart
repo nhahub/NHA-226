@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend.dart';
 import 'package:lingo_sign/features/home/presentation/widget/request_friend_shimmer.dart';
@@ -48,8 +50,29 @@ class RequestsScreen extends StatelessWidget {
                           },
                         );
                       }
-                      return Center(
-                        child: Text('There are not any requestes yet'),
+                      return Padding(
+                        padding: EdgeInsets.only(top: context.height * 0.11),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                child: SvgPicture.asset(
+                                  'assets/images/rafiki.svg',
+                                ),
+                              ),
+                              SizedBox(height: context.height * 0.03),
+                              Text(
+                                'No friend requests',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: AppColor.main,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       );
                     }
                     if (state is RequestsLoading) {

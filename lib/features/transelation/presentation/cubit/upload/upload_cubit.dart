@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lingo_sign/features/transelation/data/translation_repository_impl.dart';
-
 part 'upload_state.dart';
 
 class UploadCubit extends Cubit<UploadState> {
@@ -10,13 +9,18 @@ class UploadCubit extends Cubit<UploadState> {
 
   Future<void> uploadVideo() async {
     try {
-      emit(UploadLoading());
-      final path = await repository.uploadVideo();
-      emit(UploadLoaded(path));
-      
+      final String path = await repository.uploadVideo();
+      if (path != "") {
+        emit(UploadSelected(path));
+      } else {
+        emit(UploadUnSelected());
+      }
     } catch (e) {
       emit(UploadErorr(e.toString()));
-      
     }
+  }
+
+  void reset() {
+    emit(UploadInitial());
   }
 }

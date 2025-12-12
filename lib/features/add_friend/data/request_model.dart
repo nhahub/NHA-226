@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class RequestModel {
   final String uid;
   final String status;
@@ -10,14 +12,30 @@ class RequestModel {
   });
 
   Map<String, dynamic> toMap() {
-    return {'uid': uid, 'status': status, 'created_at': createdAt};
+    return {
+      'uid': uid,
+      'status': status,
+      'created_at': Timestamp.fromDate(createdAt),
+    };
   }
 
   factory RequestModel.fromJson(Map<String, dynamic> map) {
+    final created = map['created_at'];
+    DateTime createdAt;
+    if (created is Timestamp) {
+      createdAt = created.toDate();
+    } else if (created is String) {
+      createdAt = DateTime.parse(created);
+    } else if (created is DateTime) {
+      createdAt = created;
+    } else {
+      createdAt = DateTime.now();
+    }
+
     return RequestModel(
       uid: map['uid'],
       status: map['status'],
-      createdAt: map['created_at'],
+      createdAt: createdAt,
     );
   }
 }

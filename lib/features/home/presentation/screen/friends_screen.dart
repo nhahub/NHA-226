@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/add_friend/presentation/cubit/friend_request_cubit.dart';
 import 'package:lingo_sign/features/add_friend/presentation/widget/add_friend.dart';
@@ -82,6 +84,31 @@ class FriendsScreen extends StatelessWidget {
                           );
                         },
                       ),
+                    ] else ...[
+                      Padding(
+                        padding: EdgeInsets.only(top: context.height * 0.11),
+                        child: Center(
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                child: SvgPicture.asset(
+                                  'assets/images/amico.svg',
+                                ),
+                              ),
+                              SizedBox(height: context.height * 0.03),
+                              Text(
+                                'No Friends Found',
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  color: AppColor.main,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ],
                   ],
                 );
@@ -114,7 +141,7 @@ class FriendsScreen extends StatelessWidget {
                   ],
                 );
               }
-              return Center(child: Text('No friends found.'));
+              return Container();
             },
           ),
         ),

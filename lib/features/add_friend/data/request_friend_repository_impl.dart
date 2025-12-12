@@ -22,10 +22,10 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
 
     final friendId = friend.docs.first.id;
 
-    if (friendId == currentUser.uid)
+    if (friendId == currentUser.uid) {
       throw Exception("operation can not process");
+    }
 
-      
     final exist = await firestore
         .collection('users')
         .doc(friendId)
@@ -44,8 +44,6 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
         .get();
 
     if (friendExist.exists) throw Exception("User is in your friends");
-
-    
 
     final request = RequestModel(
       uid: currentUser.uid,
@@ -68,7 +66,9 @@ class RequestFriendRepositoryImpl implements RequestFriendRepository {
           'title': '${currentUser.displayName} want to be your friend',
           'type': 'request',
           'is_read': false,
-          'created_at': DateTime.now(),
+          'from_user_id': currentUser.uid,
+          'is_ignored': false,
+          'created_at': Timestamp.now(),
         });
   }
 }

@@ -9,11 +9,11 @@ sealed class UploadState extends Equatable {
 
 final class UploadInitial extends UploadState {}
 
-final class UploadLoading extends UploadState {}
+final class UploadUnSelected extends UploadState {}
 
-final class UploadLoaded extends UploadState {
+final class UploadSelected extends UploadState {
   final String path;
-  const UploadLoaded(this.path);
+  const UploadSelected(this.path);
 }
 
 final class UploadErorr extends UploadState {

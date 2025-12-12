@@ -1,24 +1,27 @@
-part of 'notifications_cubit.dart';
+import 'package:equatable/equatable.dart';
+import 'package:lingo_sign/features/notification/domain/app_notification.dart';
 
-sealed class NotificationsState extends Equatable {
-  const NotificationsState();
+abstract class NotificationsState extends Equatable {
+  @override
+  List<Object?> get props => [];
+}
+
+class NotificationsInitial extends NotificationsState {}
+
+class NotificationsLoading extends NotificationsState {}
+
+class NotificationsLoaded extends NotificationsState {
+  final List<AppNotification> notifications;
+  NotificationsLoaded({required this.notifications});
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [notifications];
 }
 
-final class NotificationsInitial extends NotificationsState {}
-
-final class NotificationsLoading extends NotificationsState {}
-
-final class NotificationsLoaded extends NotificationsState {
-  final List<AppNotification> notifications;
-
-  const NotificationsLoaded({required this.notifications});
-}
-
-final class NotificationsError extends NotificationsState {
+class NotificationsError extends NotificationsState {
   final String message;
+  NotificationsError({required this.message});
 
-  const NotificationsError({required this.message});
+  @override
+  List<Object?> get props => [message];
 }

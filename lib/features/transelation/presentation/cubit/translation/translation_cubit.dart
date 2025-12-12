@@ -1,4 +1,4 @@
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:lingo_sign/features/transelation/data/translation_repository_impl.dart';
 
@@ -19,4 +19,5 @@ class TranslationCubit extends Cubit<TranslationState> {
       return "";
     }
   }
+
 }

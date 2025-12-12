@@ -68,6 +68,7 @@ class HomeRepositoryImpl implements HomeRepository {
                 email: userApp.email,
                 imageUrl: userApp.imageUrl,
                 lastSeen: userApp.lastSeen,
+                call: friend.call,
               ),
             ),
           ),
@@ -146,6 +147,35 @@ class HomeRepositoryImpl implements HomeRepository {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  @override
+  Stream<List<Request>> getRequestsStream() {
+    final uid = firebaseAuth.currentUser!.uid;
+    final requestsRef = firebaseFirestore
+        .collection('users')
+        .doc(uid)
+        .collection('requests')
+        .orderBy('created_at', descending: true);
+
+    return requestsRef.snapshots().asyncMap((snapshot) async {
+      final validDocs = snapshot.docs.where((doc) => doc.id != '_init');
+      final requests = validDocs
+          .map((doc) => RequestModel.fromJson(doc.data()))
+          .toList();
+
+      final requestsInfo = await Future.wait(
+        requests.map((requst) async {
+          UserApp userApp = await getUserInfoById(requst.uid);
+          return requst.toRequste(
+            name: userApp.name,
+            imageUrl: userApp.imageUrl,
+          );
+        }),
+      );
+
+      return requestsInfo;
+    });
   }
 
   @override

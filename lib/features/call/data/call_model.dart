@@ -6,10 +6,9 @@ class CallModel extends CallEntity {
     required super.callerId,
     required super.callerName,
     required super.receiverId,
-    required super.receiverName,
     required super.startTime,
     super.endTime,
-    required super.status,
+    required super.type,
     required super.duration,
     required super.isVideoCall,
   });
@@ -19,13 +18,36 @@ class CallModel extends CallEntity {
       callId: json['callId'] ?? '',
       callerId: json['callerId'] ?? '',
       callerName: json['callerName'] ?? '',
-      receiverId: json['receiverId'] ?? '',
-      receiverName: json['receiverName'] ?? '',
-      startTime: DateTime.parse(json['startTime']),
-      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
-      status: json['status'] ?? 'pending',
       duration: json['duration'] ?? 0,
+      endTime: json['endTime'] != null ? DateTime.parse(json['endTime']) : null,
       isVideoCall: json['isVideoCall'] ?? false,
+      receiverId: json['receiverId'] ?? '',
+      startTime: DateTime.parse(json['startTime']),
+      type: callEntityTypeFromJson(json['type']),
+    );
+  }
+
+  CallModel copyWith({
+    String? callId,
+    String? callerId,
+    String? callerName,
+    String? receiverId,
+    DateTime? startTime,
+    DateTime? endTime,
+    CallEntityType? type,
+    int? duration,
+    bool? isVideoCall,
+  }) {
+    return CallModel(
+      callId: callId ?? this.callId,
+      callerId: callerId ?? this.callerId,
+      callerName: callerName ?? this.callerName,
+      receiverId: receiverId ?? this.receiverId,
+      startTime: startTime ?? this.startTime,
+      endTime: endTime ?? this.endTime,
+      type: type ?? this.type,
+      duration: duration ?? this.duration,
+      isVideoCall: isVideoCall ?? this.isVideoCall,
     );
   }
 
@@ -35,10 +57,9 @@ class CallModel extends CallEntity {
       'callerId': callerId,
       'callerName': callerName,
       'receiverId': receiverId,
-      'receiverName': receiverName,
       'startTime': startTime.toIso8601String(),
       'endTime': endTime?.toIso8601String(),
-      'status': status,
+      'type': type.name,
       'duration': duration,
       'isVideoCall': isVideoCall,
     };
