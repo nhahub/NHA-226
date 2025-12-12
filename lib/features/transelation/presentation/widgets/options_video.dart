@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/const/screen_name.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/upload/upload_cubit.dart';
 
 class OptionsVideo extends StatefulWidget {
@@ -41,9 +42,7 @@ class _TestState extends State<OptionsVideo> {
                 BlocConsumer<UploadCubit, UploadState>(
                   listener: (context, state) {
                     if (state is UploadErorr) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(state.message ?? "Error")),
-                      );
+                      Message(context: context, message: state.message!);
                     }
                     if (state is UploadSelected) {
                       if (state.path != "") {
@@ -57,7 +56,7 @@ class _TestState extends State<OptionsVideo> {
                   },
                   builder: (context, state) {
                     final cubit = context.read<UploadCubit>();
-                    
+
                     return ElevatedButton(
                       onPressed: () {
                         cubit.uploadVideo();
@@ -101,7 +100,10 @@ class _TestState extends State<OptionsVideo> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColor.main,
-                    fixedSize: Size(context.width * 0.31, context.height * 0.04),
+                    fixedSize: Size(
+                      context.width * 0.31,
+                      context.height * 0.04,
+                    ),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),

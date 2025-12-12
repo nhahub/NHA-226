@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
 
 class RecordingVideoScreen extends StatefulWidget {
@@ -20,17 +21,18 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<RecordingVideoCubit, RecordingVideoState>(
+    return BlocConsumer<RecordingVideoCubit, RecordingVideoState>(
+      listener: (context, state) {
+        if (state is RecordingVideoError) {
+          Message(context: context, message: state.message!);
+        }
+      },
       builder: (context, state) {
         final cubit = context.read<RecordingVideoCubit>();
         // ignore: unused_local_variable
         String path = "";
         if (state is RecordingVideoLoading || state is RecordingVideoInitial) {
           return Center(child: CircularProgressIndicator());
-        }
-
-        if (state is RecordingVideoError) {
-          return Scaffold(body: Center(child: Text("Error: ${state.message}")));
         } else {
           return Scaffold(
             body: Stack(
@@ -64,6 +66,13 @@ class _RecordingVideoScreenState extends State<RecordingVideoScreen> {
                         color: state is RecordingVideoRecording
                             ? Colors.red
                             : Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColor.darkGray,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 0),
+                          )
+                        ]
                       ),
                     ),
                   ),

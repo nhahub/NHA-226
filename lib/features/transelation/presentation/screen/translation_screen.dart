@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
 import 'package:lingo_sign/features/home/presentation/widget/text_shimmer.dart';
 import 'package:lingo_sign/features/transelation/presentation/cubit/translation/translation_cubit.dart';
@@ -34,11 +35,14 @@ class _TranslationScreenState extends State<TranslationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserInfoCubit, UserInfoState>(
-      builder: (context, state) {
+    return BlocConsumer<UserInfoCubit, UserInfoState>(
+      listener: (context, state) {
         if (state is UserInfoError) {
-          return Scaffold(body: Center(child: Text("Error: ${state.message}")));
-        } else if (state is UserInfoLoaded) {
+          Message(context: context, message: state.message);
+        }
+      },
+      builder: (context, state) {
+        if (state is UserInfoLoaded) {
           return Scaffold(
             backgroundColor: AppColor.white,
             body: SingleChildScrollView(
@@ -50,7 +54,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: context.height * 0.05),
+                    SizedBox(height: context.height * 0.09),
                     Text(
                       "Hi ${state.user.name},",
                       style: TextStyle(
@@ -71,15 +75,11 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         if (state is TranslationLoaded) {
                           translationController.text = state.translation;
                         }
+                        if (state is TranslationError) {
+                          Message(context: context, message: state.message!);
+                        }
                       },
                       builder: (context, state) {
-                        if (state is TranslationError) {
-                          return Scaffold(
-                            body: Center(
-                              child: Text("Error: ${state.message}"),
-                            ),
-                          );
-                        }
                         return Container(
                           width: double.infinity,
                           height: context.height * 0.3,
@@ -103,6 +103,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                         )
                                       : TextField(
                                           controller: translationController,
+                                          readOnly: true,
                                           maxLines: null,
                                           decoration: InputDecoration(
                                             border: InputBorder.none,
@@ -128,15 +129,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                             text: translationController.text,
                                           ),
                                         );
-                                        ScaffoldMessenger.of(
-                                          context,
-                                        ).showSnackBar(
-                                          SnackBar(
-                                            content: Text(
-                                              'Copy Done Sucessfully',
-                                            ),
-                                            backgroundColor: Colors.green,
-                                          ),
+                                        Message(
+                                          context: context,
+                                          message: 'Copy Done Sucessfully',
+                                          color:  Colors.green
                                         );
                                       },
                                       icon: Icon(
