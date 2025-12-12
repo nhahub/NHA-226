@@ -7,8 +7,12 @@ abstract class CallRepository {
     bool? isVideoCall,
   });
 
-  Future<Either<Exception, void>> updateCallStatus({
-    required String callId,
-    required String status,
+  Future<Either<Exception, CallEntity>> joinToCall({
+    required String callerId
+  });
+
+  Future<Either<Exception, void>> endTheCall({
+    required String callerId,
+    required String receiverId,
   });
 }

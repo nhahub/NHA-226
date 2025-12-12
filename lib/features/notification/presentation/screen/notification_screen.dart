@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
+import 'package:lingo_sign/core/widget/custom_app_bar.dart';
 import 'package:lingo_sign/features/notification/presentation/cubit/notifications_cubit.dart';
 import 'package:lingo_sign/features/notification/presentation/cubit/notifications_state.dart';
 import 'package:lingo_sign/features/notification/presentation/widget/notification_cart.dart';
@@ -25,7 +26,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.white,
-      appBar: AppBar(title: const Text("Notifications")),
+      appBar: CustomAppBar(title: "Notifications"),
       body: BlocBuilder<NotificationsCubit, NotificationsState>(
         builder: (context, state) {
           if (state is NotificationsLoading || state is NotificationsInitial) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
-import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/friend_account/screen/freind_account_screen.dart';
 import 'package:lingo_sign/features/home/domain/entities/friend.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -77,14 +76,8 @@ class FriendUserCallCard extends StatelessWidget {
                       if (isLoading) return;
 
                       if (userFriend.call != null) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => VideoCallScreen(
-                              callID: userFriend.call!.callId,
-                              isVideoCall: userFriend.call!.isVideoCall,
-                            ),
-                          ),
+                        context.read<CallBloc>().add(
+                          JoinCallEvent(callerId: userFriend.uid),
                         );
                       } else {
                         context.read<CallBloc>().add(

@@ -36,58 +36,42 @@ class FirebaseDataSource {
     return callModel;
   }
 
-  Future<void> updateCallStatus(String callId, String status) async {
-    try {
-      // ignore: avoid_print
-      print(
-        '[FirebaseDataSource] Updating call status: callId=$callId, status=$status',
-      );
+  Future<CallModel> joinToCall({required String callerId}) async {
+    var user = _firebaseAuth.currentUser;
+    final snapshot = await _firestore
+        .collection('users')
+        .doc(user!.uid)
+        .collection('friends')
+        .doc(callerId)
+        .get();
 
-      await _firestore.collection('calls').doc(callId).update({
-        'status': status,
-        'endTime': status == 'ended' ? DateTime.now().toIso8601String() : null,
-      });
-
-      // ignore: avoid_print
-      print('[FirebaseDataSource] Call status updated successfully');
-    } catch (e) {
-      // ignore: avoid_print
-      print('[FirebaseDataSource] Error updating call status: $e');
-      rethrow;
+    if (!snapshot.exists) {
+      throw Exception("Call does not exist");
     }
+
+    final call = CallModel.fromJson(snapshot.data()!['call']);
+
+    await _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('friends')
+        .doc(callerId)
+        .set({
+          'call': {'type': CallEntityType.active.name},
+        }, SetOptions(merge: true));
+
+    return call.copyWith(type: CallEntityType.active);
   }
 
-  Stream<CallModel> listenToIncomingCalls(String userId) {
-    return _firestore
-        .collection('calls')
-        .where('receiverId', isEqualTo: userId)
-        .where('status', isEqualTo: 'pending')
-        .snapshots()
-        .map((snapshot) {
-          if (snapshot.docs.isNotEmpty) {
-            return CallModel.fromJson(snapshot.docs.first.data());
-          }
-          // Return empty/default pending call instead of throwing error
-          /*
-            return CallModel(
-              callId: '',
-              callerId: '',
-              callerName: '',
-              receiverId: '',
-              receiverName: '',
-              startTime: DateTime.now(),
-              type: CallEntityType.pending,
-              duration: 0,
-              isVideoCall: false,
-            );
-          */
-          throw Exception('No incoming calls');
-        })
-        .handleError((error) {
-          // ignore: avoid_print
-          print('Error listening to incoming calls: $error');
-          // Continue stream on error instead of breaking it
-          throw error;
-        });
+  Future<void> endCall({
+    required String callerId,
+    required String receiverId,
+  }) async {
+    await _firestore
+        .collection('users')
+        .doc(receiverId)
+        .collection('friends')
+        .doc(callerId)
+        .update({'call': FieldValue.delete()});
   }
 }

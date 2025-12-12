@@ -15,15 +15,16 @@ class MakeCallEvent extends CallEvent {
 }
 
 class JoinCallEvent extends CallEvent {
-  final String callId;
-  const JoinCallEvent({required this.callId});
+  final String callerId;
+  const JoinCallEvent({required this.callerId});
   @override
-  List<Object> get props => [callId];
+  List<Object> get props => [callerId];
 }
 
 class EndCallEvent extends CallEvent {
-  final String callId;
-  const EndCallEvent({required this.callId});
+  final String callerId;
+  final String receiverId;
+  const EndCallEvent({required this.callerId, required this.receiverId});
   @override
-  List<Object> get props => [callId];
+  List<Object> get props => [callerId, receiverId];
 }

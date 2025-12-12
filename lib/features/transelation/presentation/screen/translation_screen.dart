@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:lingo_sign/core/const/app_color.dart';
 import 'package:lingo_sign/core/utils/helper.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/user_info/user_info_cubit.dart';
@@ -28,7 +27,6 @@ class _TranslationScreenState extends State<TranslationScreen> {
   void initState() {
     super.initState();
     context.read<UserInfoCubit>().getUserInfo();
-
     if (path != null && path != '') {
       context.read<TranslationCubit>().getTranslation(path!);
     }
@@ -42,6 +40,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
           return Scaffold(body: Center(child: Text("Error: ${state.message}")));
         } else if (state is UserInfoLoaded) {
           return Scaffold(
+            backgroundColor: AppColor.white,
             body: SingleChildScrollView(
               child: Padding(
                 padding: EdgeInsets.symmetric(
@@ -51,8 +50,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: context.height * 0.09 ),
-
+                    SizedBox(height: context.height * 0.05),
                     Text(
                       "Hi ${state.user.name},",
                       style: TextStyle(
@@ -62,16 +60,12 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         color: AppColor.black,
                       ),
                     ),
-
                     SizedBox(height: context.height * 0.01),
-
                     Text(
                       "Let's understand each other better",
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
                     SizedBox(height: context.height * 0.04),
-
                     BlocConsumer<TranslationCubit, TranslationState>(
                       listener: (context, state) {
                         if (state is TranslationLoaded) {
@@ -104,8 +98,8 @@ class _TranslationScreenState extends State<TranslationScreen> {
                                 Expanded(
                                   child: state is TranslationLoading
                                       ? Align(
-                                        alignment: Alignment.topLeft,
-                                        child: TextShimmer()
+                                          alignment: Alignment.topLeft,
+                                          child: TextShimmer(),
                                         )
                                       : TextField(
                                           controller: translationController,
@@ -158,21 +152,16 @@ class _TranslationScreenState extends State<TranslationScreen> {
                         );
                       },
                     ),
-
                     SizedBox(height: context.height * 0.04),
-
                     Text(
                       '• Hold your hand clearly in front of the camera',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
                     Text(
                       '• Ensure good lighting',
                       style: TextStyle(fontSize: 16, color: AppColor.darkGray),
                     ),
-
                     SizedBox(height: context.height * 0.19),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -197,12 +186,7 @@ class _TranslationScreenState extends State<TranslationScreen> {
                             height: context.width * 0.16,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(50),
-                              gradient: LinearGradient(
-                                colors: [AppColor.main, AppColor.second],
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                stops: [0.41, 1.0],
-                              ),
+                              color: AppColor.main,
                               boxShadow: [
                                 BoxShadow(
                                   color: Colors.black26,
@@ -213,8 +197,10 @@ class _TranslationScreenState extends State<TranslationScreen> {
                             ),
                             child: Center(
                               child: SizedBox(
-                                child: SvgPicture.asset(
-                                  'assets/images/mdi_camera.svg',
+                                child: Icon(
+                                  Icons.camera_alt,
+                                  color: AppColor.white,
+                                  size: context.width * 0.08,
                                 ),
                               ),
                             ),

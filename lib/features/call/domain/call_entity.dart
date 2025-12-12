@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-enum CallEntityType { pending, accepted, declined, completed }
+enum CallEntityType { pending, completed, ended, active }
 
 CallEntityType callEntityTypeFromJson(dynamic value) {
   if (value == null) return CallEntityType.pending;

@@ -25,12 +25,9 @@ class CallMade extends CallState {
   List<Object> get props => [call];
 }
 
-class CallAccepted extends CallState {
-  final String callId;
-  final bool isVideoCall;
-  const CallAccepted({required this.callId, this.isVideoCall = true});
+class CallEnded extends CallState {
   @override
-  List<Object> get props => [callId, isVideoCall];
+  List<Object> get props => [];
 }
 
 class CallError extends CallState {

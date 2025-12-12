@@ -29,21 +29,14 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     JoinCallEvent event,
     Emitter<CallState> emit,
   ) async {
+    emit(CallLoading(friendId: event.callerId));
     try {
-      final result = await callRepository.updateCallStatus(
-        callId: event.callId,
-        status: 'accepted',
-      );
+      final result = await callRepository.joinToCall(callerId: event.callerId);
 
       result.fold(
-        (failure) {
-          emit(
-            CallError(message: 'Failed to accept call: ${failure.toString()}'),
-          );
-        },
-        (_) {
-          emit(CallAccepted(callId: event.callId, isVideoCall: true));
-        },
+        (failure) =>
+            emit(CallError(message: 'Failed to join: ${failure.toString()}')),
+        (call) => emit(CallMade(call: call)),
       );
     } catch (e) {
       emit(CallError(message: e.toString()));
@@ -55,19 +48,17 @@ class CallBloc extends Bloc<CallEvent, CallState> {
     Emitter<CallState> emit,
   ) async {
     try {
-      final result = await callRepository.updateCallStatus(
-        callId: event.callId,
-        status: 'declined',
+      final result = await callRepository.endTheCall(
+        callerId: event.callerId,
+        receiverId: event.receiverId,
       );
 
       result.fold(
         (failure) {
-          emit(
-            CallError(message: 'Failed to decline call: ${failure.toString()}'),
-          );
+          emit(CallError(message: 'Failed to end call: ${failure.toString()}'));
         },
         (_) {
-          // emit(CallDeclined(callId: event.callId));
+          emit(CallEnded());
         },
       );
     } catch (e) {

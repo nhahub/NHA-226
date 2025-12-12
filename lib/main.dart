@@ -4,11 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lingo_sign/core/config/zego_config.dart';
 import 'package:lingo_sign/core/get_it/get_it.dart';
+import 'package:lingo_sign/core/widget/message.dart';
 import 'package:lingo_sign/features/call/presentation/bloc/call_bloc.dart';
 import 'package:lingo_sign/features/call/presentation/screen/video_call_screen.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/last_calls/last_calls_bloc.dart';
 import 'package:lingo_sign/features/home/presentation/bloc/requests/requests_bloc.dart';
 import 'package:lingo_sign/features/notification/data/notification_repository_impl.dart';
+import 'package:lingo_sign/features/profile/data/repositries/profile_repositry.dart';
+import 'package:lingo_sign/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:lingo_sign/features/recording_video/data/recording_video_repository_impl.dart';
 import 'package:lingo_sign/features/recording_video/data/video_service.dart';
 import 'package:lingo_sign/features/recording_video/presentation/cubit/recording_video_cubit.dart';
@@ -71,7 +74,6 @@ class MyApp extends StatelessWidget {
           BlocProvider(
             create: (_) => UserInfoCubit(HomeRepositoryImpl())..getUserInfo(),
           ),
-
           // Friend Request
           BlocProvider(
             create: (_) => FriendRequestCubit(RequestFriendRepositoryImpl()),
@@ -97,7 +99,7 @@ class MyApp extends StatelessWidget {
               RecordingVideoRepositoryImpl(VideoService()),
             ),
           ),
-
+          // Notifications
           BlocProvider(
             create: (_) {
               final cubit = NotificationsCubit(NotificationRepositoryImpl());
@@ -111,6 +113,10 @@ class MyApp extends StatelessWidget {
           ),
           // Upload Video
           BlocProvider(create: (_) => UploadCubit(TranslationRepositoryImpl())),
+          // Profile
+          BlocProvider(
+            create: (_) => ProfileBloc(profileRepository: ProfileRepository()),
+          ),
           // Call
           BlocProvider<CallBloc>(create: (_) => getIt<CallBloc>()),
         ],
@@ -134,12 +140,13 @@ class MyApp extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (_) => VideoCallScreen(
-                                  callID: state.call.callId,
-                                  isVideoCall: state.call.isVideoCall,
-                                ),
+                                builder: (_) =>
+                                    VideoCallScreen(call: state.call),
                               ),
                             );
+                          }
+                          if (state is CallError) {
+                            Message(context: context, message: state.message);
                           }
                         },
                         child: MainScreen(),
