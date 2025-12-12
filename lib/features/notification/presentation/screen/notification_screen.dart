@@ -18,8 +18,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     super.initState();
     final cubit = context.read<NotificationsCubit>();
-    cubit.getAllNotifications();
-    cubit.markAllNotificationsAsRead();
+    cubit.listenToNotificationsRealTime();
+    Future.delayed(Duration(milliseconds: 100), () {
+      cubit.markAllNotificationsAsRead();
+    });
   }
 
   @override
